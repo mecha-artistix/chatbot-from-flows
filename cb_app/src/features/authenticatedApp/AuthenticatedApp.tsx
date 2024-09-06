@@ -1,0 +1,95 @@
+import { useEffect, useState } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
+import Dashboard from '../dashboard/Dashboard';
+import FlowchartsCollection from '../flowchart/components/FlowchartsCollection';
+import FlowBoard from '../flowchart/components/FlowBoard';
+import Knowledgebase from '../knowledgebase/Knowledgebase';
+import Bots from '../bots/Bots';
+import Leads from '../leads/Leads';
+import ProfileSettings from '../userProfile/ProfileSettings';
+import AccountSettings from '../userProfile/components/AccountSettings';
+import SecuritySettings from '../userProfile/components/SecuritySettings';
+import PaymentSettings from '../userProfile/components/PaymentSettings';
+import useAuthStore from '../authentication/userStore';
+import { Box, Container, Grid, Stack, Drawer } from '@mui/material';
+import LeftPanel from '../leftPanel/LeftPanel';
+import TopBar from '../../components/TopBar';
+
+const AuthenticatedApp: React.FC = () => {
+  const navigate = useNavigate();
+
+  const { isAuthenticated, verify } = useAuthStore((state) => ({
+    isAuthenticated: state.isAuthenticated,
+    verify: state.verify,
+  }));
+
+  useEffect(() => {
+    verify();
+    // Check authentication and navigate accordingly
+    if (!isAuthenticated) {
+      navigate('/authentication/login');
+    }
+  }, [isAuthenticated, verify]);
+
+  const style = {
+    wrapper: {
+      height: '100vh',
+    },
+    container: {
+      height: '100%',
+    },
+    topSection: {},
+    bodySection: {
+      display: 'flex',
+    },
+    leftSection: {
+      borderRight: 1,
+    },
+
+    rightSection: {
+      height: 'calc(100vh - 70px)',
+      overflowY: 'auto',
+      flexGrow: 1,
+    },
+  };
+
+  return (
+    <Container maxWidth={false} disableGutters sx={style.wrapper}>
+      <Stack sx={style.container} direction="column">
+        {/* TOP BAR */}
+        <TopBar />
+        {/* <Stack direction="row" className="dashboard-cont" sx={style.bodySection}> */}
+        <Box className="dashboard-cont" sx={style.bodySection}>
+          {/* LEFT PANEL HEADER */}
+          {/* <Grid item xs={12} sm={4} md={2} lg={2} className="left-panel" sx={style.leftSection}> */}
+          {/* <Box sx={{}}> */}
+          <LeftPanel />
+          {/* </Box> */}
+          {/* </Grid> */}
+          {/* DASHBOARD */}
+          {/* <Grid item xs={12} sm={8} md={10} lg={10} className="dashboard-area" sx={style.rightSection}> */}
+          <Box sx={style.rightSection}>
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/flowcharts" element={<FlowchartsCollection />} />
+              <Route path="create-flowchart" element={<FlowBoard />} />
+              <Route path="knowledgebase" element={<Knowledgebase />} />
+              <Route path="bots" element={<Bots />} />
+              <Route path="leads" element={<Leads />} />
+              <Route path="user-profile" element={<ProfileSettings />}>
+                <Route index element={<AccountSettings />} />
+                <Route path="account-settings" element={<AccountSettings />} />
+                <Route path="security-settings" element={<SecuritySettings />} />
+                <Route path="payment-settings" element={<PaymentSettings />} />
+              </Route>
+            </Routes>
+          </Box>
+          {/* </Grid> */}
+          {/* </Stack> */}
+        </Box>
+      </Stack>
+    </Container>
+  );
+};
+
+export default AuthenticatedApp;
