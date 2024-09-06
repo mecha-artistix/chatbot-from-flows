@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: DEPLOY TO SERVER
 
 # Trigger this workflow on push or pull request events
 on:
