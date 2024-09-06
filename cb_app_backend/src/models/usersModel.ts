@@ -69,11 +69,12 @@ userSchema.pre('save', async function (this: MyUser, next) {
 });
 
 // removing inactive users from find()
-userSchema.pre(/^find/, function (this: Query<any, MyUser, any>, next) {
-  // this point to currect query
-  this.find({ active: { $ne: false } }); // we are doing notEqualto fasle because some users dont have the active  prop
-  next();
-});
+// userSchema.pre(/^find/, function (this: Query<any, MyUser, any>, next) {
+//   // this point to currect query
+//   // we are doing notEqualto fasle because some users dont have the active  prop
+//   this.find({ active: { $ne: false } });
+//   next();
+// });
 
 // instance method - method that is awailable on all docs of certain collection
 userSchema.methods.correctPassword = async function (this: MyUser, candidatePassword: string, userPassword: string) {
