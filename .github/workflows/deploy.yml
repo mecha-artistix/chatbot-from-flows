@@ -1,0 +1,57 @@
+name: DEPLOY TO SERVER
+
+# Trigger this workflow on push or pull request events
+on:
+  push:
+    branches: [development, main]
+  pull_request:
+    branches: [development, main]
+
+jobs:
+  # Job to deploy to staging environment
+  deploy-staging:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/development'
+    steps:
+      # Step 1: Use SSH to connect to the server and pull latest changes for staging
+      - name: Deploy to Staging Server
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Connect and deploy to staging
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
+            cd ${{ secrets.SSH_DIR }}
+            git pull origin ${{ secrets.MAIN_BRANCH }}
+            cd cb_app_backend
+            npm install
+            npm run start:dev
+            cd ../cb_app
+            npm install
+            npm run dev
+          EOF
+
+  # Job to deploy to production environment
+  deploy-production:
+    runs-on: ubuntu-latest
+    # needs: deploy-staging
+    if: github.ref == 'refs/heads/main'
+    steps:
+      # Step 1: Use SSH to connect to the server and pull latest changes for production
+      - name: Deploy to Production Server
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Connect and deploy to production
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
+            cd ${{ secrets.SSH_DIR }}
+            git pull origin ${{ secrets.MAIN_BRANCH }}
+            cd cb_app_backend
+            npm install
+            npm run start:prod
+            cd ../cb_app
+            npm install
+            npm run dev
+          EOF
