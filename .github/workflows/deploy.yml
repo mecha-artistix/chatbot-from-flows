@@ -3,7 +3,7 @@ name: DEPLOY TO SERVER
 # Trigger this workflow on push or pull request events
 on:
   push:
-    branches: [development, main]
+    branches: [main]
   pull_request:
     branches: [development, main]
 
