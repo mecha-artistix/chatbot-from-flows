@@ -8,7 +8,7 @@ import app from './app';
 const localIPAddress = getLocalIPAddress();
 const host = localIPAddress === '172.31.149.141' ? 'localhost' : localIPAddress;
 
-const { PORT } = process.env;
+const PORT = Number(process.env.PORT);
 const mongoUrl = process.env.DB_MONGO_URL?.replace('<db_password>', 'immfAdeLhAHHB0DW');
 if (!mongoUrl) {
   throw new Error('MongoDB connection string is undefined');
@@ -19,6 +19,6 @@ mongoose
   .then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.log('Error connecting to mongoDB: ', err));
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port http://${host}:${PORT}`);
 });

@@ -1,4 +1,5 @@
 import mongoose, { Document, Model as MongooseModel } from 'mongoose';
+import { IFlowChart } from 'src/types/flowchart';
 
 /**
  * Checks if a document with the given name exists in the specified model.
@@ -9,17 +10,13 @@ import mongoose, { Document, Model as MongooseModel } from 'mongoose';
  */
 
 type CheckIfNameExists = (
-  this: MongooseModel<IFlowChart>,
-  userId: mongoose.Schema.Types.ObjectId,
+  Model: mongoose.Model<IFlowChart>,
   name: string,
+  userId: mongoose.Schema.Types.ObjectId,
 ) => Promise<boolean>;
 
-export const checkIfNameExists: CheckIfNameExists = async <T extends Document>(
-  Model,
-  name,
-  userId,
-): Promise<boolean> => {
-  const query: any = { [field]: name };
+export const checkIfNameExists: CheckIfNameExists = async (Model, name, userId): Promise<boolean> => {
+  const query: Record<string, unknown> = { name };
   if (userId) query.user = userId;
 
   const count = await Model.countDocuments(query);
