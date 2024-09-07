@@ -7,6 +7,10 @@ on:
   pull_request:
     branches: [development, main]
 
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   # Job to deploy to production environment
 
