@@ -14,9 +14,9 @@ jobs:
     runs-on: ubuntu-latest
     # needs: deploy-staging
     # if: github.ref == 'refs/heads/main'
-    concurrency:
-      group: deploy-main # This groups both jobs together under the same concurrency group
-      cancel-in-progress: true
+    # concurrency:
+    #   group: deploy-main # This groups both jobs together under the same concurrency group
+    #   cancel-in-progress: true
     steps:
       # Step 1: Use SSH to connect to the server and pull latest changes for production
       - name: Deploy backend to production
@@ -39,9 +39,9 @@ jobs:
     runs-on: ubuntu-latest
     # needs: deploy-staging
     if: github.ref == 'refs/heads/main'
-    concurrency:
-      group: deploy-main # This groups both jobs together under the same concurrency group
-      cancel-in-progress: true
+    # concurrency:
+    #   group: deploy-main # This groups both jobs together under the same concurrency group
+    #   cancel-in-progress: true
     steps:
       # Step 1: Use SSH to connect to the server and pull latest changes for production
       - name: Deploy frontend to production
