@@ -33,7 +33,7 @@ const createSendToken = (user: MyUser, statusCode: number, res: Response) => {
   const cookieOptions: CookieOptions = {
     expires: cookieExpirationDate,
     httpOnly: false,
-    secure: true,
+    secure: false,
     sameSite: 'none',
   };
   // if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
