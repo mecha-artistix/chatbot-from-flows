@@ -2,3 +2,4 @@
 node_modules
 cicd.yml.copy
 dist/
+.github

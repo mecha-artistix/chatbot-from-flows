@@ -26,8 +26,6 @@ export const useDAGRELayout = (options: LayoutOptions = {}) => {
     // Apply Dagre layout
     dagre.layout(g);
 
-    console.log('dagre');
-
     // Adjust node positions
 
     return {
