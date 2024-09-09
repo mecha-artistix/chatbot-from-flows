@@ -99,8 +99,8 @@ export const protect: RequestHandler = catchAsync(async (req, res, next) => {
   // 1) Get the token
   let token: string | null;
   if (req.headers.cookie) {
-    // token = getJwtFromCookie(req.headers.cookie);
-    token = req.cookies.jwt;
+    token = getJwtFromCookie(req.headers.cookie);
+    // token = req.cookies.jwt;
     if (!token) return next(new AppError('You are not logged in', 401));
   } else {
     return next(new AppError('You are not logged in', 401));
