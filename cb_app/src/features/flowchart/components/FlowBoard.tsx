@@ -70,8 +70,7 @@ const ReactFlowComp: React.FC = () => {
 
   useEffect(() => {
     console.log('nodes=>', nodes, 'edges=>', edges);
-    setFlowBoard(flowId);
-  }, []);
+  }, [nodes.length, edges.length]);
 
   const handleUpdateFlowchart = async () => {
     const body = JSON.stringify({

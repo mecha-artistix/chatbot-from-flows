@@ -19,8 +19,6 @@ export const nodeSlice: StateCreator<INodeSlice> = (set, get, api) => ({
   setNextNodeType: (nodeType) => set({ nextNodeType: nodeType }),
 
   onNodeClick: (event, node) => {
-    console.log('node clicked', node.id);
-    console.log(node);
     set({ clickedNode: node, nodeDrawerOpen: node.id !== 'start_node' });
   },
 

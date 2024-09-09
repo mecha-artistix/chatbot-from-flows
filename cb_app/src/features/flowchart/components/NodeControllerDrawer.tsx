@@ -32,6 +32,7 @@ export const NodeControlDrawer: React.FC<INodeControlDrawerProps> = ({}) => {
     nextResponseType,
     clickedNode,
     setNode,
+    setLayout,
   } = useFlowStore((state) => ({
     nodeDrawerOpen: state.nodeDrawerOpen,
     setNodeDrawer: state.setNodeDrawer,
@@ -45,6 +46,7 @@ export const NodeControlDrawer: React.FC<INodeControlDrawerProps> = ({}) => {
     currentNode: state.currentNode,
     nextResponseType: state.nextResponseType,
     clickedNode: state.clickedNode,
+    setLayout: state.setLayout,
   }));
   const TopBarHeight = useThemeStore((state) => state.topBarHeight);
   // const [label, setLabel] = useState<string>('');
@@ -57,19 +59,18 @@ export const NodeControlDrawer: React.FC<INodeControlDrawerProps> = ({}) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setResData({ ...resData, [e.target.name]: e.target.value });
   };
-  useEffect(() => {
-    // console.log(clickedNode.data);
-    // setLabel(clickedNode?.data?.label || '');
-    setResData({ ...clickedNode?.data });
-  }, [nodeDrawerOpen]);
+  // useEffect(() => {
+
+  //   setResData({ ...clickedNode?.data });
+  // }, [nodeDrawerOpen]);
 
   const handleSubmit = () => {
     console.log(clickedNode.id, resData);
     setNode(clickedNode.id.toString(), resData);
     const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements([...nodes], [...edges]);
-    setNodes(layoutedNodes);
-    setEdges(layoutedEdges);
-    setNodeDrawer(false);
+    // setNodes(layoutedNodes);
+    // setEdges(layoutedEdges);
+    // setNodeDrawer(false);
     // const data = {
     //   label: 'First Response',
     //   responseType: 'neutral',

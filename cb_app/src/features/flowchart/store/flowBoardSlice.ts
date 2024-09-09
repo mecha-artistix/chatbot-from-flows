@@ -5,6 +5,9 @@ import { IFlowBoardSlice, INode, INodeData } from '../../../types/flowchart';
 import { createFlowchart, getFlowchart } from '../services/fetchFlowchart';
 import { edge1 } from '../components/edges/InitEdges';
 import { StartNode, ResponseNode, CustomNode } from '../components/nodes/Nodes';
+import { useDAGRELayout } from '../utils/useDAGRELayout';
+
+const getLayoutedElements = useDAGRELayout({ direction: 'LR' });
 
 const URL: string = import.meta.env.VITE_NODE_BASE_API + '/flowcharts';
 const nodeTypes = {
@@ -66,6 +69,7 @@ export const flowBoardSlice: StateCreator<IFlowBoardSlice> = (set, get, api) => 
   },
 
   setEdges: (edges) => {
+    console.log(edges);
     set({ edges });
   },
 
@@ -73,11 +77,17 @@ export const flowBoardSlice: StateCreator<IFlowBoardSlice> = (set, get, api) => 
     try {
       set({ status: 'loading', error: '' });
       const data = await getFlowchart(id);
-      console.log(data.data);
       const { nodes, edges } = data.data;
       set({ nodes, edges, status: 'success' });
     } catch (error) {
       set({ status: 'error', error: error.message });
     }
+  },
+
+  setLayout: (node = null) => {
+    const { nodes, edges } = get();
+    console.log(nodes, edges);
+    const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements([...nodes, node], [...edges]);
+    set({ nodes: layoutedNodes, edges: layoutedEdges });
   },
 });
