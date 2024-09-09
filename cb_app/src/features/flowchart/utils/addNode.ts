@@ -1,6 +1,6 @@
 import { INode, INodeData, IPosition } from '../../../types/flowchart';
 
-type UseAddNode = (id: string, type: string, data: INodeData) => INode;
+type UseAddNode = (id: number, type: string, data: INodeData) => INode;
 
 export const useAddNode: UseAddNode = (id, type, data) => {
   return {
