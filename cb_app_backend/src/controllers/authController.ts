@@ -138,11 +138,18 @@ export const verify: RequestHandler = catchAsync(async (req, res, next) => {
 
 export const logout: RequestHandler = catchAsync(async (req, res, next) => {
   // res.clearCookie('jwt', { path: '/' });
-  res.clearCookie('jwt', {
-    path: '/',
+  // res.clearCookie('jwt', {
+  //   path: '/',
+  //   httpOnly: false,
+  //   secure: true,
+  //   sameSite: 'none',
+  // });
+
+  res.cookie('jwt', 'loggedOut', {
+    expires: new Date(Date.now() + 10 * 1000),
     httpOnly: false,
-    secure: true,
-    sameSite: 'none',
+    secure: false,
+    sameSite: 'lax',
   });
 
   res.status(200).json({ message: 'Logged out successfully' });
