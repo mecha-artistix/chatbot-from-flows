@@ -58,7 +58,7 @@ export const NodeControlDrawer: React.FC<INodeControlDrawerProps> = ({}) => {
     setResData({ ...resData, [e.target.name]: e.target.value });
   };
   useEffect(() => {
-    console.log(clickedNode.data);
+    // console.log(clickedNode.data);
     // setLabel(clickedNode?.data?.label || '');
     setResData({ ...clickedNode?.data });
   }, [nodeDrawerOpen]);
