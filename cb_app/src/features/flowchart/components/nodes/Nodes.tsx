@@ -76,6 +76,7 @@ export const ResponseNode: React.FC<NodeProps<INodeData>> = ({ data, id }) => {
 
   return (
     <Box
+      className="nowheel"
       sx={(theme) => ({
         bgcolor: theme.palette.bgNode[data?.responseType],
         border: `1px solid ${theme.palette.divider}`,
@@ -83,7 +84,7 @@ export const ResponseNode: React.FC<NodeProps<INodeData>> = ({ data, id }) => {
         px: 1,
         py: 2,
         borderRadius: 2,
-        maxWidth: '250px',
+        // maxWidth: '250px',
         maxHeight: '250px',
         // overflowY: 'auto',
         // color: theme.palette.grey[900],
@@ -116,17 +117,17 @@ export const ResponseNode: React.FC<NodeProps<INodeData>> = ({ data, id }) => {
       </IconButton>
       <Box
         sx={(theme) => ({
+          overflowX: 'hidden',
           overflowY: 'auto',
-          color: theme.palette.grey[900],
-          bgcolor: theme.palette.bgNode[data?.responseType],
         })}
-        className="nowheel"
       >
         <Typography variant="h6">
           {data?.responseType} {id}
         </Typography>
         <Typography>{data ? data.label : 'no data'}</Typography>
-        <Typography>{data ? data.description : 'no description'}</Typography>
+        <Typography sx={(theme) => ({ maxHeight: '200px', overflowY: 'auto' })}>
+          {data ? data.description : 'no description'}
+        </Typography>
       </Box>
       <Handle type="target" position={Position.Left} isConnectable={true} />
     </Box>
