@@ -19,7 +19,7 @@ import flowchartRoutes from './routes/flowchartRoutes';
 import leadRoutes from './routes/leadRoutes';
 
 const { BASE_URL } = process.env;
-const ALLOWED_ORIGINS = ['127.0.0.1', 'localhost', '91.107.194.217', '172.31.149.141'];
+const ALLOWED_ORIGINS = ['127.0.0.1', 'localhost', '91.107.194.217', '172.31.149.141', '209.209.42.134'];
 const { window } = new JSDOM('');
 const dompurify = DOMPurify(window);
 
