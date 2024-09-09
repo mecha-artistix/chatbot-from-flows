@@ -95,7 +95,7 @@ app.use(
   catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     req.requestTime = new Date().toString();
     console.log('hello 😇', req.requestTime);
-    console.log(req.cookies);
+    // console.log(req.cookies);
     next();
   }),
 );

@@ -94,12 +94,13 @@ function getJwtFromCookie(cookieHeader: string): string | null {
 }
 
 export const protect: RequestHandler = catchAsync(async (req, res, next) => {
-  console.log('cookies', req.headers.cookie);
+  console.log('cookies', req.cookies.jwt);
   const jwtSecret = process.env.JWT_SECRET as string;
   // 1) Get the token
   let token: string | null;
   if (req.headers.cookie) {
-    token = getJwtFromCookie(req.headers.cookie);
+    // token = getJwtFromCookie(req.headers.cookie);
+    token = req.cookies.jwt;
     if (!token) return next(new AppError('You are not logged in', 401));
   } else {
     return next(new AppError('You are not logged in', 401));
