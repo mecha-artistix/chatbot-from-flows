@@ -4,7 +4,8 @@ export interface ILead extends Document {
   user?: Types.ObjectId;
   name?: string;
   createdAt: Date;
-  intent?: IIntent;
+  sessionId: string;
+  intent: string;
 }
 
 interface IIntent {

@@ -2,8 +2,8 @@ import Lead from '../models/leadModel';
 import { catchAsync } from '../utils/catchAsync';
 
 export const createLead = catchAsync(async (req, res, next) => {
-  const data = { sessionsId: req.body.session_id, intent: req.body.intent };
-  const doc = await Lead.create({ intent: { ...data } });
+  const data = { sessionId: req.body.sessionId, intent: req.body.intent };
+  const doc = await Lead.create(data);
   res.status(201).json({
     status: 'success',
     data: { data: doc },
