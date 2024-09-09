@@ -27,6 +27,8 @@ const useAddNode = () => {
         id: id,
         type: 'response_node',
         data: { label, responseType: nextResponseType },
+        height: 300,
+        width: 300,
         position: { x: 400, y: 300 },
         draggable: false,
         connectable: true,
