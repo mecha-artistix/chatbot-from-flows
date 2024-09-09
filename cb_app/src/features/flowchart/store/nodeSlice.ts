@@ -19,6 +19,8 @@ export const nodeSlice: StateCreator<INodeSlice> = (set, get, api) => ({
   setNextNodeType: (nodeType) => set({ nextNodeType: nodeType }),
 
   onNodeClick: (event, node) => {
+    console.log('node clicked', node.id);
+    console.log(node);
     set({ clickedNode: node, nodeDrawerOpen: node.id !== 'start_node' });
   },
 
@@ -35,5 +37,22 @@ export const nodeSlice: StateCreator<INodeSlice> = (set, get, api) => ({
 
   setDataLabel: (text) => {
     set({ dataLabel: text });
+  },
+
+  setNode: (id, resData) => {
+    const { nodes } = get();
+    const updatedNodes = nodes.map((node) =>
+      node.id === id
+        ? {
+            ...node,
+            data: {
+              ...node.data,
+              label: resData.label,
+              description: resData.description,
+            },
+          }
+        : node,
+    );
+    set({ nodes: updatedNodes });
   },
 });
