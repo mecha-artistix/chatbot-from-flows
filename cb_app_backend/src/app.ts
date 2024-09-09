@@ -16,6 +16,7 @@ import { catchAsync } from './utils/catchAsync';
 import AppError from './utils/appError';
 import userRoutes from './routes/userRoutes';
 import flowchartRoutes from './routes/flowchartRoutes';
+import leadRoutes from './routes/leadRoutes';
 
 const { BASE_URL } = process.env;
 const ALLOWED_ORIGINS = ['127.0.0.1', 'localhost', '91.107.194.217', '172.31.149.141'];
@@ -110,6 +111,8 @@ app.get('/', (req: Request, res: Response) => {
 app.use(BASE_URL + '/users', userRoutes);
 
 app.use(BASE_URL + '/flowcharts', flowchartRoutes);
+
+app.use(BASE_URL + '/leads', leadRoutes);
 
 app.get('/error-test', (req: Request, res: Response, next: NextFunction) => {
   const err = new AppError('This is a test error', 500);

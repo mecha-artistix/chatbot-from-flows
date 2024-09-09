@@ -55,16 +55,7 @@ const useAddNode = () => {
       };
       addEdge(NextEdge);
 
-      // const { nodes: updatedNodes, edges: updatedEdges } = useFlowStore.getState();
-      // const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements([...nodes,nextNode], [updatedEdges]);
-      // const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
-      //   [...nodes, nextNode],
-      //   [...edges, NextEdge],
-      // );
-      // setNodes(layoutedNodes);
-      // setEdges(layoutedEdges);
-
-      setLayout(nextNode);
+      setLayout();
       // setNodeDrawer(false);
     },
     [nodes, currentNode, addNode, addEdge, setNodes, setEdges, setNodeDrawer],

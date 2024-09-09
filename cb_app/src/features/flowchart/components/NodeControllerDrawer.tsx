@@ -67,6 +67,7 @@ export const NodeControlDrawer: React.FC<INodeControlDrawerProps> = ({}) => {
   const handleSubmit = () => {
     console.log(clickedNode.id, resData);
     setNode(clickedNode.id.toString(), resData);
+    setLayout();
     const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements([...nodes], [...edges]);
     // setNodes(layoutedNodes);
     // setEdges(layoutedEdges);

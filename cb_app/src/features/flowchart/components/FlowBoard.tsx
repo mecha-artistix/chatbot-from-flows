@@ -69,6 +69,10 @@ const ReactFlowComp: React.FC = () => {
   }));
 
   useEffect(() => {
+    setFlowBoard(flowId);
+  }, []);
+
+  useEffect(() => {
     console.log('nodes=>', nodes, 'edges=>', edges);
   }, [nodes.length, edges.length]);
 

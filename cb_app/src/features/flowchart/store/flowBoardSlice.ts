@@ -84,10 +84,11 @@ export const flowBoardSlice: StateCreator<IFlowBoardSlice> = (set, get, api) => 
     }
   },
 
-  setLayout: (node = null) => {
+  setLayout: () => {
     const { nodes, edges } = get();
-    console.log(nodes, edges);
-    const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements([...nodes, node], [...edges]);
+    // console.log(nodes, edges);
+    console.log('nodes, edges');
+    const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements([...nodes], [...edges]);
     set({ nodes: layoutedNodes, edges: layoutedEdges });
   },
 });
