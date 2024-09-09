@@ -6,6 +6,7 @@ import { JSDOM } from 'jsdom';
 import mongoSanitize from 'express-mongo-sanitize';
 import helmet from 'helmet';
 import hpp from 'hpp';
+import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
 import path from 'path';
 import bodyParser from 'body-parser';
@@ -73,6 +74,7 @@ const limiter = rateLimit({
 // app.use('/api', limiter);
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
+
 // Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
 // Data sanitization against XSS
@@ -87,11 +89,13 @@ app.use(
 app.use(compression());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
+// cookie  parser
+app.use(cookieParser());
 app.use(
   catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     req.requestTime = new Date().toString();
     console.log('hello 😇', req.requestTime);
+    console.log(req.cookies);
     next();
   }),
 );

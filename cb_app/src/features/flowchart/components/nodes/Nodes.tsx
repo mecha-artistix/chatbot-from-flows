@@ -62,19 +62,13 @@ export const ResponseNode: React.FC<NodeProps<INodeData>> = ({ data, id }) => {
     // openNodeSelector: state.openNodeSelector,
     // setOpenNodeSelector: state.setOpenNodeSelector,
   }));
-  const [nodeData, setNodeData] = useState(data || {});
+  // const [nodeData, setNodeData] = useState(data || {});
   const [openNodeSelector, setOpenNodeSelector] = useState(false);
   const [addBtnOpacity, setAddBtnOpacity] = useState(0);
   // setCurrentNode(id);
 
   const addNodeHandler = (event) => {
     event?.stopPropagation();
-    // ask type of node
-    // setOpenNodeSelector(true);
-
-    // SELECT NODE TYPE
-    // open drawer for the selected type of node
-
     setCurrentNode(id);
     setOpenNodeSelector(true);
     event.preventDefault();
@@ -111,8 +105,11 @@ export const ResponseNode: React.FC<NodeProps<INodeData>> = ({ data, id }) => {
       >
         <AddCircleRoundedIcon />
       </IconButton>
-      <Typography variant="h6">RESPONSE NODE {id}</Typography>
-      <Typography>{nodeData ? nodeData.label : 'no data'}</Typography>
+      <Typography variant="h6">
+        {data?.responseType} {id}
+      </Typography>
+      <Typography>{data ? data.label : 'no data'}</Typography>
+      <Typography>{data ? data.description : 'no description'}</Typography>
       <Handle type="target" position={Position.Left} isConnectable={true} />
     </Box>
   );

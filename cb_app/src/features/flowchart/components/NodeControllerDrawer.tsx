@@ -31,6 +31,7 @@ export const NodeControlDrawer: React.FC<INodeControlDrawerProps> = ({}) => {
     setEdges,
     nextResponseType,
     clickedNode,
+    setNode,
   } = useFlowStore((state) => ({
     nodeDrawerOpen: state.nodeDrawerOpen,
     setNodeDrawer: state.setNodeDrawer,
@@ -39,27 +40,38 @@ export const NodeControlDrawer: React.FC<INodeControlDrawerProps> = ({}) => {
     addNode: state.addNode,
     addEdge: state.addEdge,
     setNodes: state.setNodes,
+    setNode: state.setNode,
     setEdges: state.setEdges,
     currentNode: state.currentNode,
     nextResponseType: state.nextResponseType,
     clickedNode: state.clickedNode,
   }));
   const TopBarHeight = useThemeStore((state) => state.topBarHeight);
-  const [label, setLabel] = useState<string>('');
-  const handleLabelChange = (e) => {
-    setLabel((prev) => e.target.value);
-  };
+  // const [label, setLabel] = useState<string>('');
+  const [resData, setResData] = useState({ label: '', description: '' });
 
+  // const handleLabelChange = (e) => {
+  // setLabel((prev) => e.target.value);
+  // };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setResData({ ...resData, [e.target.name]: e.target.value });
+  };
   useEffect(() => {
-    setLabel(clickedNode?.data?.label || '');
-  }, []);
+    console.log(clickedNode.data);
+    // setLabel(clickedNode?.data?.label || '');
+    setResData({ ...clickedNode?.data });
+  }, [nodeDrawerOpen]);
 
   const handleSubmit = () => {
-    const data = {
-      label: 'First Response',
-      responseType: 'neutral',
-    };
-    clickedNode.data.label = label;
+    console.log(clickedNode.id, resData);
+    setNode(clickedNode.id.toString(), resData);
+    setNodeDrawer(false);
+    // const data = {
+    //   label: 'First Response',
+    //   responseType: 'neutral',
+    // };
+    // {clickedNode.data} = {data};
   };
 
   return (
@@ -86,12 +98,20 @@ export const NodeControlDrawer: React.FC<INodeControlDrawerProps> = ({}) => {
             id="filled-basic"
             label="Label"
             variant="filled"
-            value={label}
-            onChange={handleLabelChange}
+            name="label"
+            value={resData.label}
+            onChange={handleChange}
             fullWidth
             size="small"
           />
-          <TextareaAutosize minRows="5" maxRows="8" style={{ width: '100%!important' }} />
+          <TextareaAutosize
+            minRows="5"
+            maxRows="8"
+            style={{ width: '100%!important' }}
+            name="description"
+            value={resData.description}
+            onChange={handleChange}
+          />
           <Button onClick={handleSubmit} variant="contained">
             Submit
           </Button>
