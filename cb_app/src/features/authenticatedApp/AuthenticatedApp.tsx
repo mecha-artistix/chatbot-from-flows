@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import Dashboard from '../dashboard/Dashboard';
-import FlowchartsCollection from '../flowchart/components/FlowchartsCollection';
+import FlowchartsCollection from '../flowchart/FlowchartsCollection';
 import FlowBoard from '../flowchart/components/FlowBoard';
 import Knowledgebase from '../knowledgebase/Knowledgebase';
 import Bots from '../bots/Bots';
