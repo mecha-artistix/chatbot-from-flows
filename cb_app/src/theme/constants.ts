@@ -52,7 +52,7 @@ export const typography: TypographyOptions = {
 
 export const palette: PaletteOptions = {
   primary: {
-    light: blue[300],
+    light: blue[100],
     main: blue[500],
     dark: blue[900],
     contrastText: grey[50],

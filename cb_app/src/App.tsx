@@ -15,7 +15,7 @@ import LoginForm from './features/authentication/components/LoginForm';
 import RegistrationForm from './features/authentication/components/RegistrationForm';
 import NotFound from './features/notFound/NotFound';
 import useAuthStore from './features/authentication/userStore';
-import FlowchartsCollection from './features/flowchart/components/FlowchartsCollection';
+import FlowchartsCollection from './features/flowchart/FlowchartsCollection';
 import FlowBoard from './features/flowchart/components/FlowBoard';
 import Knowledgebase from './features/knowledgebase/Knowledgebase';
 import Bots from './features/bots/Bots';

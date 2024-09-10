@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import TopControlBar from './TopControlBar';
-import useFlowStore from '../store/FlowStore';
+import TopControlBar from './components/TopControlBar';
+import useFlowStore from './store/FlowStore';
 import {
   Container,
   IconButton,
