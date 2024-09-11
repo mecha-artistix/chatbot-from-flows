@@ -8,6 +8,7 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "strict": true,
+    "noImplicitAny": false,
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "sourceMap": true,
