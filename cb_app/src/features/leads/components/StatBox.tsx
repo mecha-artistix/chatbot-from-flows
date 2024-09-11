@@ -1,9 +1,15 @@
-import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
-import React from 'react';
+import { Box, Paper, Stack, Typography } from '@mui/material';
 import useLeadsStore from '../leadsStore';
+import { useEffect, useState } from 'react';
 
 const StatBox = ({ name, stat, icon }) => {
-  const { leadsCount } = useLeadsStore((state) => ({ leadsCount: state.leadsCount }));
+  const { leadsCount, getLeadsStatus, leadsStatus } = useLeadsStore((state) => ({
+    leadsCount: state.leadsCount,
+    getLeadsStatus: state.getLeadsStatus,
+    leadsStatus: state.leadsStatus,
+  }));
+  const [stateWidth, setStateWidth] = useState(0);
+  const label = {};
 
   const styleHandler = (theme, component) => {
     const style = {
@@ -13,7 +19,6 @@ const StatBox = ({ name, stat, icon }) => {
         height: '200px',
         borderRadius: 2,
         border: `1px solid ${theme.palette.divider}`,
-        bgcolor: theme.palette.primary.light,
       },
       statTitle: {
         fontWeight: 400,
@@ -21,6 +26,16 @@ const StatBox = ({ name, stat, icon }) => {
     };
     return style[component];
   };
+
+  useEffect(() => {
+    getLeadsStatus();
+  }, []);
+
+  useEffect(() => {
+    console.log(leadsStatus);
+    console.log(leadsStatus[stat]);
+    setStateWidth(() => ((100 * leadsStatus[stat]) / leadsStatus.total_leads).toFixed(2));
+  }, [leadsStatus]);
 
   return (
     <Paper sx={(theme) => styleHandler(theme, 'statBox')} elevation={10}>
@@ -35,10 +50,14 @@ const StatBox = ({ name, stat, icon }) => {
       >
         <Stack direction="row" alignItems="center" spacing={1}>
           {icon}
-          <Typography variant="h4" sx={(theme) => styleHandler(theme, 'statTitle')}>
-            {name}
-          </Typography>
+          <Stack direction="column">
+            <Typography variant="h4" sx={(theme) => styleHandler(theme, 'statTitle')}>
+              {name}
+            </Typography>
+            <Typography variant="h3"> {leadsStatus[stat]}</Typography>
+          </Stack>
         </Stack>
+
         <Box
           sx={(theme) => ({
             overflow: 'hidden',
@@ -48,7 +67,7 @@ const StatBox = ({ name, stat, icon }) => {
             bgcolor: theme.palette.primary.main,
           })}
         >
-          <Box sx={(theme) => ({ bgcolor: theme.palette.primary.dark, height: '100%', width: '50%' })}></Box>
+          <Box sx={(theme) => ({ bgcolor: theme.palette.primary.dark, height: '100%', width: stateWidth + '%' })}></Box>
         </Box>
       </Box>
     </Paper>

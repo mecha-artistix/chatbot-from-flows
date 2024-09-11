@@ -76,19 +76,21 @@ export const getOne = <T extends Document>(Model: MongooseModel<T>, popOptions?:
 
 export const getAll = <T extends Document>(Model: MongooseModel<T>): RequestHandler =>
   catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    if (!req.user) {
-      return next(new AppError('User not authenticated', 401));
-    }
+    // if (!req.user) {
+    //   return next(new AppError('User not authenticated', 401));
+    // }
 
     const modelArrName = `${Model.modelName.toLowerCase()}s` as keyof MyUser;
 
     // Safely access `req.user` properties with type assertion
-    const userArray = (req.user[modelArrName] as Schema.Types.ObjectId[]) || [];
-
-    const filter = { _id: { $in: userArray } };
-
+    // const userArray = (req.user[modelArrName] as Schema.Types.ObjectId[]) || [];
+    // const filter = { _id: { $in: userArray } };
     // Ensure the request query is properly typed
-    const features = new APIFeatures(Model.find(filter), req.query as { [key: string]: string })
+
+    // const features = new APIFeatures(Model.find(filter), req.query as { [key: string]: string })
+    const totalDocs = await Model.countDocuments();
+
+    const features = new APIFeatures(Model.find(), req.query as { [key: string]: string })
       .filter()
       .sort()
       .limitFields()
@@ -100,6 +102,7 @@ export const getAll = <T extends Document>(Model: MongooseModel<T>): RequestHand
     // Send response
     res.status(200).json({
       status: 'success',
+      total: totalDocs,
       results: doc.length,
       data: {
         data: doc,
