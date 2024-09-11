@@ -10,7 +10,7 @@ const leadsStore: StateCreator<ILeadsStore> = (set, get, api) => ({
   status: '',
   error: '',
   leadsCount: 0,
-
+  loading: true,
   fetchLeads: async () => {
     try {
       set({ status: 'loading' });
@@ -21,26 +21,60 @@ const leadsStore: StateCreator<ILeadsStore> = (set, get, api) => ({
       set({ status: 'failed', error: error.message });
     }
   },
-
+  paginationModel: { page: 0, pageSize: 5 },
+  setPaginationModel: (paginationModel) => set({ paginationModel }),
   hasMore: true,
+  curPage: 0,
+  pageSize: 10,
+  leadsStatus: { total_leads: 0, successful: 0, unsuccessful: 0, call_later: 0 },
+  setPageSize: (pageSize) => set({ pageSize }),
 
   getLeads: async (page, limit = 10) => {
-    const { leadsCollection } = get();
+    const { leadsCollection, paginationModel } = get();
+    set((state) => ({ ...state, loading: true }));
     try {
       //http://localhost:5180/api/v2/leads?page=10&limit=10
       const response = await axios.get(`${URL}?page=${page}&limit=${limit}`);
-      //   console.log('response = ', response);
-      const leads = await response.data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      //   console.log(leads);
-      set({
+      const data = await response.data;
+      const leads = data.data.data;
+      set((state) => ({
+        ...state,
+        loading: false,
         status: 'success',
-        leadsCollection: [...leadsCollection, ...leads],
-        leadsCount: response.data.total,
+        leadsCollection: [...leads],
+        leadsCount: data.total,
         hasMore: leads.length > 0,
-      });
+      }));
     } catch (error) {
-      console.log(error);
+      set((state) => ({ ...state, status: 'failed', error: error.message }));
+    } finally {
+      set((state) => ({ ...state, loading: false }));
     }
+  },
+
+  getSorted: async (options) => {
+    console.log(options);
+    const key = options[0].field;
+    const value = options[0].sort;
+    const sortBy = value == 'asc' ? '' : '-';
+    const { paginationModel } = get();
+    const respone = await axios.get(
+      `${URL}?page=${paginationModel.page}&limit=${paginationModel.pageSize}&sort=${sortBy}${key}`,
+    );
+    const data = await respone.data;
+    const leads = data.data.data;
+    set((state) => ({
+      ...state,
+      loading: false,
+      status: 'success',
+      leadsCollection: [...leads],
+      leadsCount: data.total,
+      hasMore: leads.length > 0,
+    }));
+  },
+
+  getFiltered: async (options) => {
+    console.log(options);
   },
 
   addLead: (lead) => {
@@ -49,14 +83,26 @@ const leadsStore: StateCreator<ILeadsStore> = (set, get, api) => ({
     }));
   },
 
+  getLeadsStatus: async () => {
+    const response = await axios(URL + '/stats');
+    const stats = response.data.stats;
+    set((state) => ({
+      ...state,
+      leadsStatus: {
+        total_leads: response.data.totalLeads,
+        successful: stats.xfer,
+        unsuccessful: stats.dnq + stats.dnc + stats.ni + stats.lb + stats.hang_up,
+        call_later: stats.callbk + stats.a,
+      },
+    })); // response.data.stats
+  },
+
   deleteLead: async (id) => {
     const { leadsCollection } = get();
     console.log('leadsCollection after delete', leadsCollection);
     try {
       set({ status: 'loading' });
       await axios.delete(`${URL}/${id}`);
-      set({ status: 'success' });
-
       set({
         status: 'deleted',
         leadsCollection: leadsCollection.filter((lead) => lead._id !== id),

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import Lead from '../models/leadModel';
 import { catchAsync } from '../utils/catchAsync';
-import { deleteOne, updateOne } from './handlerFactory';
+import { deleteOne, getAll, updateOne } from './handlerFactory';
 
 export const createLead = catchAsync(async (req, res, next) => {
   const data = { sessionId: req.body.sessionId, intent: req.body.intent };
@@ -12,13 +12,15 @@ export const createLead = catchAsync(async (req, res, next) => {
   });
 });
 
-export const getAllLeads = catchAsync(async (req, res, next) => {
-  const doc = await Lead.find({});
-  res.status(200).json({
-    status: 'success',
-    data: { data: doc },
-  });
-});
+// export const getAllLeads = catchAsync(async (req, res, next) => {
+//   const doc = await Lead.find({});
+//   res.status(200).json({
+//     status: 'success',
+//     data: { data: doc },
+//   });
+// });
+
+export const getAllLeads = getAll(Lead);
 
 export const getPaginatedLeads = catchAsync(async (req, res, next) => {
   const page = parseInt(req.query.page as string, 10) || 1;
@@ -33,6 +35,21 @@ export const getPaginatedLeads = catchAsync(async (req, res, next) => {
     page,
     totalPages: Math.ceil(totalLeads / limit),
   });
+});
+
+export const leadsStats = catchAsync(async (req, res, next) => {
+  const totalLeads = await Lead.countDocuments();
+  const intentsValues = ['XFER', 'DAIR', 'DNQ', 'CallBK', 'DNC', 'NI', 'NP', 'A', 'Hang up', 'LB'];
+
+  let statsObj = {};
+
+  await Promise.all(
+    intentsValues.map(async (el) => {
+      statsObj[el.toLowerCase().replace(' ', '_')] = await Lead.countDocuments({ intent: el });
+    }),
+  );
+
+  res.status(200).json({ status: 'success', totalLeads, stats: statsObj });
 });
 
 // export const deleteLead = deleteOne(Lead);
