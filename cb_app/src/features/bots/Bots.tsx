@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
 
-function Bots() {
+const Bots = () => {
   return <div>Bots</div>;
-}
+};
 
 export default Bots;

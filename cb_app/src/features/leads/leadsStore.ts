@@ -53,7 +53,7 @@ const leadsStore: StateCreator<ILeadsStore> = (set, get, api) => ({
   },
 
   getSorted: async (options) => {
-    console.log(options);
+    options;
     const key = options[0].field;
     const value = options[0].sort;
     const sortBy = value == 'asc' ? '' : '-';
@@ -74,7 +74,7 @@ const leadsStore: StateCreator<ILeadsStore> = (set, get, api) => ({
   },
 
   getFiltered: async (options) => {
-    console.log(options);
+    options;
   },
 
   addLead: (lead) => {
@@ -99,7 +99,7 @@ const leadsStore: StateCreator<ILeadsStore> = (set, get, api) => ({
 
   deleteLead: async (id) => {
     const { leadsCollection } = get();
-    console.log('leadsCollection after delete', leadsCollection);
+    'leadsCollection after delete', leadsCollection;
     try {
       set({ status: 'loading' });
       await axios.delete(`${URL}/${id}`);
@@ -107,7 +107,7 @@ const leadsStore: StateCreator<ILeadsStore> = (set, get, api) => ({
         status: 'deleted',
         leadsCollection: leadsCollection.filter((lead) => lead._id !== id),
       });
-      console.log('leadsCollection after delete', leadsCollection);
+      'leadsCollection after delete', leadsCollection;
     } catch (error) {
       set({ status: 'failed', error: error.message });
     }

@@ -21,6 +21,7 @@ import {
 import { initialNodes } from './nodes/InitNode';
 import { NodeControlDrawer } from './NodeControllerDrawer';
 import { updateFlowchart } from '../services/fetchFlowchart';
+import useGeneratePrompt from '../../bots/utils/generatePromptString';
 
 const ReactFlowComp: React.FC = () => {
   // const FlowBoard: React.FC = () => {
@@ -49,6 +50,7 @@ const ReactFlowComp: React.FC = () => {
     currentNode,
     nodeTypes,
     clickedNode,
+    setLayout,
     onNodeClick,
   } = useFlowStore((state) => ({
     setFlowBoard: state.setFlowBoard,
@@ -66,14 +68,23 @@ const ReactFlowComp: React.FC = () => {
     nodeTypes: state.nodeTypes,
     clickedNode: state.clickedNode,
     onNodeClick: state.onNodeClick,
+    setLayout: state.setLayout,
   }));
+
+  const { generatePrompt } = useGeneratePrompt();
 
   useEffect(() => {
     setFlowBoard(flowId);
   }, []);
 
+  const handleTestBot = () => {
+    console.log('test');
+    generatePrompt(nodes, edges);
+  };
+
   useEffect(() => {
     console.log('nodes=>', nodes, 'edges=>', edges);
+    setLayout();
   }, [nodes.length, edges.length]);
 
   const handleUpdateFlowchart = async () => {
@@ -101,7 +112,9 @@ const ReactFlowComp: React.FC = () => {
         <Background />
         <Panel style={{}} position="bottom-left">
           <Stack direction="row" spacing={1} justifyContent="flex-end" px={2}>
-            <Button variant="contained">Test Bot</Button>
+            <Button variant="contained" onClick={handleTestBot}>
+              Test Bot
+            </Button>
             <Button variant="outlined" onClick={handleUpdateFlowchart}>
               Save
             </Button>
@@ -109,7 +122,7 @@ const ReactFlowComp: React.FC = () => {
         </Panel>
         <Controls position="bottom-right" />
         {/* <MiniMap nodeStrokeWidth={3} /> */}
-        <NodeControlDrawer />
+        {/* <NodeControlDrawer /> */}
       </ReactFlow>
     </Box>
   );

@@ -58,16 +58,12 @@ const AuthenticatedApp: React.FC = () => {
       <Stack sx={style.container} direction="column">
         {/* TOP BAR */}
         <TopBar />
-        {/* <Stack direction="row" className="dashboard-cont" sx={style.bodySection}> */}
         <Box className="dashboard-cont" sx={style.bodySection}>
           {/* LEFT PANEL HEADER */}
-          {/* <Grid item xs={12} sm={4} md={2} lg={2} className="left-panel" sx={style.leftSection}> */}
-          {/* <Box sx={{}}> */}
+
           <LeftPanel />
-          {/* </Box> */}
-          {/* </Grid> */}
+
           {/* DASHBOARD */}
-          {/* <Grid item xs={12} sm={8} md={10} lg={10} className="dashboard-area" sx={style.rightSection}> */}
           <Box sx={style.rightSection}>
             <Routes>
               <Route path="/" element={<Dashboard />} />
@@ -84,8 +80,6 @@ const AuthenticatedApp: React.FC = () => {
               </Route>
             </Routes>
           </Box>
-          {/* </Grid> */}
-          {/* </Stack> */}
         </Box>
       </Stack>
     </Container>

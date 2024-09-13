@@ -14,16 +14,15 @@ export const nodeSlice: StateCreator<INodeSlice> = (set, get, api) => ({
   clickedNode: null,
   setNextResponseType: (responseType) => set({ nextResponseType: responseType }),
   //   openNodeSelector: false,
-  //   setOpenNodeSelector: (open) => set({ openNodeSelector: open }),
+  setNodeDrawerOpen: (open) => set({ nodeDrawerOpen: open }),
   setCurrentNode: (nodeId) => set({ currentNode: nodeId }),
   setNextNodeType: (nodeType) => set({ nextNodeType: nodeType }),
 
   onNodeClick: (event, node) => {
-    set({ clickedNode: node, nodeDrawerOpen: node.id !== 'start_node' });
+    set((state) => ({ ...state, clickedNode: node }));
   },
 
   addNode: (newNode) => {
-    console.log('add Node called');
     const { nodes } = get();
 
     set({ nodes: [...nodes, newNode] });
@@ -31,13 +30,12 @@ export const nodeSlice: StateCreator<INodeSlice> = (set, get, api) => ({
 
   addEdge: (edge) => set((state) => ({ edges: [...state.edges, edge] })),
 
-  setNodeDrawer: (open) => set({ nodeDrawerOpen: open }),
-
   setDataLabel: (text) => {
     set({ dataLabel: text });
   },
 
   setNode: (id, resData) => {
+    console.log('setNode');
     const { nodes } = get();
     const updatedNodes = nodes.map((node) =>
       node.id === id
@@ -45,8 +43,7 @@ export const nodeSlice: StateCreator<INodeSlice> = (set, get, api) => ({
             ...node,
             data: {
               ...node.data,
-              label: resData.label,
-              description: resData.description,
+              ...resData,
             },
           }
         : node,
