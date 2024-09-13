@@ -16,7 +16,7 @@ const useFlowStore = create<IFlowStore>()(
     persist(flowStore, {
       name: 'FlowStore',
       partialize: (state) => ({
-        // nodeTypes: state.nodeTypes,
+        clickedNode: state.clickedNode,
       }),
     }),
   ),

@@ -1,7 +1,7 @@
 {
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": "./tsconfig.json",
+    "project": "tsconfig.json",
     "ecmaVersion": 2020,
     "sourceType": "module"
   },
@@ -12,7 +12,8 @@
     "plugin:import/warnings",
     "plugin:import/typescript",
     "plugin:prettier/recommended",
-    "airbnb-typescript/base"
+    "airbnb-typescript/base",
+    "@typescript-eslint/parser"
   ],
   "plugins": ["@typescript-eslint", "prettier", "@stylistic/eslint-plugin-ts", "import"],
   "rules": {

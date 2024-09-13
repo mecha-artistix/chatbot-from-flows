@@ -6,122 +6,121 @@ import {
   Typography,
   TextField,
   Button,
-  capitalize,
   IconButton,
   Box,
   TextareaAutosize,
+  ClickAwayListener,
+  Collapse,
 } from '@mui/material';
 import useFlowStore from '../store/FlowStore';
-import { useDAGRELayout } from '../utils/useDAGRELayout';
 import { useThemeStore } from '../../../theme/themeStore';
 import CloseIcon from '@mui/icons-material/Close';
+import { Textarea } from '@mui/joy';
+import { getIncomers } from '@xyflow/react';
 // export const NodeControlDrawer: React.FC<INodeControlDrawerProps> = ({ open }) => {
-export const NodeControlDrawer: React.FC<INodeControlDrawerProps> = ({}) => {
-  const getLayoutedElements = useDAGRELayout({ direction: 'LR' });
-
-  const {
-    nodes,
-    edges,
-    currentNode,
-    nodeDrawerOpen,
-    setNodeDrawer,
-    addNode,
-    addEdge,
-    setNodes,
-    setEdges,
-    nextResponseType,
-    clickedNode,
-    setNode,
-    setLayout,
-  } = useFlowStore((state) => ({
-    nodeDrawerOpen: state.nodeDrawerOpen,
-    setNodeDrawer: state.setNodeDrawer,
-    nodes: state.nodes,
-    edges: state.edges,
-    addNode: state.addNode,
-    addEdge: state.addEdge,
-    setNodes: state.setNodes,
-    setNode: state.setNode,
-    setEdges: state.setEdges,
-    currentNode: state.currentNode,
-    nextResponseType: state.nextResponseType,
-    clickedNode: state.clickedNode,
-    setLayout: state.setLayout,
-  }));
+export const NodeControlDrawer: React.FC<INodeControlDrawerProps> = ({
+  id,
+  data,
+  openController,
+  setOpenController,
+}) => {
+  const { nodes, nodeDrawerOpen, edges, setNodeDrawerOpen, clickedNode, setNode, setLayout } = useFlowStore(
+    (state) => ({
+      nodeDrawerOpen: state.nodeDrawerOpen,
+      setNodeDrawerOpen: state.setNodeDrawerOpen,
+      nodes: state.nodes,
+      setNode: state.setNode,
+      clickedNode: state.clickedNode,
+      setLayout: state.setLayout,
+      edges: state.edges,
+    }),
+  );
   const TopBarHeight = useThemeStore((state) => state.topBarHeight);
-  // const [label, setLabel] = useState<string>('');
-  const [resData, setResData] = useState({ label: '', description: '' });
+  // const [resData, setResData] = useState({ label: '', description: '', personResponse: '', botResponse: '' });
+  const [resData, setResData] = useState({ ...data });
+  const [parent, setParent] = useState();
 
-  // const handleLabelChange = (e) => {
-  // setLabel((prev) => e.target.value);
-  // };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent) => {
     setResData({ ...resData, [e.target.name]: e.target.value });
   };
-  // useEffect(() => {
-
-  //   setResData({ ...clickedNode?.data });
-  // }, [nodeDrawerOpen]);
 
   const handleSubmit = () => {
-    console.log(clickedNode.id, resData);
-    setNode(clickedNode.id.toString(), resData);
-    setNodeDrawer(false);
+    clickedNode.id, resData;
+    setNode(id, resData);
+    setNodeDrawerOpen(false);
+    setOpenController(false);
     setLayout();
-    // setNodes(layoutedNodes);
-    // setEdges(layoutedEdges);
-    // setNodeDrawer(false);
-    // const data = {
-    //   label: 'First Response',
-    //   responseType: 'neutral',
-    // };
-    // {clickedNode.data} = {data};
   };
+  useEffect(() => {
+    setParent((prev) => {
+      const parent = getIncomers({ id: id }, nodes, edges)[0];
+      return parent;
+    });
+  }, [openController]);
 
   return (
     <Drawer
+      key={id}
       hideBackdrop={true}
-      open={nodeDrawerOpen}
+      open={openController}
       anchor="right"
       PaperProps={{ sx: { width: '320px', height: `calc(100% - ${TopBarHeight}px)`, top: TopBarHeight } }}
+      onClick={(e) => e.stopPropagation()}
     >
-      <Stack direction="row" alignItems="center" justifyContent="space-between">
-        <Typography variant="h4" sx={{ textTransform: 'capitalize', textAlign: 'center' }}>
-          {clickedNode?.data?.responseType || ''} Bot Response {clickedNode?.id}
-        </Typography>
-        <IconButton onClick={() => setNodeDrawer(false)}>
-          <CloseIcon color="warning" />
-        </IconButton>
-      </Stack>
-      <Paper sx={{ height: '100%', width: '100%', py: 4, px: 2 }}>
-        <Stack sx={{ height: '100%' }} spacing={4}>
-          <Typography sx={{ textTransform: 'capitalize', textAlign: 'center' }}>
-            {clickedNode?.data?.responseType || ''} Bot Response {clickedNode?.id}
-          </Typography>
+      <Stack direction="column">
+        <Stack direction="row" alignItems="center" justifyContent="space-between">
           <TextField
             id="filled-basic"
-            label="Label"
-            variant="filled"
-            name="label"
-            value={resData.label}
+            variant="standard"
+            name="responseLabel"
+            value={resData?.responseLabel || `Bot Response ${clickedNode?.id}`}
             onChange={handleChange}
             fullWidth
-            size="small"
+            inputProps={{ style: { fontSize: 28 } }}
+            sx={{}}
           />
-          <TextareaAutosize
-            minRows="5"
-            maxRows="8"
-            style={{ width: '100%!important' }}
-            name="description"
-            value={resData.description}
-            onChange={handleChange}
-          />
-          <Button onClick={handleSubmit} variant="contained">
-            Submit
-          </Button>
+
+          <IconButton onClick={() => setOpenController(false)}>
+            <CloseIcon color="warning" />
+          </IconButton>
         </Stack>
-      </Paper>
+        <Paper sx={{ height: '100%', width: '100%', py: 4, px: 2 }}>
+          <Stack sx={{ height: '100%' }} spacing={4}>
+            <Box>
+              <Typography>
+                If user responds {resData.responseType || ''}ly to {parent?.data?.responseLabel} <br /> Examples of how
+                the {resData.responseType} response from user will look like
+              </Typography>
+              <TextField
+                placeholder="Example of Person Responses to bot."
+                multiline
+                fullWidth
+                minRows={5}
+                maxRows={8}
+                name="responsePerson"
+                onChange={handleChange}
+                value={resData.responsePerson}
+              />
+            </Box>
+            <Box>
+              <Typography>Prompt for next bot response</Typography>
+              <TextField
+                placeholder="Write what the bot should respond with"
+                multiline
+                fullWidth
+                minRows={5}
+                maxRows={8}
+                name="responseBot"
+                onChange={handleChange}
+                value={resData.responseBot}
+              />
+            </Box>
+            <Button onClick={handleSubmit} variant="contained">
+              Submit
+            </Button>
+          </Stack>
+        </Paper>
+      </Stack>
     </Drawer>
   );
 };
@@ -129,45 +128,3 @@ export const NodeControlDrawer: React.FC<INodeControlDrawerProps> = ({}) => {
 interface INodeControlDrawerProps {
   parentNode?: string;
 }
-
-// nodes.find;
-
-// console.log(clickedNode.data);
-// updateNodeData(clickedNode.id, data);
-// setNodes((nodes) =>
-//     nodes.map((node) => (node.id === nodeId ? { ...node, data: { ...node.data, ...newData } } : node)),
-//   );
-
-//   const updateNodeData = (nodeId, newData) => {
-//     setNodes((nodes) =>
-//       nodes.map((node) => (node.id === nodeId ? { ...node, data: { ...node.data, ...newData } } : node)),
-//     );
-//   };
-
-//   const handleAddNode = () => {
-//     console.log('log from handleAddNode');
-//     const id = `${nodes.length + 1}`;
-
-//     const nextNode = {
-//       id: id,
-//       type: `response_node`,
-//       data: { label: label, responseType: nextResponseType },
-//       position: { x: 400, y: 300 },
-//       draggable: false,
-//       connectable: true,
-//     };
-//     addNode(nextNode);
-//     // const { nextNodeId, nodes, edges } = useFlowStore.getState();
-//     // console.log(nodes);
-//     const edge = {
-//       id: `edge-${currentNode}-${nextNode.id}`,
-//       source: currentNode,
-//       target: nextNode.id,
-//     };
-//     addEdge(edge);
-//     const { nodes: updatedNodes, edges: updatedEdges } = useFlowStore.getState();
-//     const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(updatedNodes, updatedEdges);
-//     setNodes(layoutedNodes);
-//     setEdges(layoutedEdges);
-//     setNodeDrawer(false);
-//   };

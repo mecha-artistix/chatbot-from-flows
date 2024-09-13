@@ -23,11 +23,9 @@ function NodeTypeSelector({ parentId, handleClose }) {
 
   const clickHandler = (event, el) => {
     event?.stopPropagation();
-    console.log(event, el);
 
     handleAddNode('', el, parentId);
     handleClose(false);
-    // event.preventDefault();
   };
   return (
     <Paper elevation={10}>
@@ -54,8 +52,3 @@ function NodeTypeSelector({ parentId, handleClose }) {
 }
 
 export default NodeTypeSelector;
-
-// setNextResponseType(el);
-// setNextNodeType(el);
-// setNodeDrawer(true);
-// setCurrentNode(parentId);

@@ -36,14 +36,8 @@ export const StartNode: React.FC<NodeProps<INodeData>> = ({ data, id }) => {
   }));
 
   const addNodeHandler = () => {
-    // ask type of node
-    // open drawer for the selected type of node
-    // setCurrentNode(id);
     handleAddNode('First Response', 'neutral', id);
-    // setNodeDrawer(true);
-    // console.log(nodeDrawerOpen);
   };
-  // onClick={addNodeHandler}
   return (
     <Box onClick={addNodeHandler} sx={{ cursor: 'pointer' }}>
       <Chip label={data.label} color="primary" />
@@ -53,19 +47,22 @@ export const StartNode: React.FC<NodeProps<INodeData>> = ({ data, id }) => {
 };
 
 export const ResponseNode: React.FC<NodeProps<INodeData>> = ({ data, id }) => {
-  const { nodeDrawerOpen, setNodeDrawer, setCurrentNode, onNodeClick, clickedNode } = useFlowStore((state) => ({
-    nodeDrawerOpen: state.nodeDrawerOpen,
-    setNodeDrawer: state.setNodeDrawer,
-    setCurrentNode: state.setCurrentNode,
-    onNodeClick: state.onNodeClick,
-    clickedNode: state.clickedNode,
-    // openNodeSelector: state.openNodeSelector,
-    // setOpenNodeSelector: state.setOpenNodeSelector,
-  }));
+  const { nodeDrawerOpen, setNodeDrawer, setCurrentNode, onNodeClick, clickedNode, setNodeDrawerOpen } = useFlowStore(
+    (state) => ({
+      nodeDrawerOpen: state.nodeDrawerOpen,
+      setNodeDrawer: state.setNodeDrawer,
+      setCurrentNode: state.setCurrentNode,
+      onNodeClick: state.onNodeClick,
+      clickedNode: state.clickedNode,
+      setNodeDrawerOpen: state.setNodeDrawerOpen,
+      // openNodeSelector: state.openNodeSelector,
+      // setOpenNodeSelector: state.setOpenNodeSelector,
+    }),
+  );
   // const [nodeData, setNodeData] = useState(data || {});
   const [openNodeSelector, setOpenNodeSelector] = useState(false);
   const [addBtnOpacity, setAddBtnOpacity] = useState(0);
-  // setCurrentNode(id);
+  const [openController, setOpenController] = useState(false);
 
   const addNodeHandler = (event) => {
     event?.stopPropagation();
@@ -74,69 +71,90 @@ export const ResponseNode: React.FC<NodeProps<INodeData>> = ({ data, id }) => {
     event.preventDefault();
   };
 
-  return (
-    <Box
-      className="nowheel"
-      sx={(theme) => ({
+  const nodeClickHandler = (e) => {
+    setOpenController(true);
+    // e.stopPropagation();
+  };
+
+  const styleHandler = (theme, component) => {
+    const style = {
+      wrapper: {
         bgcolor: theme.palette.bgNode[data?.responseType],
         border: `1px solid ${theme.palette.divider}`,
         position: 'relative',
         px: 1,
         py: 2,
         borderRadius: 2,
-        // maxWidth: '250px',
         maxHeight: '250px',
-        // overflowY: 'auto',
-        // color: theme.palette.grey[900],
-      })}
-      onMouseEnter={() => setAddBtnOpacity(1)}
-      onMouseLeave={() => setAddBtnOpacity(0)}
-    >
-      <ClickAwayListener onClickAway={() => setOpenNodeSelector(false)}>
-        <Collapse
-          in={openNodeSelector}
-          sx={(theme) => ({ position: 'absolute', top: 0, right: 0, transform: 'translateX(100%)', zIndex: 99999999 })}
-        >
-          <NodeTypeSelector parentId={id} handleClose={setOpenNodeSelector} />
-        </Collapse>
-      </ClickAwayListener>
-      <Handle type="source" position={Position.Right} isConnectable={true} />
-      <IconButton
-        color="primary"
-        aria-label="Add Node"
-        onClick={addNodeHandler}
-        sx={{
-          opacity: addBtnOpacity,
-          transition: 'opacity 0.2s ease-in',
-          position: 'absolute',
-          top: '-20px',
-          right: '-10px',
-        }}
-      >
-        <AddCircleRoundedIcon />
-      </IconButton>
+      },
+      collapsableNodeSelector: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        transform: 'translateX(100%)',
+      },
+      collapsePanel: {
+        position: 'absolute',
+        right: '0',
+        height: '100%',
+      },
+      addNodeBtn: {
+        opacity: addBtnOpacity,
+        transition: 'opacity 0.2s ease-in',
+        position: 'absolute',
+        top: '-20px',
+        right: '-10px',
+      },
+    };
+    return style[component];
+  };
+
+  return (
+    <>
       <Box
-        sx={(theme) => ({
-          overflowX: 'hidden',
-          overflowY: 'auto',
-        })}
+        className="nowheel"
+        sx={(theme) => styleHandler(theme, 'wrapper')}
+        onMouseEnter={() => setAddBtnOpacity(1)}
+        onMouseLeave={() => setAddBtnOpacity(0)}
+        onClick={(e) => nodeClickHandler(e)}
       >
-        <Typography variant="h6">
-          {data?.responseType} {id}
-        </Typography>
-        <Typography>{data ? data.label : 'no data'}</Typography>
-        <Typography sx={(theme) => ({ maxHeight: '200px', overflowY: 'auto' })}>
-          {data ? data.description : 'no description'}
-        </Typography>
+        <ClickAwayListener onClickAway={() => setOpenNodeSelector(false)}>
+          <Collapse in={openNodeSelector} sx={(theme) => styleHandler(theme, 'collapsableNodeSelector')}>
+            <NodeTypeSelector parentId={id} handleClose={setOpenNodeSelector} />
+          </Collapse>
+        </ClickAwayListener>
+        <Handle type="source" position={Position.Right} isConnectable={true} />
+        <IconButton
+          color="primary"
+          aria-label="Add Node"
+          onClick={addNodeHandler}
+          sx={(theme) => styleHandler(theme, 'addNodeBtn')}
+        >
+          <AddCircleRoundedIcon />
+        </IconButton>
+        <Box
+          sx={(theme) => ({
+            overflowX: 'hidden',
+            overflowY: 'auto',
+          })}
+        >
+          <Typography variant="h6">
+            {id} - {data?.responseLabel || data?.responseType}
+          </Typography>
+
+          <Typography sx={(theme) => ({ maxHeight: '200px', overflowY: 'auto' })}>
+            {data?.responseBot || 'Tell what the bot should respond'}
+          </Typography>
+        </Box>
+        <Handle type="target" position={Position.Left} isConnectable={true} />
+        <NodeControlDrawer id={id} data={data} openController={openController} setOpenController={setOpenController} />
       </Box>
-      <Handle type="target" position={Position.Left} isConnectable={true} />
-    </Box>
+    </>
   );
 };
 
 export const CustomNode: React.FC<NodeProps<INodeData>> = ({ data, id }) => {
   const connection = useConnection();
-  console.log(data, id);
   const isTarget = connection.inProgress && connection.fromNode.id !== id;
   const label = isTarget ? 'Drop here' : 'Drag to connect';
 

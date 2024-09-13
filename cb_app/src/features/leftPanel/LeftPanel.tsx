@@ -45,7 +45,6 @@ function LeftPanel() {
       >
         {/* <Box sx={{ height: TopBarHeight, borderBottom: 1 }}> */}
         <SiteLogo />
-        {/* </Box> */}
         <Stack sx={{ flexGrow: 1, width: '100%' }}>
           <Navigation />
           <SettingsNavigation />

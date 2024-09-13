@@ -52,11 +52,11 @@ const Leads: React.FC = () => {
     };
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log(data);
+      (data);
       addLead(data);
     };
     ws.onclose = () => {
-      // console.log('WebSocket connection closed');
+      // ('WebSocket connection closed');
     };
     setSocket(ws);
     return () => {
@@ -68,11 +68,11 @@ const Leads: React.FC = () => {
 
   useEffect(() => {
     getLeads(page);
-    console.log(page, 'hasMore', hasMore);
+    (page, 'hasMore', hasMore);
   }, [page]);
 
   const fetchMoreLeads = () => {
-    console.log('fetchMoreLeads');
+    ('fetchMoreLeads');
     setPage((prevPage) => prevPage + 1);
   };
 

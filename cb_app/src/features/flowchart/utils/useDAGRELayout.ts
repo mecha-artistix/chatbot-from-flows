@@ -15,13 +15,14 @@ export const useDAGRELayout = (options: LayoutOptions = {}) => {
 
     // Add edges and nodes
     edges.forEach((edge) => g.setEdge(edge.source, edge.target));
-    nodes.forEach((node) =>
+    nodes.forEach((node) => {
+      // const { parentId, ...nodeWithoutParent } = node;
       g.setNode(node.id, {
         ...node,
         width: node.measured?.width ?? 0,
         height: node.measured?.height ?? 0,
-      }),
-    );
+      });
+    });
 
     // Apply Dagre layout
     dagre.layout(g);
