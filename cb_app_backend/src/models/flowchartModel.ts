@@ -15,6 +15,8 @@ const nodeSchema = new Schema<INode>({
   width: { type: Number },
   height: { type: Number },
   id: { type: String, required: true },
+  parent: { type: String },
+  draggable: { type: Boolean },
 });
 
 const edgeSchema = new Schema<IEdge>({

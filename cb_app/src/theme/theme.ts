@@ -1,8 +1,9 @@
 import { createTheme, responsiveFontSizes, ThemeOptions, Theme } from '@mui/material/styles';
+import { extendTheme as extendJoyTheme } from '@mui/joy/styles';
 import { typography, palette, lightMode, darkMode } from './constants';
 
 // Create the theme based on the mode passed as an argument
-export const createAppTheme = (mode: 'light' | 'dark'): Theme => {
+export const createMaterialTheme = (mode: 'light' | 'dark'): Theme => {
   const themeOptions: ThemeOptions = {
     palette: {
       ...palette,
@@ -20,6 +21,11 @@ export const createAppTheme = (mode: 'light' | 'dark'): Theme => {
 
   return responsiveFontSizes(createTheme(themeOptions));
 };
+
+export const joyTheme = extendJoyTheme({
+  components: {},
+});
+
 /*
     components: {
       MuiCssBaseline: {

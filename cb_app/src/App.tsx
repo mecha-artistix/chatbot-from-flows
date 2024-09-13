@@ -3,10 +3,12 @@ import { BrowserRouter, Route, Routes, Navigate, useNavigate, Outlet } from 'rea
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { CssVarsProvider, extendTheme } from '@mui/joy/styles';
 import './App.css';
 import Flowchart from './features/flowchart/Flowchart';
 import { useThemeStore } from './theme/themeStore';
-import { createAppTheme } from './theme/theme';
+import { createMaterialTheme, joyTheme } from './theme/theme';
+import { createJoyTheme } from './theme/theme';
 import ToggleTheme from './components/ToggleTheme';
 import UserAuthPage from './features/authentication/components/UserAuthPage';
 import Dashboard from './features/dashboard/Dashboard';
@@ -38,10 +40,10 @@ const App: React.FC = () => {
     setMode('light');
   }, [prefersDarkMode, setMode]);
 
-  const theme = createAppTheme(mode);
+  const materialTheme = createMaterialTheme(mode);
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={materialTheme}>
       <BrowserRouter>
         <CssBaseline />
         <Routes>

@@ -26,7 +26,7 @@ export default function ImportFileBtn() {
       startIcon={<CloudUploadIcon />}
     >
       Import file
-      <VisuallyHiddenInput type="file" onChange={(event) => console.log(event.target.files)} multiple />
+      <VisuallyHiddenInput type="file" onChange={(event) => event.target.files} multiple />
     </Button>
   );
 }

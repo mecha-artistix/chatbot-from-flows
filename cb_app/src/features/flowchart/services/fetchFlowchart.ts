@@ -21,7 +21,7 @@ export const createFlowchart: CreateFlowchart = async (name, nodes) => {
     });
     const data = await response.json();
     if (!response.ok) throw new Error(data.message || 'response not ok');
-    // console.log(response);
+    // (response);
     obj = data.data;
     return obj;
   } catch (error) {

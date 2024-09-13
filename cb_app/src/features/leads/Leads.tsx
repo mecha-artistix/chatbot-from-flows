@@ -96,19 +96,13 @@ const Leads = () => {
           density="compact"
           initialState={{}}
           onPaginationModelChange={(newPaginationModel) => {
-            console.log(newPaginationModel);
             setPaginationModel(newPaginationModel);
             getLeads(newPaginationModel.page, newPaginationModel.pageSize);
           }}
           onSortModelChange={(newSortModel) => {
-            // console.log(newSortModel[0].field);
-            // console.log(newSortModel[0].sort);
             getSorted(newSortModel);
-            // getLeads();
-            // console.log(newSortModel);
           }}
           onFilterModelChange={(newFilterModel) => {
-            console.log('filter');
             const key = newFilterModel.items[0].field;
             const value = newFilterModel.items[0].value;
           }}

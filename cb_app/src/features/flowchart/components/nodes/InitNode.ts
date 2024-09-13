@@ -22,11 +22,12 @@ export const initNodes: INode[] = [
 
 export const startNode: INode = {
   id: 'start_node',
+  parentId: undefined,
   type: 'start_node',
   draggable: false,
   position: {
-    x: 200,
-    y: 250,
+    x: 0,
+    y: 0,
   },
   data: { label: 'Start Here' },
 };

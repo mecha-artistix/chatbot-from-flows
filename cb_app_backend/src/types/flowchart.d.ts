@@ -23,10 +23,12 @@ interface NodeData {
 export interface INode extends Document {
   type?: string;
   position?: Position;
+  draggable?: boolean;
   data?: NodeData;
   width?: number;
   height?: number;
   id: string;
+  parent?: string;
 }
 
 interface EdgeData {

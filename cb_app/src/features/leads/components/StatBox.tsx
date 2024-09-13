@@ -32,8 +32,6 @@ const StatBox = ({ name, stat, icon }) => {
   }, []);
 
   useEffect(() => {
-    console.log(leadsStatus);
-    console.log(leadsStatus[stat]);
     setStateWidth(() => ((100 * leadsStatus[stat]) / leadsStatus.total_leads).toFixed(2));
   }, [leadsStatus]);
 
@@ -57,17 +55,27 @@ const StatBox = ({ name, stat, icon }) => {
             <Typography variant="h3"> {leadsStatus[stat]}</Typography>
           </Stack>
         </Stack>
-
         <Box
           sx={(theme) => ({
+            position: 'relative',
             overflow: 'hidden',
             borderRadius: 2,
-            height: '10px',
+            height: '16px',
             width: '100%',
             bgcolor: theme.palette.primary.main,
           })}
         >
-          <Box sx={(theme) => ({ bgcolor: theme.palette.primary.dark, height: '100%', width: stateWidth + '%' })}></Box>
+          <Box
+            sx={(theme) => ({
+              position: 'absolute',
+              bgcolor: theme.palette.primary.dark,
+              height: '100%',
+              width: stateWidth + '%',
+            })}
+          ></Box>
+          <Typography sx={{ fontSize: 14, mx: 1, color: 'white', position: 'absolute', right: 0, top: 0 }}>
+            {stateWidth} %
+          </Typography>
         </Box>
       </Box>
     </Paper>

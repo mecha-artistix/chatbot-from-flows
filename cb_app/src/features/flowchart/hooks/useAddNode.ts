@@ -1,10 +1,8 @@
 import { useCallback } from 'react';
 import useFlowStore from '../store/FlowStore';
-import { useDAGRELayout } from '../utils/useDAGRELayout';
+import { getIncomers } from '@xyflow/react';
 
 const useAddNode = () => {
-  const getLayoutedElements = useDAGRELayout({ direction: 'LR' });
-
   const { nodes, edges, setLayout, currentNode, addNode, addEdge, setNodes, setEdges, setNodeDrawer } = useFlowStore(
     (state) => ({
       nodes: state.nodes,
@@ -22,15 +20,22 @@ const useAddNode = () => {
   const handleAddNode = useCallback(
     (label, nextResponseType, source) => {
       const id = `${nodes.length + 1}`;
-
       const nextNode = {
         id: id,
         type: 'response_node',
-        data: { label, responseType: nextResponseType },
+        data: {
+          responseLabel: label,
+          responseType: nextResponseType,
+          responsePerson: 'Person Response',
+          responseBot: 'Bot Response',
+        },
         width: 250,
         position: { x: 0, y: 0 },
         draggable: false,
-        connectable: true,
+        connectable: false,
+        parent: source,
+        // parent: { id: source },
+        dragHandle: false,
       };
       addNode(nextNode);
 
@@ -57,7 +62,6 @@ const useAddNode = () => {
       addEdge(NextEdge);
 
       setLayout();
-      // setNodeDrawer(false);
     },
     [nodes, currentNode, addNode, addEdge, setNodes, setEdges, setNodeDrawer],
   );
