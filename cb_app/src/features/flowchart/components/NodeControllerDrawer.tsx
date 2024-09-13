@@ -45,7 +45,6 @@ export const NodeControlDrawer: React.FC<INodeControlDrawerProps> = ({
   };
 
   const handleSubmit = () => {
-    clickedNode.id, resData;
     setNode(id, resData);
     setNodeDrawerOpen(false);
     setOpenController(false);
