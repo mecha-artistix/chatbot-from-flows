@@ -4,27 +4,26 @@ import AcUnitIcon from '@mui/icons-material/AcUnit';
 import useFlowStore from '../store/FlowStore';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import useAddNode from '../hooks/useAddNode';
-// import { nodeTypes } from './nodes/nodeTypes';
 const responseTypes = [
   { name: 'positive', icon: <EmojiEmotionsIcon /> },
   { name: 'neutral', icon: <EmojiEmotionsIcon /> },
   { name: 'negative', icon: <EmojiEmotionsIcon /> },
 ];
 
-function NodeTypeSelector({ parentId, handleClose }) {
+function NodeTypeSelector({ source, handleClose }) {
   const handleAddNode = useAddNode();
-  const { setCurrentNode, nodeTypes, setNodeDrawer, setNextNodeType, setNextResponseType } = useFlowStore((state) => ({
-    setCurrentNode: state.setCurrentNode,
-    nodeTypes: state.nodeTypes,
-    setNextNodeType: state.setNextNodeType,
-    setNodeDrawer: state.setNodeDrawer,
-    setNextResponseType: state.setNextResponseType,
-  }));
+  // const { setCurrentNode, nodeTypes, setNodeDrawer, setNextNodeType, setNextResponseType } = useFlowStore((state) => ({
+  //   setCurrentNode: state.setCurrentNode,
+  //   nodeTypes: state.nodeTypes,
+  //   setNextNodeType: state.setNextNodeType,
+  //   setNodeDrawer: state.setNodeDrawer,
+  //   setNextResponseType: state.setNextResponseType,
+  // }));
 
   const clickHandler = (event, el) => {
+    console.log('source hand- ', source);
     event?.stopPropagation();
-
-    handleAddNode('', el, parentId);
+    handleAddNode('', el, source);
     handleClose(false);
   };
   return (

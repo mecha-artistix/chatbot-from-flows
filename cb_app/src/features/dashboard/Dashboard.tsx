@@ -1,20 +1,23 @@
-import { ReactDOM } from 'react';
-import { Route, Routes } from 'react-router-dom';
-import LoginForm from '../authentication/components/LoginForm';
-import UserAuthPage from '../authentication/components/UserAuthPage';
-import RegistrationForm from '../authentication/components/RegistrationForm';
+import { Container } from '@mui/material';
+import StatBox from './components/StatBox';
+import GroupsIcon from '@mui/icons-material/Groups';
 
 const Dashboard: React.FC = () => {
+  const styleHandler = (theme, component) => {
+    const style = {
+      wrapper: { bgcolor: 'pink' },
+    };
+    return style[component];
+  };
+
   return (
-    <>
-      This is dashboard
-      {/* <Routes>
-        <Route path="/login" element={<UserAuthPage />}>
-          <Route index element={<LoginForm />} />
-          <Route path="/sign-up" element={<RegistrationForm />} />
-        </Route>
-      </Routes> */}
-    </>
+    <Container maxWidth={false} sx={(theme) => styleHandler(theme, 'wrapper')}>
+      <StatBox
+        name="Total Leads"
+        stat="total_leads"
+        icon={<GroupsIcon sx={(theme) => ({ color: theme.palette.primary.dark, fontSize: '46px' })} />}
+      />
+    </Container>
   );
 };
 

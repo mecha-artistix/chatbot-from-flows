@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { ListItem, ListItemIcon, ListItemText, Stack, Typography } from '@mui/material';
-import LogoLight from '../assets/LogoLight.svg';
-import LogoDark from '../assets/LogoDark.svg';
-import { useThemeStore } from '../theme/themeStore';
+import LogoLight from '../../assets/LogoLight.svg';
+import LogoDark from '../../assets/LogoDark.svg';
+import useThemeStore from '../../theme/themeStore';
 
 const SiteLogo: React.FC = () => {
   const { mode, leftDrawerOpen } = useThemeStore((state) => ({
@@ -17,7 +17,6 @@ const SiteLogo: React.FC = () => {
     img: {},
     title: {
       fontSize: { sm: '0.6rem', md: '0.8rem', lg: '1rem' },
-      // mt: '7px',
     },
   };
 

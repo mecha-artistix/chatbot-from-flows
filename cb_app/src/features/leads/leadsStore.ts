@@ -7,6 +7,7 @@ const URL = import.meta.env.VITE_NODE_BASE_API + '/leads';
 
 const leadsStore: StateCreator<ILeadsStore> = (set, get, api) => ({
   leadsCollection: [],
+  setLeadsCollection: (data) => set({ leadsCollection: data }),
   status: '',
   error: '',
   leadsCount: 0,
@@ -21,11 +22,10 @@ const leadsStore: StateCreator<ILeadsStore> = (set, get, api) => ({
       set({ status: 'failed', error: error.message });
     }
   },
-  paginationModel: { page: 0, pageSize: 5 },
+  paginationModel: { page: 1, pageSize: 25 },
   setPaginationModel: (paginationModel) => set({ paginationModel }),
   hasMore: true,
-  curPage: 0,
-  pageSize: 10,
+
   leadsStatus: { total_leads: 0, successful: 0, unsuccessful: 0, call_later: 0 },
   setPageSize: (pageSize) => set({ pageSize }),
 
@@ -68,7 +68,6 @@ const leadsStore: StateCreator<ILeadsStore> = (set, get, api) => ({
       status: 'success',
       leadsCollection: [...leads],
       leadsCount: data.total,
-      hasMore: leads.length > 0,
     }));
   },
 

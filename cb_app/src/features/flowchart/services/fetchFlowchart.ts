@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { INode } from '../../../types/flowchart';
 
 const URL: string = import.meta.env.VITE_NODE_BASE_API + '/flowcharts';
@@ -8,59 +9,40 @@ type DeleteFlowchart = (id: string) => Promise<any>;
 type GetFlowchart = (id: string) => Promise<any>;
 
 export const createFlowchart: CreateFlowchart = async (name, nodes) => {
-  let obj;
+  let data;
   try {
-    const response = await fetch(URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: name,
-        nodes: nodes,
-      }),
-      credentials: 'include',
-    });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.message || 'response not ok');
-    // (response);
-    obj = data.data;
-    return obj;
-  } catch (error) {
-    obj = { status: 'failed', error: (error as Error).message };
-    return obj;
+    const response = await axios.post(
+      URL,
+      { name, nodes },
+      { withCredentials: true, headers: { 'Content-Type': 'application/json' } },
+    );
+    data = await response.data.data;
+    return data;
+  } catch (error: any) {
+    return {
+      status: 'failed',
+      error,
+    };
   }
 };
 
 export const getAllFlowcharts: GetAllFlowcharts = async () => {
-  let obj;
   try {
-    const response = await fetch(URL, {
-      method: 'GET',
-      credentials: 'include',
-    });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.message || 'response not ok');
-    obj = data.data;
-    return obj;
+    const response = await axios.get(URL, { withCredentials: true });
+    const data = response.data.data;
+    return data;
   } catch (error) {
-    obj = { status: 'failed', error: (error as Error).message };
-    return obj;
+    return { status: 'failed', error };
   }
 };
 
 export const getFlowchart: GetFlowchart = async (id) => {
-  let obj;
   try {
-    const response = await fetch(URL + `/${id}`, {
-      method: 'GET',
-      credentials: 'include',
-    });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.message || 'response not ok');
-    obj = data.data;
-    return obj;
+    const response = await axios.get(URL + `/${id}`, { withCredentials: true });
+    const data = await response.data.data.data;
+    return data;
   } catch (error) {
-    obj = { status: 'failed', error: (error as Error).message };
-    return obj;
+    return { status: 'failed', error };
   }
 };
 
@@ -81,23 +63,59 @@ export const deleteFlowchart: DeleteFlowchart = async (id) => {
   }
 };
 
-export const updateFlowchart = async function (id, body) {
-  let obj;
+export const patchFlowchart = async (id, body) => {
   try {
-    const response = await fetch(URL + `/${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body,
-      credentials: 'include',
+    const response = await axios.patch(URL + `/${id}`, body, {
+      withCredentials: true,
+      headers: { 'Content-Type': 'application/json' },
     });
-    if (!response.ok) return new Error('error occured while updating');
-    const data = await response.json();
-    obj = data.data;
-    return obj;
+    const data = await response.data.data;
+    return data;
   } catch (error) {
-    obj = { status: 'failed', error: (error as Error).message };
-    return obj;
+    return { status: 'fail', error };
   }
 };
+
+// export const createFlowchart: CreateFlowchart = async (name, nodes) => {
+//   let obj;
+//   try {
+//     const response = await fetch(URL, {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({
+//         name: name,
+//         nodes: nodes,
+//       }),
+//       credentials: 'include',
+//     });
+//     const data = await response.json();
+//     if (!response.ok) throw new Error(data.message || 'response not ok');
+//     // (response);
+//     obj = data.data;
+//     return obj;
+//   } catch (error) {
+//     obj = { status: 'failed', error: (error as Error).message };
+//     return obj;
+//   }
+// };
+
+// export const patchFlowchart = async function (id, body) {
+//   let obj;
+//   try {
+//     const response = await fetch(URL + `/${id}`, {
+//       method: 'PATCH',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body,
+//       credentials: 'include',
+//     });
+//     if (!response.ok) return new Error('error occured while updating');
+//     const data = await response.json();
+//     obj = data.data;
+//     return obj;
+//   } catch (error) {
+//     obj = { status: 'failed', error: (error as Error).message };
+//     return obj;
+//   }
+// };

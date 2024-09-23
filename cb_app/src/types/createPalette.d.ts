@@ -1,8 +1,7 @@
 import { Color, PaletteMode } from '..';
 
 export {};
-// use standalone interface over typeof colors/commons
-// to enable module augmentation
+
 export interface CommonColors {
   black: string;
   white: string;
