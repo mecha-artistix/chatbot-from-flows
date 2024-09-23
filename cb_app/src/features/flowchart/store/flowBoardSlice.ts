@@ -1,8 +1,8 @@
 import { StateCreator, StoreApi } from 'zustand';
-import { addEdge, applyEdgeChanges, applyNodeChanges } from '@xyflow/react';
+import { addEdge, applyEdgeChanges, applyNodeChanges, ReactFlowJsonObject } from '@xyflow/react';
 import { initialEdges, initialNodes, initNodes, startNode } from '../components/nodes/InitNode';
 import { IFlowBoardSlice, INode, INodeData } from '../../../types/flowchart';
-import { createFlowchart, getFlowchart } from '../services/fetchFlowchart';
+import { createFlowchart, getFlowchart, patchFlowchart } from '../services/fetchFlowchart';
 import { edge1 } from '../components/edges/InitEdges';
 import { StartNode, ResponseNode, CustomNode } from '../components/nodes/Nodes';
 import { useDAGRELayout } from '../utils/useDAGRELayout';
@@ -10,6 +10,7 @@ import { useDAGRELayout } from '../utils/useDAGRELayout';
 const getLayoutedElements = useDAGRELayout({ direction: 'LR' });
 
 const URL: string = import.meta.env.VITE_NODE_BASE_API + '/flowcharts';
+
 const nodeTypes = {
   start_node: StartNode,
   response_node: ResponseNode,
@@ -20,33 +21,22 @@ const edgeTypes = {};
 export const flowBoardSlice: StateCreator<IFlowBoardSlice> = (set, get, api) => ({
   id: '',
   name: '',
-  status: '',
-  error: '',
   nodes: [startNode],
-  edges: initialEdges,
+  edges: [],
+  clickedNode: null,
+  viewport: { x: 0, y: 0, zoom: 1 },
   nodeTypes,
-  edgeTypes: edgeTypes,
+  edgeTypes,
   defaultEdgeOptions: { animated: true },
 
-  setName: async (name) => {
-    set({ status: 'loading', error: '' });
-    // const { nodes } = get();
-    const data = await createFlowchart(name, startNode);
-    if (data.status === 'failed') {
-      set({ status: 'failed', error: data.error });
-    }
-    if (data) {
-      set({
-        id: data.data._id,
-        name: data.data.name,
-        status: data.status,
-      });
-    }
+  setFlowboard: (flowchart) => {
+    const { _id, name, nodes, edges, viewport } = flowchart;
+    set({ id: _id, name, nodes, edges, viewport });
   },
 
   onNodesChange: (changes) => {
     const { nodes } = get();
-    const updatedNodes = applyNodeChanges(changes, nodes);
+    const updatedNodes = applyNodeChanges(changes, nodes) as INode[];
     set({ nodes: updatedNodes });
   },
 
@@ -58,9 +48,7 @@ export const flowBoardSlice: StateCreator<IFlowBoardSlice> = (set, get, api) => 
 
   onConnect: (connection) => {
     const { edges } = get();
-
     const updatedEdges = addEdge(connection, edges);
-    // refer to docs core-concept to see how edge options can be added
     set({ edges: updatedEdges });
   },
 
@@ -73,20 +61,35 @@ export const flowBoardSlice: StateCreator<IFlowBoardSlice> = (set, get, api) => 
     set({ edges });
   },
 
-  setFlowBoard: async (id) => {
-    try {
-      set({ status: 'loading', error: '' });
-      const data = await getFlowchart(id);
-      const { nodes, edges } = data.data;
-      set({ nodes, edges, status: 'success' });
-    } catch (error) {
-      set({ status: 'error', error: error.message });
-    }
-  },
-
   setLayout: () => {
     const { nodes, edges } = get();
     const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements([...nodes], [...edges]);
     set({ nodes: layoutedNodes, edges: layoutedEdges });
+  },
+
+  onNodeClick: (event, node) => {
+    set((state) => ({ ...state, clickedNode: node }));
+  },
+
+  addNode: (newNode) => {
+    set((state) => ({ ...state, nodes: [...state.nodes, newNode] }));
+  },
+
+  addEdge: (edge) => set((state) => ({ edges: [...state.edges, edge] })),
+
+  updateNodeData: (id, resData) => {
+    const { nodes } = get();
+    const updatedNodes = nodes.map((node) =>
+      node.id === id
+        ? {
+            ...node,
+            data: {
+              ...node.data,
+              ...resData,
+            },
+          }
+        : node,
+    );
+    set({ nodes: updatedNodes });
   },
 });

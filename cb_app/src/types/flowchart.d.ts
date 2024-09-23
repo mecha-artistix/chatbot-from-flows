@@ -1,47 +1,54 @@
-import type { Node, NodeProps, Connection, DefaultEdgeOptions, EdgeChange, NodeChange } from '@xyflow/react';
+import type {
+  Node,
+  NodeProps,
+  Connection,
+  DefaultEdgeOptions,
+  EdgeChange,
+  NodeChange,
+  EdgeProps,
+  ReactFlowJsonObject,
+  Edge,
+} from '@xyflow/react';
 
 export interface IFlowchartSlice {
   flowcharts: [];
-  status: '' | 'loading' | 'failed' | 'success';
-  error?: string;
   addFlowcharts: () => Promise<void>;
   deleteFlowchart: (id: string) => Promise<void>;
 }
 
+type Viewport = {
+  x: number;
+  y: number;
+  zoom: number;
+};
+
 export interface IFlowBoardSlice {
   id: string;
   name: string;
-  status: '' | 'loading' | 'failed' | 'success';
-  error?: string;
   nodes: INode[];
   edges: Edge[];
-  edgeTypes?: EdgeTypes;
+  clickedNode: INode | null;
+  viewport: Viewport;
+  nodeTypes?: Record<String, React.ComponentType<NodeProps>>;
+  edgeTypes?: Record<String, React.ComponentType<EdgeProps>>;
+  defaultEdgeOptions?: DefaultEdgeOptions;
+
+  setFlowboard?: (flowchart) => void;
   onNodesChange?: (changes: NodeChange[]) => void;
   onEdgesChange?: (changes: EdgeChange[]) => void;
   onConnect?: (connection: Connection) => void;
-  defaultEdgeOptions?: DefaultEdgeOptions;
-  setName?: (name: string) => Promise<void>;
-  setFlowBoard?: (id: string) => Promise<void>;
   setNodes?: (nodes: INode[]) => void;
   setEdges?: (nodes: Edge[]) => void;
-}
-
-export interface INodeSlice {
-  id?: number;
-  nodeDrawerOpen: boolean;
-  dataLabel?: string;
-  currentNode?: null | INodeData;
-  nextNodeId?: number;
-  nodeTypes?: Record<String, React.ComponentType<NodeProps>>;
-  addNode?: (node: INode) => void;
-  addEdge?: (edge: EDGE) => void;
-  setNodeDrawer?: (open: boolean) => void;
-  setDataLabel?: (text: string) => void;
+  setLayout?: () => void;
+  onNodeClick?: (event, node) => void;
+  addNode?: (newNode: INode) => void;
+  addEdge?: (edge: Edge) => void;
+  updateNodeData?: (id: string, resData: INodeData) => void;
 }
 
 export interface INodeData {
-  label?: string;
-  texts?: string[];
+  responseLabel?: string;
+  responseType?: string[];
   [key: string]: unknown;
 }
 
@@ -49,7 +56,7 @@ export interface INode extends Node<INodeData> {
   type?: 'start_node' | 'response_node' | 'action_node' | 'custom_node';
 }
 
-interface IFlowStore extends INodeSlice, IFlowBoardSlice, IFlowchartSlice {}
+interface IFlowStore extends IFlowBoardSlice, IFlowchartSlice {}
 
 export interface IEdge extends Document {
   source: string;

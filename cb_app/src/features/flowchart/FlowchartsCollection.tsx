@@ -16,8 +16,13 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import ShareIcon from '@mui/icons-material/Share';
-import { useNavigate } from 'react-router-dom';
-function FlowchartsCollection() {
+import { useLoaderData, useNavigate } from 'react-router-dom';
+import { getAllFlowcharts } from './services/fetchFlowchart';
+import axios from 'axios';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
+
+const FlowchartsCollection: React.FC = () => {
+  const flowchartsData = useLoaderData();
   const navigate = useNavigate();
   const { flowcharts, addFlowcharts, deleteFlowchart } = useFlowStore((state) => ({
     flowcharts: state.flowcharts,
@@ -28,12 +33,8 @@ function FlowchartsCollection() {
   const columns = ['Name', 'Created Date', 'Generated Test File'];
 
   useEffect(() => {
-    const getCharts = async () => {
-      const data = await addFlowcharts();
-      return data;
-    };
-
-    getCharts();
+    console.log(flowchartsData);
+    addFlowcharts(flowchartsData);
   }, []);
 
   const style = {
@@ -85,6 +86,17 @@ function FlowchartsCollection() {
       </Container>
     </>
   );
-}
+};
 
 export default FlowchartsCollection;
+
+const URL: string = import.meta.env.VITE_NODE_BASE_API + '/flowcharts';
+
+export const loader = async () => {
+  try {
+    const response = await axios.get(URL, { withCredentials: true });
+    return response.data.data.data;
+  } catch (error: any) {
+    throw new Response(error?.response?.data?.message || error?.data || 'Failed to fetch flowcharts');
+  }
+};

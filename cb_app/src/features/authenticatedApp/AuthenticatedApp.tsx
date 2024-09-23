@@ -5,15 +5,16 @@ import FlowchartsCollection from '../flowchart/FlowchartsCollection';
 import FlowBoard from '../flowchart/components/FlowBoard';
 import Knowledgebase from '../knowledgebase/Knowledgebase';
 import Bots from '../bots/Bots';
-import Leads from '../leads/Leads';
+import LeadsStats from '../leads/LeadsStats';
 import ProfileSettings from '../userProfile/ProfileSettings';
 import AccountSettings from '../userProfile/components/AccountSettings';
 import SecuritySettings from '../userProfile/components/SecuritySettings';
 import PaymentSettings from '../userProfile/components/PaymentSettings';
 import useAuthStore from '../authentication/userStore';
 import { Box, Container, Grid, Stack, Drawer } from '@mui/material';
-import LeftPanel from '../leftPanel/LeftPanel';
-import TopBar from '../../components/TopBar';
+import LeftPanel from '../../ui/leftPanel/LeftPanel';
+import TopBar from '../../ui/components/TopBar';
+import LeadsData from '../leads/LeadsData';
 
 const AuthenticatedApp: React.FC = () => {
   const navigate = useNavigate();
@@ -71,7 +72,8 @@ const AuthenticatedApp: React.FC = () => {
               <Route path="create-flowchart" element={<FlowBoard />} />
               <Route path="knowledgebase" element={<Knowledgebase />} />
               <Route path="bots" element={<Bots />} />
-              <Route path="leads" element={<Leads />} />
+              <Route path="leads-data" element={<LeadsData />} />
+              <Route path="leads-stats" element={<LeadsStats />} />
               <Route path="user-profile" element={<ProfileSettings />}>
                 <Route index element={<AccountSettings />} />
                 <Route path="account-settings" element={<AccountSettings />} />

@@ -1,11 +1,11 @@
 import { getIncomers } from '@xyflow/react';
 import { useCallback, useState } from 'react';
-
+import { parameters, instructions } from './botPromptConfig';
 const useGeneratePrompt = () => {
   const [prompt, setPrompt] = useState('');
 
   const generatePrompt = useCallback((nodes, edges) => {
-    setPrompt('');
+    setPrompt(``);
     const newPrompt = nodes.reduce((acc, node) => {
       if (node.type === 'response_node' && node.data) {
         const parent = getIncomers({ id: node.id }, nodes, edges)[0];
@@ -19,10 +19,10 @@ const useGeneratePrompt = () => {
     }, '');
 
     // Update the prompt state with the new prompt
-    setPrompt(newPrompt);
+    setPrompt(`${parameters} \n ${instructions} \n${newPrompt}`);
   }, []);
 
-  console.log(prompt);
+  // console.log('prompt');
 
   return { prompt, generatePrompt };
 };

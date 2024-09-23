@@ -74,6 +74,7 @@ export const palette: PaletteOptions = {
     positive: green[100],
     neutral: blue[100],
     negative: red[100],
+    contrastText: { positive: green[800], neutral: blue[800], negative: red[800] },
   },
 };
 

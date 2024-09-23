@@ -28,6 +28,17 @@ declare module '@mui/material/styles' {
 
   export interface PaletteOptions {
     accent?: PaletteColorOptions;
-    bgNode: Partial;
+    bgNode?: Partial;
   }
+}
+
+export interface IThemeStore {
+  mode: 'light' | 'dark';
+  leftDrawerOpen: boolean;
+  leftDrawerWidth: number;
+  rightWidth: number;
+  topBarHeight: number;
+  setLeftDrawerOpen: () => void;
+  toggleTheme: () => void;
+  setMode: (mode: 'light' | 'dark') => void;
 }

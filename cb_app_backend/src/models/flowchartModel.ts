@@ -34,13 +34,17 @@ const edgeSchema = new Schema<IEdge>({
 const flowChartSchema = new Schema<IFlowChart>({
   name: {
     type: String,
-
     required: [true, 'Please Provide a valid name for flowchart'],
     match: [/^[a-zA-Z][a-zA-Z0-9]*$/, 'Name must start with a letter and contain only alphanumeric characters'],
   },
   createdAt: { type: Date, default: Date.now },
   nodes: [nodeSchema],
   edges: [edgeSchema],
+  viewport: {
+    x: { type: Number, required: true, default: 0 },
+    y: { type: Number, required: true, default: 0 },
+    zoom: { type: Number, required: true, default: 0 },
+  },
   // promptText: { type: String },
   bot: { type: mongoose.Schema.Types.ObjectId, ref: 'Bot' },
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },

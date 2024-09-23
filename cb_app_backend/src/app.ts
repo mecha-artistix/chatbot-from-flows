@@ -60,12 +60,15 @@ const corsOptions: CorsOptions = {
   },
   credentials: true,
 };
+// serving static files
+app.use(BASE_URL + '/public', express.static(path.join(__dirname, '..', 'public')));
 
 app.use(cors(corsOptions));
+
 // app.use(cors({ origin: '*', credentials: true }));
 
 // Set security HTTP headers
-app.use(helmet());
+// app.use(helmet());
 // Limit requests from the same IP address
 const limiter = rateLimit({
   max: 100,
