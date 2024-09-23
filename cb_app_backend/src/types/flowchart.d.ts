@@ -5,8 +5,15 @@ export interface IFlowChart extends Document {
   createdAt?: Date;
   nodes?: INode[];
   edges?: IEdge[];
+  viewport: IViewport;
   bot?: Types.ObjectId;
   user: Types.ObjectId;
+}
+
+interface IViewport {
+  x: number;
+  y: number;
+  zoom: number;
 }
 
 interface Position {

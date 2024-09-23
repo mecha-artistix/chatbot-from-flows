@@ -1,21 +1,12 @@
-import { create } from 'zustand';
+import { create, StateCreator } from 'zustand';
+import { devtools, persist } from 'zustand/middleware';
+import { IThemeStore } from '../types/mui';
 
-type ThemeStore = {
-  mode: 'light' | 'dark';
-  leftDrawerOpen: boolean;
-  leftDrawerWidth: number;
-  rightWidth: number;
-  topBarHeight: number;
-  setLeftDrawerOpen: () => void;
-  toggleTheme: () => void;
-  setMode: (mode: 'light' | 'dark') => void;
-};
-
-export const useThemeStore = create<ThemeStore>((set, get) => ({
+export const themeStore: StateCreator<IThemeStore> = (set, get) => ({
   mode: 'light',
-  leftDrawerOpen: false,
-  // leftDrawerWidth: 250,
-  leftDrawerWidth: 60,
+  leftDrawerOpen: true,
+  leftDrawerWidth: 250,
+  // leftDrawerWidth: 60,
   rightWidth: 10,
   topBarHeight: 70,
   toggleTheme: () =>
@@ -40,4 +31,21 @@ export const useThemeStore = create<ThemeStore>((set, get) => ({
       }));
     }
   },
-}));
+});
+
+const useThemeStore = create<IThemeStore>()(
+  devtools(
+    persist(themeStore, {
+      name: 'ThemeStore',
+      partialize: (state) => ({
+        mode: state.mode,
+        leftDrawerOpen: state.leftDrawerOpen,
+        leftDrawerWidth: state.leftDrawerWidth,
+        rightWidth: state.rightWidth,
+        topBarHeight: state.topBarHeight,
+      }),
+    }),
+  ),
+);
+
+export default useThemeStore;

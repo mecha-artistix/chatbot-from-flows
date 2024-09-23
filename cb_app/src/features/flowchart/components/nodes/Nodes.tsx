@@ -28,12 +28,6 @@ import useAddNode from '../../hooks/useAddNode';
 */
 export const StartNode: React.FC<NodeProps<INodeData>> = ({ data, id }) => {
   const handleAddNode = useAddNode();
-  const { nodeDrawerOpen, setNodeDrawer, setCurrentNode, clickedNode } = useFlowStore((state) => ({
-    nodeDrawerOpen: state.nodeDrawerOpen,
-    setNodeDrawer: state.setNodeDrawer,
-    setCurrentNode: state.setCurrentNode,
-    clickedNode: state.clickedNode,
-  }));
 
   const addNodeHandler = () => {
     handleAddNode('First Response', 'neutral', id);
@@ -65,10 +59,11 @@ export const ResponseNode: React.FC<NodeProps<INodeData>> = ({ data, id }) => {
   const [openController, setOpenController] = useState(false);
 
   const addNodeHandler = (event) => {
-    event?.stopPropagation();
-    setCurrentNode(id);
+    // setCurrentNode(id);
+    onNodeClick();
     setOpenNodeSelector(true);
     event.preventDefault();
+    event?.stopPropagation();
   };
 
   const nodeClickHandler = (e) => {
@@ -76,7 +71,7 @@ export const ResponseNode: React.FC<NodeProps<INodeData>> = ({ data, id }) => {
     // e.stopPropagation();
   };
 
-  const styleHandler = (theme, component) => {
+  const SxHandler = (theme, component) => {
     const style = {
       wrapper: {
         bgcolor: theme.palette.bgNode[data?.responseType],
@@ -113,14 +108,14 @@ export const ResponseNode: React.FC<NodeProps<INodeData>> = ({ data, id }) => {
     <>
       <Box
         className="nowheel"
-        sx={(theme) => styleHandler(theme, 'wrapper')}
+        sx={(theme) => SxHandler(theme, 'wrapper')}
         onMouseEnter={() => setAddBtnOpacity(1)}
         onMouseLeave={() => setAddBtnOpacity(0)}
         onClick={(e) => nodeClickHandler(e)}
       >
         <ClickAwayListener onClickAway={() => setOpenNodeSelector(false)}>
-          <Collapse in={openNodeSelector} sx={(theme) => styleHandler(theme, 'collapsableNodeSelector')}>
-            <NodeTypeSelector parentId={id} handleClose={setOpenNodeSelector} />
+          <Collapse in={openNodeSelector} sx={(theme) => SxHandler(theme, 'collapsableNodeSelector')}>
+            <NodeTypeSelector source={id} handleClose={setOpenNodeSelector} />
           </Collapse>
         </ClickAwayListener>
         <Handle type="source" position={Position.Right} isConnectable={true} />
@@ -128,7 +123,7 @@ export const ResponseNode: React.FC<NodeProps<INodeData>> = ({ data, id }) => {
           color="primary"
           aria-label="Add Node"
           onClick={addNodeHandler}
-          sx={(theme) => styleHandler(theme, 'addNodeBtn')}
+          sx={(theme) => SxHandler(theme, 'addNodeBtn')}
         >
           <AddCircleRoundedIcon />
         </IconButton>
@@ -138,11 +133,21 @@ export const ResponseNode: React.FC<NodeProps<INodeData>> = ({ data, id }) => {
             overflowY: 'auto',
           })}
         >
-          <Typography variant="h6">
+          <Typography
+            variant="h6"
+            sx={(theme) => ({ fontWeight: 600, color: theme.palette.bgNode.contrastText[data?.responseType] })}
+          >
             {id} - {data?.responseLabel || data?.responseType}
           </Typography>
 
-          <Typography sx={(theme) => ({ maxHeight: '200px', overflowY: 'auto' })}>
+          <Typography
+            sx={(theme) => ({
+              maxHeight: '200px',
+              overflowY: 'auto',
+              fontWeight: 400,
+              color: theme.palette.bgNode.contrastText[data?.responseType],
+            })}
+          >
             {data?.responseBot || 'Tell what the bot should respond'}
           </Typography>
         </Box>

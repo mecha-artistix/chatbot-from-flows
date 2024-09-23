@@ -1,14 +1,22 @@
 import { Date, Document, Types } from 'mongoose';
 
-export interface ILead extends Document {
+export interface ILeadData extends Document {
   user?: Types.ObjectId;
   name?: string;
   createdAt: Date;
-  sessionId: string;
-  intent: string;
+  dataFile?: string;
 }
 
-interface IIntent {
+export interface ILeadsDataFile {
+  name?: string;
+  email?: string;
+  phone?: string;
+}
+
+export interface ILeadStatus extends Document {
+  user?: Types.ObjectId;
+  name?: string;
+  createdAt: Date;
   sessionId: string;
   intent: string;
 }

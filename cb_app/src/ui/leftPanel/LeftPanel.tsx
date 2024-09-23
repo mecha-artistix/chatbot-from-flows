@@ -3,11 +3,11 @@ import Navigation from './Navigation';
 import SettingsNavigation from './SettingsNavigation';
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import UnfoldLessIcon from '@mui/icons-material/UnfoldLess';
-import React, { useState } from 'react';
-import { useThemeStore } from '../../theme/themeStore';
-import SiteLogo from '../../components/SiteLogo';
+import React from 'react';
+import useThemeStore from '../../theme/themeStore';
+import SiteLogo from '../components/SiteLogo';
 function LeftPanel() {
-  const { leftDrawerOpen, leftDrawerWidth, topBarHeight } = useThemeStore((state) => ({
+  const { leftDrawerOpen, leftDrawerWidth } = useThemeStore((state) => ({
     leftDrawerOpen: state.leftDrawerOpen,
     leftDrawerWidth: state.leftDrawerWidth,
     topBarHeight: state.topBarHeight,

@@ -1,5 +1,5 @@
 import { Box, Paper, Stack, Typography } from '@mui/material';
-import useLeadsStore from '../leadsStore';
+import useLeadsStore from '../../leads/leadsStore';
 import { useEffect, useState } from 'react';
 
 const StatBox = ({ name, stat, icon }) => {
@@ -9,15 +9,14 @@ const StatBox = ({ name, stat, icon }) => {
     leadsStatus: state.leadsStatus,
   }));
   const [stateWidth, setStateWidth] = useState(0);
-  const label = {};
 
   const styleHandler = (theme, component) => {
     const style = {
       statBox: {
-        // maxWidth: '400px',
+        // width: 40,
         flex: 1,
-        py: 2,
-        px: 1,
+        p: 1,
+        height: '200px',
         borderRadius: 2,
         border: `1px solid ${theme.palette.divider}`,
       },

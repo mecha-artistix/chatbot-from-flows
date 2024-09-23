@@ -3,6 +3,7 @@ import SmartToyIcon from '@mui/icons-material/SmartToy';
 import PeopleIcon from '@mui/icons-material/People';
 import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
 import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
+import TtyIcon from '@mui/icons-material/Tty';
 import { Link, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { NavLink as RouterLink } from 'react-router-dom';
 function Navigation() {
@@ -11,7 +12,8 @@ function Navigation() {
     { name: 'Flowcharts', link: '/flowcharts', icon: <ShapeLineIcon /> },
     { name: 'Bots', link: '/bots', icon: <SmartToyIcon /> },
     { name: 'Knowledgebase', link: '/knowledgebase', icon: <TipsAndUpdatesIcon /> },
-    { name: 'Leads', link: '/leads', icon: <PeopleIcon /> },
+    { name: 'Leads Data', link: '/leads-data', icon: <PeopleIcon /> },
+    { name: 'Leads stats', link: '/leads-stats', icon: <TtyIcon /> },
   ];
 
   return (

@@ -13,14 +13,16 @@ import {
   ListItem,
   ListItemIcon,
   Paper,
+  Theme,
 } from '@mui/material';
-import SiteLogo from './SiteLogo';
-import useAuthStore from '../features/authentication/userStore';
+import useAuthStore from '../../features/authentication/userStore';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import { useThemeStore } from '../theme/themeStore';
+import useThemeStore from '../../theme/themeStore';
+import { Styles, SXHandler } from '../../types/utils';
+import { SxProps } from '@mui/system';
 
 function TopBar() {
   const [open, setOpen] = React.useState(false);
@@ -31,21 +33,9 @@ function TopBar() {
     event.stopPropagation();
     setOpen(!open);
   };
-  const style = {
-    wrapper: {
-      justifyContent: 'flex-end',
-      height: TopBarHeight,
-    },
-    collapsable: {
-      position: 'absolute',
-      zIndex: 1,
-      top: '100%',
-      left: '0',
-      width: '100%',
-    },
-  };
-  const sxHandler = (theme, component) => {
-    const styles = {
+
+  const sxHandler: SXHandler = (theme, component) => {
+    const styles: Styles = {
       wrapper: {
         justifyContent: 'flex-end',
         height: TopBarHeight,

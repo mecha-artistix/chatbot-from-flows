@@ -1,9 +1,16 @@
 import mongoose, { Schema } from 'mongoose';
 import WebSocket from 'ws';
 import User from './usersModel';
-import { ILead } from 'src/types/lead';
+import { ILeadData, ILeadStatus } from 'src/types/lead';
 
-const leadSchema = new Schema<ILead>({
+const leadDataSchema = new Schema<ILeadData>({
+  //   user: { type: Schema.ObjectId, ref: 'User', required: true },
+  //   name: { type: String, required: false },
+  createdAt: { type: Date, default: Date.now },
+  dataFile: { type: String },
+});
+
+const leadStatusSchema = new Schema<ILeadStatus>({
   //   user: { type: Schema.ObjectId, ref: 'User', required: true },
   //   name: { type: String, required: false },
   createdAt: { type: Date, default: Date.now },
@@ -11,12 +18,17 @@ const leadSchema = new Schema<ILead>({
   intent: { type: String },
 });
 
-const Lead = mongoose.model('Lead', leadSchema);
+export const LeadStatus = mongoose.model('LeadStatus', leadStatusSchema);
 
+export const LeadData = mongoose.model('LeadData', leadDataSchema);
+
+/*
+ */
 // Function to initialize the WebSocket server for leads collection
+
 export const initializeLeadsWebSocket = (wss: WebSocket.Server) => {
   // Access the leads collection from the existing mongoose connection
-  const leadsCollection = mongoose.connection.collection('leads');
+  const leadsCollection = mongoose.connection.collection('LeadStatus');
 
   // Set up MongoDB Change Stream to watch for changes in the leads collection
   const changeStream = leadsCollection.watch();
@@ -38,5 +50,3 @@ export const initializeLeadsWebSocket = (wss: WebSocket.Server) => {
     });
   });
 };
-
-export default Lead;

@@ -13,9 +13,8 @@ import {
   Collapse,
 } from '@mui/material';
 import useFlowStore from '../store/FlowStore';
-import { useThemeStore } from '../../../theme/themeStore';
+import useThemeStore from '../../../theme/themeStore';
 import CloseIcon from '@mui/icons-material/Close';
-import { Textarea } from '@mui/joy';
 import { getIncomers } from '@xyflow/react';
 // export const NodeControlDrawer: React.FC<INodeControlDrawerProps> = ({ open }) => {
 export const NodeControlDrawer: React.FC<INodeControlDrawerProps> = ({
@@ -24,19 +23,14 @@ export const NodeControlDrawer: React.FC<INodeControlDrawerProps> = ({
   openController,
   setOpenController,
 }) => {
-  const { nodes, nodeDrawerOpen, edges, setNodeDrawerOpen, clickedNode, setNode, setLayout } = useFlowStore(
-    (state) => ({
-      nodeDrawerOpen: state.nodeDrawerOpen,
-      setNodeDrawerOpen: state.setNodeDrawerOpen,
-      nodes: state.nodes,
-      setNode: state.setNode,
-      clickedNode: state.clickedNode,
-      setLayout: state.setLayout,
-      edges: state.edges,
-    }),
-  );
+  const { nodes, edges, setNode, setLayout, updateNodeData } = useFlowStore((state) => ({
+    nodes: state.nodes,
+    setNode: state.setNode,
+    setLayout: state.setLayout,
+    edges: state.edges,
+    updateNodeData: state.updateNodeData,
+  }));
   const TopBarHeight = useThemeStore((state) => state.topBarHeight);
-  // const [resData, setResData] = useState({ label: '', description: '', personResponse: '', botResponse: '' });
   const [resData, setResData] = useState({ ...data });
   const [parent, setParent] = useState();
 
@@ -45,14 +39,13 @@ export const NodeControlDrawer: React.FC<INodeControlDrawerProps> = ({
   };
 
   const handleSubmit = () => {
-    setNode(id, resData);
-    setNodeDrawerOpen(false);
+    updateNodeData(id, resData);
     setOpenController(false);
     setLayout();
   };
   useEffect(() => {
     setParent((prev) => {
-      const parent = getIncomers({ id: id }, nodes, edges)[0];
+      const parent = getIncomers({ id }, nodes, edges)[0];
       return parent;
     });
   }, [openController]);
@@ -72,7 +65,7 @@ export const NodeControlDrawer: React.FC<INodeControlDrawerProps> = ({
             id="filled-basic"
             variant="standard"
             name="responseLabel"
-            value={resData?.responseLabel || `Bot Response ${clickedNode?.id}`}
+            value={resData?.responseLabel || `Bot Response ${id}`}
             onChange={handleChange}
             fullWidth
             inputProps={{ style: { fontSize: 28 } }}
