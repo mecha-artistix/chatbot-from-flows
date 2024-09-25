@@ -17,7 +17,7 @@ if (!mongoUrl) {
 }
 
 mongoose
-  .connect(mongoUrl, { tls: true })
+  .connect(mongoUrl, { tls: true, serverSelectionTimeoutMS: 30000, socketTimeoutMS: 45000 })
   .then(() => {
     console.log('Connected to MongoDB');
     const server = app.listen(PORT, '0.0.0.0', () => {
