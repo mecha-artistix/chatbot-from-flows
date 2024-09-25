@@ -11,7 +11,7 @@ const leadsStore: StateCreator<ILeadsStore> = (set, get, api) => ({
   status: '',
   error: '',
   leadsCount: 0,
-  loading: true,
+  loading: false,
   fetchLeads: async () => {
     try {
       set({ status: 'loading' });
@@ -80,7 +80,7 @@ const leadsStore: StateCreator<ILeadsStore> = (set, get, api) => ({
   },
 
   getLeadsStatus: async () => {
-    const response = await axios(URL + '/stats');
+    const response = await axios(URL + '/sessions/stats');
     const stats = response.data.stats;
     set((state) => ({
       ...state,

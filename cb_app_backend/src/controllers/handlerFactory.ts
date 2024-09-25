@@ -74,13 +74,13 @@ export const getOne = <T extends Document>(Model: MongooseModel<T>, popOptions?:
     });
   });
 
-export const getAll = <T extends Document>(Model: MongooseModel<T>): RequestHandler =>
+export const getAll = <T extends Document>(Model: MongooseModel<T>) =>
   catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     // if (!req.user) {
     //   return next(new AppError('User not authenticated', 401));
     // }
 
-    const modelArrName = `${Model.modelName.toLowerCase()}s` as keyof MyUser;
+    // const modelArrName = `${Model.modelName.toLowerCase()}s` as keyof MyUser;
 
     // Safely access `req.user` properties with type assertion
     // const userArray = (req.user[modelArrName] as Schema.Types.ObjectId[]) || [];
