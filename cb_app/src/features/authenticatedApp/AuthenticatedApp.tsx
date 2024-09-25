@@ -5,7 +5,7 @@ import FlowchartsCollection from '../flowchart/FlowchartsCollection';
 import FlowBoard from '../flowchart/components/FlowBoard';
 import Knowledgebase from '../knowledgebase/Knowledgebase';
 import Bots from '../bots/Bots';
-import LeadsStats from '../leads/LeadsStats';
+import LeadsStats from '../leads/Sessions';
 import ProfileSettings from '../userProfile/ProfileSettings';
 import AccountSettings from '../userProfile/components/AccountSettings';
 import SecuritySettings from '../userProfile/components/SecuritySettings';

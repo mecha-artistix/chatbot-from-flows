@@ -12,10 +12,10 @@ import {
   GridToolbarExport,
   GridToolbarQuickFilter,
 } from '@mui/x-data-grid';
-import { useLoaderData, useNavigation, useSearchParams } from 'react-router-dom';
-import { getLeads } from './services';
+import { Outlet, useLoaderData, useNavigation, useSearchParams } from 'react-router-dom';
+import { getSessions } from './services';
 
-const Leads = () => {
+const Sessions = () => {
   const data = useLoaderData();
   const navigation = useNavigation();
   const isLoading = navigation.state === 'loading';
@@ -61,13 +61,13 @@ const Leads = () => {
   ];
 
   useEffect(() => {
-    console.log(leadsCollection);
     setLeadsCollection(data);
   }, []);
 
   return (
     <Container maxWidth="lg">
-      <Stats />
+      {/* <Stats /> */}
+      <Outlet />
       <Container maxWidth="lg">
         <DataGrid
           rowSelection={false}
@@ -133,7 +133,7 @@ const Stats = () => {
   );
 };
 
-export default Leads;
+export default Sessions;
 
 const Toolbar = () => {
   return (
@@ -157,30 +157,11 @@ const Toolbar = () => {
   );
 };
 
-// export const loader = async ({ request }) => {
-//   const url = new URL(request.url);
-//   const searchParams = url.searchParams;
-//   console.log(url.searchParams);
-//   const page = parseInt(searchParams.get('page') || '1', 10);
-//   const limit = parseInt(searchParams.get('limit') || '25', 10);
-//   const sort = searchParams.get('sort') || 'createdAt';
-//   console.log(page, limit, sort);
-
-//   const leads = await getLeads(page, limit, sort);
-//   return leads;
-// };
-
 export const loader = async () => {
   const { paginationModel } = useLeadsStore.getState();
-  // const url = new URL(request.url);
-  // const searchParams = url.searchParams;
-  // console.log(url.searchParams);
-  // const page = parseInt(searchParams.get('page') || '1', 10);
-  // const limit = parseInt(searchParams.get('limit') || '25', 10);
-  // const sort = searchParams.get('sort') || 'createdAt';
-  // console.log(page, limit, sort);
+
   const page = paginationModel.page == 0 ? 1 : paginationModel.page;
   const limit = paginationModel.pageSize;
-  const leads = await getLeads(page, limit);
+  const leads = await getSessions(page, limit);
   return leads;
 };

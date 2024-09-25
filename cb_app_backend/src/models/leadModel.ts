@@ -1,26 +1,46 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, Model } from 'mongoose';
 import WebSocket from 'ws';
+import validator from 'validator';
 import User from './usersModel';
-import { ILeadData, ILeadStatus } from 'src/types/lead';
+import { ILead, ISession, ILeadDataSource } from '../types/lead';
 
-const leadDataSchema = new Schema<ILeadData>({
+const sessionSchema = new Schema<ISession>({
   //   user: { type: Schema.ObjectId, ref: 'User', required: true },
   //   name: { type: String, required: false },
-  createdAt: { type: Date, default: Date.now },
-  dataFile: { type: String },
-});
-
-const leadStatusSchema = new Schema<ILeadStatus>({
-  //   user: { type: Schema.ObjectId, ref: 'User', required: true },
-  //   name: { type: String, required: false },
+  lead: { type: mongoose.Schema.Types.ObjectId, ref: 'Lead' },
   createdAt: { type: Date, default: Date.now },
   sessionId: { type: String },
   intent: { type: String },
 });
+export const Session = mongoose.model('Session', sessionSchema);
 
-export const LeadStatus = mongoose.model('LeadStatus', leadStatusSchema);
+const leadSchema = new Schema<ILead>({
+  user: { type: Schema.ObjectId, ref: 'User', required: true },
+  name: { type: String, required: false },
+  phone: { type: String, match: /^[0-9+\-\s()]*$/ },
+  email: {
+    type: String,
+    required: false,
+    lowercase: true,
+    validate: [validator.isEmail, 'Please provide a valid email'],
+  },
+  createdAt: { type: Date, default: Date.now },
+  dataSource: { type: Schema.ObjectId, ref: 'LeadDataSource', required: false },
+  sessions: [sessionSchema],
+});
 
-export const LeadData = mongoose.model('LeadData', leadDataSchema);
+export const Lead = mongoose.model<ILead>('Lead', leadSchema);
+
+const leadsDataSourceSchema = new Schema<ILeadDataSource>({
+  user: { type: Schema.ObjectId, ref: 'User', required: true },
+  name: { type: String, required: false },
+  createdAt: { type: Date, default: Date.now },
+  leads: [{ type: Schema.ObjectId, ref: 'Lead', required: false }],
+});
+
+export const LeadDataSource = mongoose.model('LeadDataSource', leadsDataSourceSchema);
+
+// const Lead: Model<ILead> = model<ILead>('Lead', leadSchema);
 
 /*
  */

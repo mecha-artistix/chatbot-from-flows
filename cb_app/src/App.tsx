@@ -35,10 +35,12 @@ import ProfileSettings from './features/userProfile/ProfileSettings';
 import AccountSettings from './features/userProfile/components/AccountSettings';
 import SecuritySettings from './features/userProfile/components/SecuritySettings';
 import PaymentSettings from './features/userProfile/components/PaymentSettings';
-import LeadsData from './features/leads/LeadsData';
-import LeadsStats, { loader as leadsStatsLoader } from './features/leads/LeadsStats';
+import LeadsCollections, { loader as LeadsCollectionsLoader } from './features/leads/LeadsCollections';
+import Sessions, { loader as sessionsLoader } from './features/leads/Sessions';
 import AppLayout from './ui/AppLayout';
 import Error from './ui/Error';
+import Leads, { loader as LeadsLoader } from './features/leads/Leads';
+import SessionsStats, { loader as sessionsStatsLoader } from './features/leads/components/SessionsStats';
 
 const getCookie = (name: string) => {
   const value = `; ${document.cookie}`;
@@ -67,8 +69,25 @@ const router = createBrowserRouter([
       { path: '/create-flowchart', element: <FlowBoard />, loader: FlowchartLoader },
       { path: '/knowledgebase', element: <Knowledgebase /> },
       { path: '/bots', element: <Bots /> },
-      { path: '/leads-data', element: <LeadsData /> },
-      { path: '/leads-stats', element: <LeadsStats />, loader: leadsStatsLoader, errorElement: <Error /> },
+      {
+        path: '/leads-collections',
+        element: <LeadsCollections />,
+        loader: LeadsCollectionsLoader,
+        errorElement: <Error />,
+      },
+      {
+        path: '/leads-collections/:id',
+        element: <Leads />,
+        loader: LeadsLoader,
+        errorElement: <Error />,
+      },
+      {
+        path: '/sessions',
+        element: <Sessions />,
+        loader: sessionsLoader,
+        errorElement: <Error />,
+        children: [{ index: true, element: <SessionsStats />, loader: sessionsStatsLoader }], // loader: sessionsStatsLoader
+      },
       { path: '/user-profile', element: <ProfileSettings /> },
       {
         path: '/account-settings',

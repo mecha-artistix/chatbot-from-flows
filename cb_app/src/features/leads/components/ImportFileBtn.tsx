@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { uploadLeadsData } from '../services';
+import { useState } from 'react';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -16,16 +17,35 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
-export default function ImportFileBtn({ onFileLoad, setColumns, setRows }) {
-  //   const [rows, setRows] = useState([]);
-  //   const [columns, setColumns] = useState([]);
+export default function ImportFileBtn({ setData }) {
+  const [file, setFile] = useState(null);
 
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
-    console.log(file);
     if (file) {
-      // send to backend
-      await uploadLeadsData(file);
+      setFile(file);
+      const res = await uploadLeadsData(file);
+      console.log(res);
+      setData((prev) => [...prev, res.data.data]);
+    }
+  };
+  return (
+    <Button
+      sx={{ zIndex: 0, position: 'relative' }}
+      component="label"
+      role={undefined}
+      variant="outlined"
+      tabIndex={-1}
+      startIcon={<CloudUploadIcon />}
+    >
+      Import leads
+      <VisuallyHiddenInput type="file" accept=".csv" onChange={handleFileUpload} multiple />
+    </Button>
+  );
+}
+
+/*
+
       // parse and display the data
       Papa.parse(file, {
         header: true,
@@ -45,29 +65,5 @@ export default function ImportFileBtn({ onFileLoad, setColumns, setRows }) {
           setRows(rows);
         },
       });
-    }
-  };
-  return (
-    <Button
-      sx={{ zIndex: 0, position: 'relative' }}
-      component="label"
-      role={undefined}
-      variant="outlined"
-      tabIndex={-1}
-      startIcon={<CloudUploadIcon />}
-    >
-      Import leads
-      <VisuallyHiddenInput type="file" accept=".csv" onChange={handleFileUpload} multiple />
-    </Button>
-  );
-}
 
-// const parseCsvFile = (file, callback) => {
-//   Papa.parse(file, {
-//     header: true,
-//     skipEmptyLines: true,
-//     complete: (result) => {
-//       callback(result.data);
-//     },
-//   });
-// };
+      */

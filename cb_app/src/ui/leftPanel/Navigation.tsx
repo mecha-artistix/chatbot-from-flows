@@ -11,9 +11,9 @@ function Navigation() {
     { name: 'Dashboard', link: '/', icon: <SpaceDashboardIcon /> },
     { name: 'Flowcharts', link: '/flowcharts', icon: <ShapeLineIcon /> },
     { name: 'Bots', link: '/bots', icon: <SmartToyIcon /> },
-    { name: 'Knowledgebase', link: '/knowledgebase', icon: <TipsAndUpdatesIcon /> },
-    { name: 'Leads Data', link: '/leads-data', icon: <PeopleIcon /> },
-    { name: 'Leads stats', link: '/leads-stats', icon: <TtyIcon /> },
+    // { name: 'Knowledgebase', link: '/knowledgebase', icon: <TipsAndUpdatesIcon /> },
+    { name: 'Leads Collections', link: '/leads-collections', icon: <PeopleIcon /> },
+    { name: 'Sessions', link: '/sessions', icon: <TtyIcon /> },
   ];
 
   return (
