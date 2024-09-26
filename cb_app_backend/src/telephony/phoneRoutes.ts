@@ -4,7 +4,8 @@ import { makeCall, reveiveCall } from './phoneController';
 
 const router: Router = express.Router();
 
-router.use(protect);
 router.route('/').post(makeCall);
 router.route('/voice-call').post(reveiveCall);
+
+router.use(protect);
 export default router;
