@@ -12,7 +12,11 @@ export const getLeads = getAll(Lead);
 // });
 
 export const createLead = catchAsync(async (req, res, next) => {
-  res.status(201).json({ status: 'working' });
+  const user = req?.user?._id;
+  const { name, email, phone, dataSource } = req.body;
+  const doc = await Lead.create({ user, name, email, phone, dataSource });
+  // console.log(doc);
+  res.status(201).json({ status: 'success', data: { data: doc } });
 });
 
 export const deleteLead = catchAsync(async (req, res, next) => {

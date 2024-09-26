@@ -12,7 +12,6 @@ const sessionSchema = new Schema<ISession>({
   sessionId: { type: String },
   intent: { type: String },
 });
-export const Session = mongoose.model('Session', sessionSchema);
 
 const leadSchema = new Schema<ILead>({
   user: { type: Schema.ObjectId, ref: 'User', required: true },
@@ -29,8 +28,6 @@ const leadSchema = new Schema<ILead>({
   sessions: [sessionSchema],
 });
 
-export const Lead = mongoose.model<ILead>('Lead', leadSchema);
-
 const leadsDataSourceSchema = new Schema<ILeadDataSource>({
   user: { type: Schema.ObjectId, ref: 'User', required: true },
   name: { type: String, required: false },
@@ -38,13 +35,30 @@ const leadsDataSourceSchema = new Schema<ILeadDataSource>({
   leads: [{ type: Schema.ObjectId, ref: 'Lead', required: false }],
 });
 
-export const LeadDataSource = mongoose.model('LeadDataSource', leadsDataSourceSchema);
+/*
+- MIDDLEWARE CONTROLLERS
 
-// const Lead: Model<ILead> = model<ILead>('Lead', leadSchema);
+ */
+
+leadSchema.post<ILead>('save', async function (doc) {
+  console.log('doc', doc + '\n');
+  try {
+    const source = await LeadDataSource.findOne({ _id: doc.dataSource });
+    const update = await LeadDataSource.findOneAndUpdate(
+      { _id: doc.dataSource },
+      { $addToSet: { leads: doc._id } },
+      { new: true, upsert: true },
+    );
+
+    console.log('source', source);
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 /*
+- Initialize Call web socket
  */
-// Function to initialize the WebSocket server for leads collection
 
 export const initializeLeadsWebSocket = (wss: WebSocket.Server) => {
   // Access the leads collection from the existing mongoose connection
@@ -70,3 +84,10 @@ export const initializeLeadsWebSocket = (wss: WebSocket.Server) => {
     });
   });
 };
+
+/*
+- EXPORTS
+*/
+export const Session = mongoose.model('Session', sessionSchema);
+export const Lead = mongoose.model<ILead>('Lead', leadSchema);
+export const LeadDataSource = mongoose.model('LeadDataSource', leadsDataSourceSchema);

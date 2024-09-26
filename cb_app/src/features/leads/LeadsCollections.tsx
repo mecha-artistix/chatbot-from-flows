@@ -13,7 +13,6 @@ import {
   Checkbox,
   Button,
 } from '@mui/material';
-import CreateNewBtn from './components/CreateNewBtn';
 import ImportFileBtn from './components/ImportFileBtn';
 import { DataGrid } from '@mui/x-data-grid';
 import CallBtn from './components/CallBtn';
@@ -67,10 +66,13 @@ function LeadsCollections() {
     navigate(`/leads-collections/${params.id}`);
   }
 
+  function handleSelectionChange(params: type) {
+    console.log(params);
+  }
+
   return (
     <Container maxWidth="xl">
       <Stack direction="row" sx={style.container}>
-        <CreateNewBtn />
         <ImportFileBtn setData={setData} />
       </Stack>
       <Container>
@@ -85,6 +87,8 @@ function LeadsCollections() {
           checkboxSelection
           disableRowSelectionOnClick
           onRowClick={handleRowClick}
+          onRowSelectionModelChange={handleSelectionChange}
+
           // onPaginationModelChange={(newPaginationModel) => {
           //   setPaginationModel(newPaginationModel);
           // }}
