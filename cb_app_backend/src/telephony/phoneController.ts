@@ -63,9 +63,7 @@ export const reveiveCall = async (req, res) => {
     {
       callerId: `${TWILIO_PHONE_NUMBER}`,
     },
-    {
-      fromNum: '+923439107326',
-    },
+    '+923439107326',
   );
 
   res.type('text/xml');
