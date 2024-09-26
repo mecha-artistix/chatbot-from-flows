@@ -8,7 +8,6 @@ import {
   GridToolbarContainer,
   GridToolbarColumnsButton,
   GridToolbarFilterButton,
-  GridToolbarDensitySelector,
   GridToolbarExport,
   GridToolbarQuickFilter,
 } from '@mui/x-data-grid';

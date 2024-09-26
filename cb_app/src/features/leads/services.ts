@@ -2,10 +2,6 @@ import axios from 'axios';
 
 const URL_LEADS = import.meta.env.VITE_NODE_BASE_API + '/leads';
 
-const URL_LEADS_COLLECTIONS = import.meta.env.VITE_NODE_BASE_API + '/leads/collections';
-
-const URL_SESSIONS = import.meta.env.VITE_NODE_BASE_API + '/leads/sessions';
-
 // &sort=${sort.sortBy}${sort.key}
 
 export const getSessions = async (page, limit) => {
@@ -23,7 +19,7 @@ export const getSessions = async (page, limit) => {
 
 export const getSessionsStats = async () => {
   try {
-    const response = await axios(URL_LEADS + '/sessions/stats');
+    const response = await axios.get(URL_LEADS + '/sessions/stats');
     const stats = response.data;
     return stats;
   } catch (error) {
@@ -56,14 +52,35 @@ export const getLeadsCollections = async () => {
   }
 };
 
+export const createLead = async (body) => {
+  try {
+    const response = await axios.post(URL_LEADS, body, { withCredentials: true });
+    const data = await response.data;
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export const getLeads = async (id) => {
   try {
     const response = await axios.get(URL_LEADS + `/collections/${id}`, { withCredentials: true });
     const data = await response.data;
-    console.log(data);
     return data;
   } catch (error) {
     throw new Error(error);
+  }
+};
+
+const URL_PHONE = import.meta.env.VITE_NODE_BASE_API + '/phone';
+
+export const makeCall = async (numbersToCall) => {
+  try {
+    const response = await axios.post(URL_PHONE, { numbersToCall }, { withCredentials: true });
+    const data = await response.data;
+    return data;
+  } catch (error) {
+    return error;
   }
 };
 
