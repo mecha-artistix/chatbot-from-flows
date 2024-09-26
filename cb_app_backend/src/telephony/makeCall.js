@@ -16,9 +16,7 @@ const fromNum = '+923439107326';
 async function createCall(fromNum, toNum) {
   const call = await client.calls.create({
     // twiml: '<Response><Say>Hello, this is a test call.</Say><Dial>' + fromNum + '</Dial></Response>',
-    twiml: `<Response>
-              <Dial>+923335354297</Dial>
-            </Response>`,
+    twiml: `<Response><Dial>+923335354297</Dial></Response>`,
     from: '+14803767089',
     to: fromNum,
   });
