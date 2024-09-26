@@ -55,6 +55,7 @@ export const initializeCallsWebSocket = (wss: WebSocket.Server) => {
 };
 
 export const reveiveCall = async (req, res) => {
+  console.log(req);
   const twiml = new VoiceResponse();
 
   twiml.say('Please wait while we connect your call.');
