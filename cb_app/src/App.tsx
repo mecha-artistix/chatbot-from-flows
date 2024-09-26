@@ -1,31 +1,16 @@
 import * as React from 'react';
-import {
-  BrowserRouter,
-  Route,
-  Routes,
-  Navigate,
-  useNavigate,
-  Outlet,
-  RouterProvider,
-  createBrowserRouter,
-} from 'react-router-dom';
+import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { CssVarsProvider, extendTheme } from '@mui/joy/styles';
 import './App.css';
-import Flowchart from './features/flowchart/Flowchart';
 import useThemeStore from './theme/themeStore';
-import { createMaterialTheme, joyTheme } from './theme/theme';
-import { createJoyTheme } from './theme/theme';
-import ToggleTheme from './ui/components/ToggleTheme';
+import { createMaterialTheme } from './theme/theme';
 import UserAuthPage from './features/authentication/components/UserAuthPage';
 import Dashboard from './features/dashboard/Dashboard';
 
 import LoginForm from './features/authentication/components/LoginForm';
 import RegistrationForm from './features/authentication/components/RegistrationForm';
-import NotFound from './features/notFound/NotFound';
-import useAuthStore from './features/authentication/userStore';
 import FlowchartsCollection, { loader as flowchartsLoader } from './features/flowchart/FlowchartsCollection';
 import { action as CreateNewFlowchartAction } from './features/flowchart/components/CreateNewBtn';
 import FlowBoard, { loader as FlowchartLoader } from './features/flowchart/components/FlowBoard';
@@ -40,6 +25,7 @@ import Sessions, { loader as sessionsLoader } from './features/leads/Sessions';
 import AppLayout from './ui/AppLayout';
 import Error from './ui/Error';
 import Leads, { loader as LeadsLoader } from './features/leads/Leads';
+// import { action as createNewLeadAction } from './features/leads/components/CreateNewLead';
 import SessionsStats, { loader as sessionsStatsLoader } from './features/leads/components/SessionsStats';
 
 const getCookie = (name: string) => {
@@ -56,7 +42,7 @@ const ProtectedRoute = ({ element }: { element: JSX.Element }) => {
 const router = createBrowserRouter([
   {
     element: <ProtectedRoute element={<AppLayout />} />,
-    errorElement: <Error />,
+    // errorElement: <Error />,
     children: [
       { path: '/', element: <Dashboard /> },
       {

@@ -32,4 +32,6 @@ router.route('/collections').post(uploadLeadsDataSource, createLeadsDataSource).
 router.route('/collections/:id').get(getLeadsfromCollection).delete(deleteLead).patch(updateLead);
 router.route('/').post(createLead).get(getLeads);
 
+router.route('/leads').get(getLeads);
+
 export default router;
