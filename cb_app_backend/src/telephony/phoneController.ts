@@ -1,17 +1,17 @@
 import { Request, Response } from 'express';
 import WebSocket from 'ws';
 const twilio = require('twilio');
+const VoiceResponse = require('twilio').twiml.VoiceResponse;
 import { catchAsync } from '../utils/catchAsync';
 import AppError from '../utils/appError';
 import { deleteOne, getAll, updateOne } from './../controllers/handlerFactory';
-
-const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN } = process.env;
+const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER } = process.env;
 
 const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
 async function createCall(num) {
   const call = await client.calls.create({
-    from: '+14803767089',
+    from: `${TWILIO_PHONE_NUMBER}`,
     to: num,
     twiml: '<Response><Say>Ahoy, World!</Say></Response>',
   });
@@ -52,6 +52,24 @@ export const initializeCallsWebSocket = (wss: WebSocket.Server) => {
       console.log('Call client disconnected');
     });
   });
+};
+
+export const reveiveCall = async (req, res) => {
+  const twiml = new VoiceResponse();
+
+  twiml.say('Please wait while we connect your call.');
+
+  twiml.dial(
+    {
+      callerId: `${TWILIO_PHONE_NUMBER}`,
+    },
+    {
+      fromNum: '+923439107326',
+    },
+  );
+
+  res.type('text/xml');
+  res.send(twiml.toString());
 };
 
 export const makeCall = catchAsync(async (req, res, next) => {
