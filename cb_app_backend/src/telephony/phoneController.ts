@@ -5,6 +5,7 @@ const VoiceResponse = require('twilio').twiml.VoiceResponse;
 import { catchAsync } from '../utils/catchAsync';
 import AppError from '../utils/appError';
 import { deleteOne, getAll, updateOne } from './../controllers/handlerFactory';
+import axios, { AxiosResponse } from 'axios';
 const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER } = process.env;
 
 const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
@@ -113,11 +114,20 @@ export const processSpeech = (req, res) => {
 };
 
 // Simulate a bot response based on the user's speech
-function getBotResponse(userSpeech) {
-  if (userSpeech.toLowerCase().includes('hello')) {
-    return 'Hello! How can I assist you today?';
-  } else {
-    return 'I am not sure I understand. Could you please repeat that?';
+async function getBotResponse(userSpeech) {
+  if (!userSpeech) {
+    console.log('userSpeach not caught');
+  }
+  try {
+    const response: AxiosResponse = await axios.post('http://209.209.42.134:5000', {
+      session_id: '13123123131',
+      input_text: userSpeech,
+    });
+    const message = response.data.response;
+    return message;
+  } catch (error) {
+    console.log(error);
+    return 'Sorry, there was an error processing your request.';
   }
 }
 
