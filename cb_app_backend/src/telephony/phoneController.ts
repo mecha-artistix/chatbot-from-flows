@@ -13,25 +13,13 @@ const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 const fromNum = '+16155520134';
 // const botNum = '+16155520134';
 
-const createControlledCall = (fromNum) => {
-  const twiml = new VoiceResponse();
-
-  twiml.say('Please wait while we connect your call.');
-  twiml.dial(fromNum);
-
-  return twiml.toString();
-};
-
-async function createCall(fromNum, toNum) {
-  const twimlString = createControlledCall(fromNum);
-
+export async function makeCall(toNumber) {
   const call = await client.calls.create({
-    from: TWILIO_PHONE_NUMBER,
-    to: toNum,
-    twiml: twimlString,
+    from: `${TWILIO_PHONE_NUMBER}`,
+    to: toNumber,
+    url: 'http://91.107.194.217:5180/api/v2/phone/receive-call',
   });
-
-  console.log('Call initiated:', call.sid);
+  console.log('Call initiated', call.sid);
   return call;
 }
 
@@ -49,12 +37,12 @@ export const initializeCallsWebSocket = (wss: WebSocket.Server) => {
           if (numbersToCall.length > 1) {
             // Sequential calls with 2-second delay
             for (const num of numbersToCall) {
-              const response = await createCall(fromNum, num);
+              const response = await makeCall(num);
               console.log('session initiated - ', response.sid);
               ws.send(JSON.stringify({ type: 'callResult', payload: response }));
             }
           } else if ((numbersToCall.length = 1)) {
-            const response = await createCall(fromNum, numbersToCall[0]);
+            const response = await makeCall(numbersToCall[0]);
             console.log('session initiated - ', response.sid);
             ws.send(JSON.stringify({ type: 'callResult', payload: response }));
           }
@@ -70,15 +58,6 @@ export const initializeCallsWebSocket = (wss: WebSocket.Server) => {
     });
   });
 };
-
-export async function makeCall(toNumber) {
-  const call = await client.calls.create({
-    from: TWILIO_PHONE_NUMBER, // Twilio number
-    to: toNumber, // callee's phone number
-    url: 'http://91.107.194.217:5180/api/v2/phone/receive-call', // Your endpoint where Twilio gets TwiML
-  });
-  console.log('Call initiated', call.sid);
-}
 
 //
 
@@ -155,6 +134,28 @@ async function getBotResponse(userSpeech, callSid) {
     },
     '+923439107326',
   );
+
+const createControlledCall = (fromNum) => {
+  const twiml = new VoiceResponse();
+
+  twiml.say('Please wait while we connect your call.');
+  twiml.dial(fromNum);
+
+  return twiml.toString();
+};
+
+  async function createCall(fromNum, toNum) {
+  const twimlString = createControlledCall(fromNum);
+
+  const call = await client.calls.create({
+    from: TWILIO_PHONE_NUMBER,
+    to: toNum,
+    twiml: twimlString,
+  });
+
+  console.log('Call initiated:', call.sid);
+  return call;
+}
 
 
   export const makeCall = catchAsync(async (req, res, next) => {
