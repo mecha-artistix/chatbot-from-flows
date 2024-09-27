@@ -33,7 +33,7 @@ export interface IFlowBoardSlice {
   edgeTypes?: Record<String, React.ComponentType<EdgeProps>>;
   defaultEdgeOptions?: DefaultEdgeOptions;
 
-  setFlowboard?: (flowchart) => void;
+  setFlowboard: (flowchart) => void;
   onNodesChange?: (changes: NodeChange[]) => void;
   onEdgesChange?: (changes: EdgeChange[]) => void;
   onConnect?: (connection: Connection) => void;

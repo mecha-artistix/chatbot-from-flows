@@ -41,7 +41,6 @@ const leadsDataSourceSchema = new Schema<ILeadDataSource>({
  */
 
 leadSchema.post<ILead>('save', async function (doc) {
-  console.log('doc', doc + '\n');
   try {
     const source = await LeadDataSource.findOne({ _id: doc.dataSource });
     const update = await LeadDataSource.findOneAndUpdate(
@@ -49,8 +48,6 @@ leadSchema.post<ILead>('save', async function (doc) {
       { $addToSet: { leads: doc._id } },
       { new: true, upsert: true },
     );
-
-    console.log('source', source);
   } catch (error) {
     console.error(error);
   }

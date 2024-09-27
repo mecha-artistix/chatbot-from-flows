@@ -1,9 +1,9 @@
-import Papa from 'papaparse';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { uploadLeadsData } from '../services';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { ILeadCollection } from '../LeadsCollections';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -17,15 +17,15 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
-export default function ImportFileBtn({ setData }) {
-  const [file, setFile] = useState(null);
+interface IImportFileBtn {
+  setData: React.Dispatch<React.SetStateAction<ILeadCollection[]>>;
+}
 
+const ImportFileBtn: React.FC<IImportFileBtn> = ({ setData }) => {
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFile(file);
       const res = await uploadLeadsData(file);
-      console.log(res);
       setData((prev) => [...prev, res.data.data]);
     }
   };
@@ -42,7 +42,7 @@ export default function ImportFileBtn({ setData }) {
       <VisuallyHiddenInput type="file" accept=".csv" onChange={handleFileUpload} multiple />
     </Button>
   );
-}
+};
 
 /*
 
@@ -67,3 +67,5 @@ export default function ImportFileBtn({ setData }) {
       });
 
       */
+
+export default ImportFileBtn;

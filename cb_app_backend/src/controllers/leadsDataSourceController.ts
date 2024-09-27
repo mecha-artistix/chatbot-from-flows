@@ -91,7 +91,10 @@ export const createLeadsDataSource = catchAsync(async (req, res, next) => {
 export const getLeadsDataSource = getAll(LeadDataSource);
 
 export const getLeadsfromCollection = catchAsync(async (req, res, next) => {
-  const doc = await LeadDataSource.findOne({ _id: req.params.id }).populate('leads');
+  const doc = await LeadDataSource.findOne({ _id: req.params.id }).populate({
+    path: 'leads',
+    options: { sort: { createdAt: -1 } },
+  });
   if (!doc) return next(new AppError('Collection not found', 404));
   const totalLeads = doc?.leads?.length;
   res.status(200).json({ status: 'success', totalLeads, data: { data: doc } });
