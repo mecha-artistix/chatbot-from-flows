@@ -1,4 +1,4 @@
-import { create, StoreApi, StateCreator } from 'zustand';
+import { create, StateCreator } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { flowBoardSlice } from './flowBoardSlice';
 import { flowchartSlice } from './flowchartSlice';

@@ -88,7 +88,7 @@ export const getAll = <T extends Document>(Model: MongooseModel<T>) =>
     // Ensure the request query is properly typed
 
     // const features = new APIFeatures(Model.find(filter), req.query as { [key: string]: string })
-    const totalDocs = await Model.countDocuments();
+    // const totalDocs = await Model.countDocuments();
 
     const features = new APIFeatures(Model.find(), req.query as { [key: string]: string })
       .filter()
@@ -102,7 +102,6 @@ export const getAll = <T extends Document>(Model: MongooseModel<T>) =>
     // Send response
     res.status(200).json({
       status: 'success',
-      total: totalDocs,
       results: doc.length,
       data: {
         data: doc,

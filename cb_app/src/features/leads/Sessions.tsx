@@ -161,6 +161,6 @@ export const loader = async () => {
 
   const page = paginationModel.page == 0 ? 1 : paginationModel.page;
   const limit = paginationModel.pageSize;
-  const leads = await getSessions(page, limit);
-  return leads;
+  const sessions = await getSessions(page, limit);
+  return sessions;
 };

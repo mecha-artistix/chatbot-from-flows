@@ -1,15 +1,13 @@
-import { StateCreator, StoreApi } from 'zustand';
-import { addEdge, applyEdgeChanges, applyNodeChanges, ReactFlowJsonObject } from '@xyflow/react';
-import { initialEdges, initialNodes, initNodes, startNode } from '../components/nodes/InitNode';
-import { IFlowBoardSlice, INode, INodeData } from '../../../types/flowchart';
+import { StateCreator } from 'zustand';
+import { addEdge, applyEdgeChanges, applyNodeChanges } from '@xyflow/react';
+import { startNode } from '../components/nodes/InitNode';
+import { IFlowBoardSlice, INode } from '../../../types/flowchart';
 import { createFlowchart, getFlowchart, patchFlowchart } from '../services/fetchFlowchart';
 import { edge1 } from '../components/edges/InitEdges';
 import { StartNode, ResponseNode, CustomNode } from '../components/nodes/Nodes';
 import { useDAGRELayout } from '../utils/useDAGRELayout';
 
 const getLayoutedElements = useDAGRELayout({ direction: 'LR' });
-
-const URL: string = import.meta.env.VITE_NODE_BASE_API + '/flowcharts';
 
 const nodeTypes = {
   start_node: StartNode,
@@ -18,7 +16,7 @@ const nodeTypes = {
 };
 const edgeTypes = {};
 
-export const flowBoardSlice: StateCreator<IFlowBoardSlice> = (set, get, api) => ({
+export const flowBoardSlice: StateCreator<IFlowBoardSlice> = (set, get) => ({
   id: '',
   name: '',
   nodes: [startNode],

@@ -12,7 +12,6 @@ class APIFeatures {
   filter(): this {
     // 1-A) BASIC FILTERING
     const queryObj = { ...this.queryString }; // { difficulty:'easy', page:2, sort:'1', limit:20 }
-    console.log('queryObj before: ', queryObj);
     const excludedFields = ['page', 'sort', 'limit', 'fields'];
     excludedFields.forEach((el) => delete queryObj[el]);
 
@@ -41,7 +40,6 @@ class APIFeatures {
   limitFields(): this {
     if (this.queryString.fields) {
       const fields = this.queryString.fields.split(',').join(' ');
-      console.log(fields); // query.select('name duration price') it will send back result that contains only these 3
       this.query = this.query.select(fields);
     } else this.query = this.query.select('-__v');
     return this;
@@ -51,7 +49,6 @@ class APIFeatures {
   paginate(): this {
     const page = +this.queryString.page || 1;
     const limit = +this.queryString.limit || 100;
-    console.log(page, limit);
     const skip = (page - 1) * limit;
     // query = query.skip(2).limit(10)
     this.query = this.query.skip(skip).limit(limit);

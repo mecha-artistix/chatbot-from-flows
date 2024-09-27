@@ -1,15 +1,19 @@
-import { getIncomers } from '@xyflow/react';
+import { Edge, getIncomers } from '@xyflow/react';
 import { useCallback, useState } from 'react';
 import { parameters, instructions } from './botPromptConfig';
+import { INode } from '../../../types/flowchart';
+
+type TGeneratePromptString = (nodes: INode[], edges: Edge[]) => void;
+
 const useGeneratePrompt = () => {
   const [prompt, setPrompt] = useState('');
 
-  const generatePrompt = useCallback((nodes, edges) => {
+  const generatePrompt: TGeneratePromptString = useCallback((nodes, edges) => {
     setPrompt(``);
     const newPrompt = nodes.reduce((acc, node) => {
       if (node.type === 'response_node' && node.data) {
         const parent = getIncomers({ id: node.id }, nodes, edges)[0];
-        const { responseLabel, responseType, responsePerson, responseBot } = node.data;
+        const { responseType, responsePerson, responseBot } = node.data;
         return (
           acc +
           `${node.id}- if person responds ${responseType}ly to '${parent?.data.responseLabel}'. For example ${responsePerson} then your response should be something like ${responseBot} \n`
