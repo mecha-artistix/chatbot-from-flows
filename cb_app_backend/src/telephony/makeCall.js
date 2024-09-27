@@ -30,11 +30,22 @@ async function createCall(fromNum, toNum) {
 // createCall(fromNum, toNums[2]);
 
 // Initiate the outbound call
+// async function makeCall(toNumber) {
+//   const call = await client.calls.create({
+//     from: '+YOUR_TWILIO_PHONE_NUMBER', // Twilio number
+//     to: toNumber, // callee's phone number
+//     url: 'http://91.107.194.217:5180/api/v2/phone/voice-call',
+//   });
+//   console.log('Call initiated with SID:', call.sid);
+// }
+
 async function makeCall(toNumber) {
   const call = await client.calls.create({
-    from: '+YOUR_TWILIO_PHONE_NUMBER', // Twilio number
+    from: `${TWILIO_PHONE_NUMBER}`, // Twilio number
     to: toNumber, // callee's phone number
-    url: 'http://91.107.194.217:5180/api/v2/phone/voice-call',
+    url: 'http://91.107.194.217:5180/api/v2/phone/receive-call', // Your endpoint where Twilio gets TwiML
   });
-  console.log('Call initiated with SID:', call.sid);
+  console.log('Call initiated', call.sid);
 }
+
+makeCall('+923439107326');
