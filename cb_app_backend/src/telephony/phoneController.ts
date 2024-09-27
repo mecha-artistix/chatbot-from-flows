@@ -99,15 +99,15 @@ export const reveiveCall = async (req, res) => {
   res.send(twiml.toString());
 };
 
-export const processSpeech = (req, res) => {
+export const processSpeech = async (req, res) => {
   const userSpeech = req.body.SpeechResult; // SpeechResult contains the recognized text
   console.log('Callee said:', userSpeech);
 
   // Simulate sending the speech to a bot and getting a response
-  const botResponse = getBotResponse(userSpeech); // This is where your bot would come in
+  const botResponse = await getBotResponse(userSpeech); // This is where your bot would come in
 
   const twiml = new VoiceResponse();
-  twiml.say(botResponse); // Twilio TTS reads the bot response to the callee
+  twiml.say(botResponse);
 
   res.type('text/xml');
   res.send(twiml.toString());
