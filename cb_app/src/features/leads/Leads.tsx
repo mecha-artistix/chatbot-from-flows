@@ -1,48 +1,30 @@
 import { useEffect, useState } from 'react';
-import { Button, Container, Stack } from '@mui/material';
-import ImportFileBtn from './components/ImportFileBtn';
-import { DataGrid } from '@mui/x-data-grid';
+import { Container, Stack } from '@mui/material';
+import { DataGrid, GridCallbackDetails, GridRowSelectionModel } from '@mui/x-data-grid';
 import CallBtn from './components/CallBtn';
-import { useLoaderData, useParams } from 'react-router-dom';
-import { createLead, getLeads } from './services';
+import { LoaderFunction, useLoaderData } from 'react-router-dom';
+import { getLeads } from './services';
 import CreateNewLead from './components/CreateNewLead';
 
 const columns = [
-  { field: 'name', headerName: 'Name', flex: 1 },
-  { field: 'email', headerName: 'Email', flex: 1 },
-  { field: 'phone', headerName: 'Phone', flex: 1 },
+  { field: 'name', headerName: 'Name', flex: 1, sortable: false },
+  { field: 'email', headerName: 'Email', flex: 1, sortable: false },
+  { field: 'phone', headerName: 'Phone', flex: 1, sortable: false },
 ];
 
 function Leads() {
-  const initData = useLoaderData();
-  const [data, setData] = useState(initData);
-  // console.log(data);
-
-  const [leads, setLeads] = useState([...initData.data.data.leads]);
-  const [leadsCount, setLeadsCount] = useState(initData.totalLeads);
-  const [loading, setLoading] = useState(false);
-  const [rows, setRows] = useState([]);
+  const initData = useLoaderData() as IInitData;
+  const [leads, setLeads] = useState<ILead[]>([...initData.data.data.leads]);
+  const [rows, setRows] = useState<Row[]>([]);
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 25 });
-  const [callNum, setCallNum] = useState([]);
-  const [collection, setCollection] = useState({ _id: initData.data.data._id, name: initData.data.data.name });
-
-  const handleFileLoad = (csvData) => {};
+  const [callNum, setCallNum] = useState<string[]>([]);
 
   useEffect(() => {
-    // console.log(collection);
-  }, []);
-
-  useEffect(() => {
-    // console.log(data);
-
-    // setLeads((prev) => [...prev, ...data.data.data.leads]);
-
     setRows(() => {
       let rows: Row[] = [];
       console.log(leads.length);
       console.log(leads);
-      // data.data.data.leads.forEach((obj, i) => {
-      leads.forEach((obj, i) => {
+      leads.forEach((obj) => {
         const { _id, name, email, phone, createdAt } = obj;
         const row = { id: _id, name, email, phone, createdAt };
         rows.push(row);
@@ -54,7 +36,6 @@ function Leads() {
 
   const style = {
     container: {
-      // position: 'fixed',
       margin: '20px auto',
       p: 2,
       justifyContent: 'space-between',
@@ -63,7 +44,7 @@ function Leads() {
     },
   };
 
-  function handleSelectionChange(rowSelectionModel, details) {
+  function handleSelectionChange(rowSelectionModel: GridRowSelectionModel, details: GridCallbackDetails) {
     if (rowSelectionModel.length) {
       console.log('rowSelectionModel', rowSelectionModel, 'details', details);
       const phone = details.api.getCellValue(rowSelectionModel[rowSelectionModel.length - 1], 'phone');
@@ -75,7 +56,7 @@ function Leads() {
   return (
     <Container maxWidth="xl">
       <Stack direction="row" sx={style.container}>
-        <CreateNewLead setLeads={setLeads} setRows={setRows} />
+        <CreateNewLead setRows={setRows} />
         <CallBtn numbersToCall={callNum} />
       </Stack>
       <Container>
@@ -90,11 +71,9 @@ function Leads() {
           checkboxSelection
           onRowSelectionModelChange={handleSelectionChange}
           disableRowSelectionOnClick
-          // rowCount={leadsCount}
           density="compact"
           sx={{ border: 0 }}
           paginationModel={paginationModel}
-          loading={loading}
           onPaginationModelChange={(newPaginationModel) => {
             setPaginationModel(newPaginationModel);
           }}
@@ -106,27 +85,39 @@ function Leads() {
 
 export default Leads;
 
-export async function loader({ params }) {
+export const loader: LoaderFunction = async function ({ params }) {
   const { id } = params;
+  if (!id) return;
   const leads = await getLeads(id);
+  console.log('leads from loader', leads);
   return leads;
-}
+};
+// type TLoader = ({ params }: TLoaderParams) => Promise<{ [key: string]: any }>;
 
-interface Row {
+// type TLoaderParams = {
+//   [key: string]: any;
+// };
+
+export interface Row {
   name?: string;
   email?: string;
   phone?: string;
 }
 
-// const CreateNewBtn = ({ collectionId, phone, email, name }) => {
-//   const handleCreateNew = async () => {
-//     console.log(collectionId);
-//     const body = { name, email, phone, dataSource: collectionId };
-//     const newLead = await createLead(body);
-//   };
-//   return (
-//     <Button onClick={handleCreateNew} variant="contained">
-//       Create New Lead
-//     </Button>
-//   );
-// };
+interface ILead {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  createdAt: string;
+}
+
+interface IInitData {
+  status: string;
+  totalLeads: number;
+  data: {
+    data: {
+      leads: ILead[];
+    };
+  };
+}

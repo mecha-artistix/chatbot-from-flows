@@ -1,23 +1,9 @@
 import { useEffect, useState } from 'react';
-import {
-  Box,
-  Container,
-  Paper,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Checkbox,
-  Button,
-} from '@mui/material';
+import { Container, Stack } from '@mui/material';
 import ImportFileBtn from './components/ImportFileBtn';
-import { DataGrid } from '@mui/x-data-grid';
-import CallBtn from './components/CallBtn';
-import { getLeadsCollections, uploadLeadsData } from './services';
-import { useLoaderData, useNavigate } from 'react-router-dom';
+import { DataGrid, GridRowParams, GridRowSelectionModel } from '@mui/x-data-grid';
+import { getLeadsCollections } from './services';
+import { LoaderFunction, useLoaderData, useNavigate } from 'react-router-dom';
 // import Checkbox from '@mui/material/Checkbox';
 
 const columns = [
@@ -25,18 +11,11 @@ const columns = [
   { field: 'createdAt', headerName: 'Created Date', width: 200 },
 ];
 
-function LeadsCollections() {
-  const initData = useLoaderData();
-  const [data, setData] = useState([...initData.data]);
+const LeadsCollections: React.FC = () => {
+  const initData = useLoaderData() as IInitData;
+  const [data, setData] = useState<ILeadCollection[]>([...initData.data.data]);
   const [rows, setRows] = useState<Row[]>([]);
-  const [selectedRow, setSelectedRow] = useState({});
-  const [checked, setChecked] = useState(0);
-  const [isAllSelected, setIsAllSelected] = useState(false);
   const navigate = useNavigate();
-  const handleFileLoad = async (csvData) => {
-    // setFile(csvData);
-    // const res = await uploadLeadsData(file);
-  };
 
   useEffect(() => {
     setRows(() => {
@@ -61,12 +40,11 @@ function LeadsCollections() {
     },
   };
 
-  function handleRowClick(params) {
-    console.log(params);
+  function handleRowClick(params: GridRowParams) {
     navigate(`/leads-collections/${params.id}`);
   }
 
-  function handleSelectionChange(params: type) {
+  function handleSelectionChange(params: GridRowSelectionModel) {
     console.log(params);
   }
 
@@ -94,27 +72,46 @@ function LeadsCollections() {
           // }}
         />
         <Stack direction="row">
-          <CallBtn />
+          {/* <CallBtn /> */}
           {/* <Button onClick={() => navigate(`/leads-collections/${id}`)}>View Leads</Button> */}
         </Stack>
       </Container>
     </Container>
   );
-}
+};
 
 export default LeadsCollections;
 
-export async function loader() {
+export const loader: LoaderFunction = async () => {
   const leadsCollections = await getLeadsCollections();
-  return leadsCollections.data;
+  console.log(leadsCollections);
+  return leadsCollections;
+};
+
+interface IInitData {
+  status: string;
+  results: number;
+  data: {
+    data: ILeadCollection[];
+  };
 }
+
+export interface ILeadCollection {
+  _id: string;
+  user: string;
+  createdAt: string;
+  leads: string[];
+  name: string;
+}
+
 interface Row {
   name: string;
   createdAt: string;
 }
-interface APIResponseLeadsCollection {
-  data: { _id: string; user: string; name: string; leads: any[]; createdAt: string };
-}
+
+// interface APIResponseLeadsCollection {
+//   data: { _id: string; user: string; name: string; leads: any[]; createdAt: string };
+// }
 
 /*
 

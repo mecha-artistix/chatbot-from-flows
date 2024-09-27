@@ -12,8 +12,11 @@ import {
   Input,
   Paper,
   Stack,
+  SxProps,
   TextField,
+  Theme,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { Handle, Position, useConnection, useReactFlow } from '@xyflow/react';
 import styles from '../Styles.module.css';
@@ -26,7 +29,12 @@ import useAddNode from '../../hooks/useAddNode';
 /* START NODE
 . 
 */
+
+type TSxHandler = (theme: Theme, component: string) => SxProps<Theme> | undefined;
+
 export const StartNode: React.FC<NodeProps<INodeData>> = ({ data, id }) => {
+  const theme = useTheme();
+
   const handleAddNode = useAddNode();
 
   const addNodeHandler = () => {
@@ -39,28 +47,12 @@ export const StartNode: React.FC<NodeProps<INodeData>> = ({ data, id }) => {
     </Box>
   );
 };
-
 export const ResponseNode: React.FC<NodeProps<INodeData>> = ({ data, id }) => {
-  const { nodeDrawerOpen, setNodeDrawer, setCurrentNode, onNodeClick, clickedNode, setNodeDrawerOpen } = useFlowStore(
-    (state) => ({
-      nodeDrawerOpen: state.nodeDrawerOpen,
-      setNodeDrawer: state.setNodeDrawer,
-      setCurrentNode: state.setCurrentNode,
-      onNodeClick: state.onNodeClick,
-      clickedNode: state.clickedNode,
-      setNodeDrawerOpen: state.setNodeDrawerOpen,
-      // openNodeSelector: state.openNodeSelector,
-      // setOpenNodeSelector: state.setOpenNodeSelector,
-    }),
-  );
-  // const [nodeData, setNodeData] = useState(data || {});
   const [openNodeSelector, setOpenNodeSelector] = useState(false);
   const [addBtnOpacity, setAddBtnOpacity] = useState(0);
   const [openController, setOpenController] = useState(false);
 
   const addNodeHandler = (event) => {
-    // setCurrentNode(id);
-    onNodeClick();
     setOpenNodeSelector(true);
     event.preventDefault();
     event?.stopPropagation();
@@ -68,11 +60,10 @@ export const ResponseNode: React.FC<NodeProps<INodeData>> = ({ data, id }) => {
 
   const nodeClickHandler = (e) => {
     setOpenController(true);
-    // e.stopPropagation();
   };
 
-  const SxHandler = (theme, component) => {
-    const style = {
+  const SxHandler: TSxHandler = (theme, component) => {
+    const style: Record<string, SxProps<Theme>> = {
       wrapper: {
         bgcolor: theme.palette.bgNode[data?.responseType],
         border: `1px solid ${theme.palette.divider}`,

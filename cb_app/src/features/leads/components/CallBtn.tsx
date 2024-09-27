@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
 import { Button, CircularProgress } from '@mui/material';
-import { makeCall } from '../services';
+import { useEffect, useState } from 'react';
 
 const { VITE_NODE_WS } = import.meta.env;
 
-const CallBtn = ({ numbersToCall }) => {
+interface ICallBtn {
+  numbersToCall: string[];
+}
+
+const CallBtn: React.FC<ICallBtn> = ({ numbersToCall }) => {
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState(null);
 

@@ -3,7 +3,7 @@ import useThemeStore from '../../../theme/themeStore';
 import { Box, Button, CircularProgress, Stack } from '@mui/material';
 import '@xyflow/react/dist/style.css';
 import useFlowStore from '../store/FlowStore';
-import { useLoaderData, useLocation } from 'react-router-dom';
+import { LoaderFunction, useLoaderData, useLocation } from 'react-router-dom';
 import { ReactFlow, Controls, Background, Panel, useReactFlow, ReactFlowProvider } from '@xyflow/react';
 import { getFlowchart, patchFlowchart } from '../services/fetchFlowchart';
 import useGeneratePrompt from '../../bots/utils/generatePromptString';
@@ -119,9 +119,10 @@ const FlowBoard = () => {
 
 export default FlowBoard;
 
-export const loader = async ({ request }) => {
+export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const flowId = url.searchParams.get('flow');
+  if (!flowId) return;
   const flowchart = await getFlowchart(flowId);
   return flowchart;
 };
