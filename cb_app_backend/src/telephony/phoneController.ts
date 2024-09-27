@@ -80,6 +80,13 @@ export async function makeCall(toNumber) {
   console.log('Call initiated', call.sid);
 }
 
+//
+
+//
+
+//
+
+//
 export const reveiveCall = async (req, res) => {
   const twiml = new VoiceResponse();
 
@@ -101,26 +108,34 @@ export const reveiveCall = async (req, res) => {
 
 export const processSpeech = async (req, res) => {
   const userSpeech = req.body.SpeechResult; // SpeechResult contains the recognized text
+  const callSid = req.query.CallSid;
   console.log('Callee said:', userSpeech);
 
   // Simulate sending the speech to a bot and getting a response
-  const botResponse = await getBotResponse(userSpeech); // This is where your bot would come in
+  const botResponse = await getBotResponse(userSpeech, callSid); // This is where your bot would come in
 
   const twiml = new VoiceResponse();
   twiml.say(botResponse);
+
+  // Gather again to continue the conversation
+  twiml.gather({
+    input: 'speech',
+    action: 'http://91.107.194.217:5180/api/v2/phone/process-speech',
+    speechTimeout: 'auto',
+  });
 
   res.type('text/xml');
   res.send(twiml.toString());
 };
 
 // Simulate a bot response based on the user's speech
-async function getBotResponse(userSpeech) {
+async function getBotResponse(userSpeech, callSid) {
   if (!userSpeech) {
     console.log('userSpeach not caught');
   }
   try {
     const response: AxiosResponse = await axios.post('http://209.209.42.134:5000', {
-      session_id: '13123123131',
+      session_id: callSid,
       input_text: userSpeech,
     });
     const message = response.data.response;
