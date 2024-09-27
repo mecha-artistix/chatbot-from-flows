@@ -107,9 +107,11 @@ export const reveiveCall = async (req, res) => {
 };
 
 export const processSpeech = async (req, res) => {
+  console.log(req.body);
+  console.log(req.query);
   const userSpeech = req.body.SpeechResult; // SpeechResult contains the recognized text
   const callSid = req.query.CallSid;
-  console.log('Callee said:', userSpeech);
+  console.log(callSid, 'Callee said:', userSpeech);
 
   // Simulate sending the speech to a bot and getting a response
   const botResponse = await getBotResponse(userSpeech, callSid); // This is where your bot would come in
