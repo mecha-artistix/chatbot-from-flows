@@ -48,4 +48,4 @@ async function makeCall(toNumber) {
   console.log('Call initiated', call.sid);
 }
 
-makeCall('+923335354297');
+// makeCall('+923335354297');
