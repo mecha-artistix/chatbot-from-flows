@@ -13,7 +13,7 @@ const useFlowStore = create<IFlowStore>()(
   devtools(
     persist(flowStore, {
       name: 'FlowStore',
-      partialize: (state) => ({}),
+      partialize: () => ({}),
     }),
   ),
 );

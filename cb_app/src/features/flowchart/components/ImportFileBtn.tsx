@@ -1,7 +1,6 @@
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { styled } from '@mui/material';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -26,7 +25,11 @@ export default function ImportFileBtn() {
       startIcon={<CloudUploadIcon />}
     >
       Import file
-      <VisuallyHiddenInput type="file" onChange={(event) => event.target.files} multiple />
+      <VisuallyHiddenInput
+        type="file"
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => event.target.files}
+        multiple
+      />
     </Button>
   );
 }

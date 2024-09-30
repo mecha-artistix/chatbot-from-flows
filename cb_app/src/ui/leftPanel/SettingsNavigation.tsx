@@ -15,15 +15,17 @@ import SecurityIcon from '@mui/icons-material/Security';
 import PaidIcon from '@mui/icons-material/Paid';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import { NavLink as RouterLink } from 'react-router-dom';
+import { NavLink as RouterLink, useNavigate } from 'react-router-dom';
 
 function SettingsNavigation() {
   const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
 
-  const handleClick = (event) => {
+  const handleClick: React.MouseEventHandler<HTMLElement> = (event) => {
     event.stopPropagation();
     setOpen((prev) => !prev);
     event.preventDefault();
+    navigate('/user-profile');
   };
   const links = [
     { name: 'Account Settings', link: 'account-settings', icon: <ManageAccountsIcon /> },
@@ -60,7 +62,6 @@ function SettingsNavigation() {
         <ListItemText primary="Settings" />
         {open ? <ExpandMore /> : <ExpandLess />}
       </ListItemButton>
-      {/* </Link> */}
     </Box>
   );
 }

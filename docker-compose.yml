@@ -1,0 +1,16 @@
+services:
+  frontend:
+    build:
+      context: ./cb_app
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./cb_app_backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"

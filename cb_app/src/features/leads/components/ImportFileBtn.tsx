@@ -2,7 +2,6 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { uploadLeadsData } from '../services';
-import React, { useState } from 'react';
 import { ILeadCollection } from '../LeadsCollections';
 
 const VisuallyHiddenInput = styled('input')({
@@ -22,8 +21,8 @@ interface IImportFileBtn {
 }
 
 const ImportFileBtn: React.FC<IImportFileBtn> = ({ setData }) => {
-  const handleFileUpload = async (e) => {
-    const file = e.target.files[0];
+  const handleFileUpload: React.ChangeEventHandler<HTMLInputElement> = async (e) => {
+    const file = e.target.files?.[0];
     if (file) {
       const res = await uploadLeadsData(file);
       setData((prev) => [...prev, res.data.data]);

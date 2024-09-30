@@ -3,7 +3,7 @@ import { StateCreator } from 'zustand';
 import { deleteFlowchart } from '../services/fetchFlowchart';
 import { IFlowchartSlice } from '../../../types/flowchart';
 
-export const flowchartSlice: StateCreator<IFlowchartSlice> = (set, get, api) => ({
+export const flowchartSlice: StateCreator<IFlowchartSlice> = (set) => ({
   error: '',
   flowcharts: [],
   addFlowcharts: (flowcharts) => set({ flowcharts }),
@@ -16,7 +16,6 @@ export const flowchartSlice: StateCreator<IFlowchartSlice> = (set, get, api) => 
         flowcharts: state.flowcharts.filter((flow) => flow._id !== id),
       }));
     } else {
-      set({ status: 'failed', error: 'Error deleting flowchart' });
     }
   },
 });

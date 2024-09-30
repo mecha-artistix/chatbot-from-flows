@@ -3,10 +3,11 @@ import { INode } from '../../../types/flowchart';
 
 const URL: string = import.meta.env.VITE_NODE_BASE_API + '/flowcharts';
 
-type CreateFlowchart = (name: string, nodes: INode[]) => Promise<any>;
+type CreateFlowchart = (name: string | File, nodes: INode[]) => Promise<any>;
 type GetAllFlowcharts = (name: string, nodes: INode[]) => Promise<any>;
 type DeleteFlowchart = (id: string) => Promise<any>;
 type GetFlowchart = (id: string) => Promise<any>;
+type PatchFlowchart = (id: string, body: string) => Promise<any>;
 
 export const createFlowchart: CreateFlowchart = async (name, nodes) => {
   let data;
@@ -63,7 +64,7 @@ export const deleteFlowchart: DeleteFlowchart = async (id) => {
   }
 };
 
-export const patchFlowchart = async (id, body) => {
+export const patchFlowchart: PatchFlowchart = async (id, body) => {
   try {
     const response = await axios.patch(URL + `/${id}`, body, {
       withCredentials: true,

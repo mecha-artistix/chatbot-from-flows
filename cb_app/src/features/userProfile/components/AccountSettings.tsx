@@ -1,5 +1,7 @@
-function AccountSettings() {
-  return <div>AccountSettings</div>;
-}
+import { Container } from '@mui/material';
+
+const AccountSettings = () => {
+  return <Container></Container>;
+};
 
 export default AccountSettings;

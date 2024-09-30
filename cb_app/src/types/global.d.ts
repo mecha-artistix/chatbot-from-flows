@@ -1,3 +1,5 @@
+import { Theme } from '@mui/material';
+
 declare global {
   interface LoginCreds {
     email: string;
@@ -19,5 +21,14 @@ declare global {
     email: string;
   }
 }
+
+declare module '*.svg' {
+  const content: string;
+  export default content;
+}
+
+type ComponentKey = 'statBox' | 'statTitle' | 'wrapper' | 'container' | 'collapsable';
+
+export type TSXHandler = (theme: Theme, component: ComponentKey) => Record<string, any>;
 
 export {};

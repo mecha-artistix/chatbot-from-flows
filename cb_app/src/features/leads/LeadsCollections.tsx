@@ -20,7 +20,7 @@ const LeadsCollections: React.FC = () => {
   useEffect(() => {
     setRows(() => {
       let rows: Row[] = [];
-      data.forEach((obj, i) => {
+      data.forEach((obj) => {
         const { _id, name, createdAt } = obj;
         const row = { id: _id, name, createdAt };
         rows.push(row);

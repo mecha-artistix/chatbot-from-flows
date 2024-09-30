@@ -1,9 +1,6 @@
-import { useState, useEffect } from 'react';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import useLeadsStore from './leadsStore';
-import { Box, Container, Stack, TextField } from '@mui/material';
-import StatBox from './components/StatBox';
-import GroupsIcon from '@mui/icons-material/Groups';
+import { Box, Container } from '@mui/material';
 import {
   GridToolbarContainer,
   GridToolbarColumnsButton,
@@ -11,47 +8,16 @@ import {
   GridToolbarExport,
   GridToolbarQuickFilter,
 } from '@mui/x-data-grid';
-import { Outlet, useLoaderData, useNavigation, useSearchParams } from 'react-router-dom';
+import { LoaderFunction, Outlet, useLoaderData } from 'react-router-dom';
 import { getSessions } from './services';
+import { ILeadsStore } from '../../types/leads';
 
 const Sessions = () => {
-  const data = useLoaderData();
-  const navigation = useNavigation();
-  const isLoading = navigation.state === 'loading';
-  const [searchParams, setSearchParams] = useSearchParams();
-  const {
-    getLeads,
-    leadsCollection,
-    leadsCount,
-    setLeadsCollection,
-    loading,
-    paginationModel,
-    setPaginationModel,
-    getSorted,
-  } = useLeadsStore((state) => ({
-    getLeads: state.getLeads,
-    setLeadsCollection: state.setLeadsCollection,
-    leadsCollection: state.leadsCollection,
-    loading: state.loading,
-    leadsCount: state.leadsCount,
+  const sessions = useLoaderData() as ISession[];
+  const { paginationModel, setPaginationModel } = useLeadsStore((state) => ({
     paginationModel: state.paginationModel,
     setPaginationModel: state.setPaginationModel,
-    getSorted: state.getSorted,
   }));
-  // const [notes, setNotes] = useState({});
-  // const [page, setPage] = useState(0);
-  // //   const [paginationModel, setPaginationModel] = useState({
-  // //     page: 0,
-  // //     pageSize: 5,
-  // //   });
-
-  // // Handle note change for a specific row
-  // const handleNoteChange = (id, value) => {
-  //   setNotes((prevNotes) => ({
-  //     ...prevNotes,
-  //     [id]: value,
-  //   }));
-  // };
 
   const columns = [
     { field: 'sessionId', headerName: 'Session ID', width: 200 },
@@ -59,24 +25,19 @@ const Sessions = () => {
     { field: 'createdAt', headerName: 'Created At', width: 200 },
   ];
 
-  useEffect(() => {
-    setLeadsCollection(data);
-  }, []);
-
   return (
     <Container maxWidth="lg">
-      {/* <Stats /> */}
       <Outlet />
       <Container maxWidth="lg">
         <DataGrid
           rowSelection={false}
-          rows={leadsCollection.map((lead, index) => ({ ...lead, id: lead._id }))}
+          rows={sessions.map((session) => ({ ...session, id: session._id }))}
           columns={columns}
           pagination
           autoHeight
+          // loading={loading}
+          rowCount={sessions.length}
           paginationMode="server"
-          loading={loading}
-          rowCount={leadsCount}
           pageSizeOptions={[5, 25, 50, 100]}
           paginationModel={paginationModel}
           slots={{ toolbar: Toolbar }}
@@ -87,48 +48,23 @@ const Sessions = () => {
             },
           }}
           density="compact"
-          initialState={{}}
           onPaginationModelChange={(newPaginationModel) => {
+            console.log(newPaginationModel);
             setPaginationModel(newPaginationModel);
-            getLeads(newPaginationModel.page, newPaginationModel.pageSize);
+            getSessions(newPaginationModel.page, newPaginationModel.pageSize);
           }}
           onSortModelChange={(newSortModel) => {
-            getSorted(newSortModel);
+            console.log(newSortModel);
+            // getSorted(newSortModel);
           }}
           onFilterModelChange={(newFilterModel) => {
-            const key = newFilterModel.items[0].field;
-            const value = newFilterModel.items[0].value;
+            console.log(newFilterModel);
+            // const key = newFilterModel.items[0].field;
+            // const value = newFilterModel.items[0].value;
           }}
         />
       </Container>
     </Container>
-  );
-};
-
-const Stats = () => {
-  return (
-    <Stack direction="row" spacing={2} py={2}>
-      <StatBox
-        name="Total Leads"
-        stat="total_leads"
-        icon={<GroupsIcon sx={(theme) => ({ color: theme.palette.primary.dark, fontSize: '46px' })} />}
-      />
-      <StatBox
-        name="Successful"
-        stat="successful"
-        icon={<GroupsIcon sx={(theme) => ({ color: theme.palette.primary.dark, fontSize: '46px' })} />}
-      />
-      <StatBox
-        name="Unsuccessful"
-        stat="unsuccessful"
-        icon={<GroupsIcon sx={(theme) => ({ color: theme.palette.primary.dark, fontSize: '46px' })} />}
-      />
-      <StatBox
-        name="Call Later"
-        stat="call_later"
-        icon={<GroupsIcon sx={(theme) => ({ color: theme.palette.primary.dark, fontSize: '46px' })} />}
-      />
-    </Stack>
   );
 };
 
@@ -156,11 +92,20 @@ const Toolbar = () => {
   );
 };
 
-export const loader = async () => {
-  const { paginationModel } = useLeadsStore.getState();
+export const loader: LoaderFunction = async () => {
+  const { paginationModel } = useLeadsStore.getState() as ILeadsStore;
 
   const page = paginationModel.page == 0 ? 1 : paginationModel.page;
   const limit = paginationModel.pageSize;
+
   const sessions = await getSessions(page, limit);
+
   return sessions;
 };
+
+interface ISession {
+  _id: string;
+  sessionId: string;
+  intent: string;
+  createdAt: string;
+}

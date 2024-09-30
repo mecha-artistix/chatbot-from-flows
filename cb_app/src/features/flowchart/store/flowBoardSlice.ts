@@ -2,8 +2,6 @@ import { StateCreator } from 'zustand';
 import { addEdge, applyEdgeChanges, applyNodeChanges } from '@xyflow/react';
 import { startNode } from '../components/nodes/InitNode';
 import { IFlowBoardSlice, INode } from '../../../types/flowchart';
-import { createFlowchart, getFlowchart, patchFlowchart } from '../services/fetchFlowchart';
-import { edge1 } from '../components/edges/InitEdges';
 import { StartNode, ResponseNode, CustomNode } from '../components/nodes/Nodes';
 import { useDAGRELayout } from '../utils/useDAGRELayout';
 
@@ -65,7 +63,7 @@ export const flowBoardSlice: StateCreator<IFlowBoardSlice> = (set, get) => ({
     set({ nodes: layoutedNodes, edges: layoutedEdges });
   },
 
-  onNodeClick: (event, node) => {
+  onNodeClick: (_, node) => {
     set((state) => ({ ...state, clickedNode: node }));
   },
 

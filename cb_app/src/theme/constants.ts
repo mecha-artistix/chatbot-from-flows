@@ -1,5 +1,5 @@
 import '@mui/material/styles';
-import { PaletteOptions, SimplePaletteColorOptions, TypographyVariants } from '@mui/material/styles';
+import { PaletteOptions, SimplePaletteColorOptions } from '@mui/material/styles';
 import { blue, red, green, grey, amber } from '@mui/material/colors';
 import { TypographyOptions } from '@mui/material/styles/createTypography';
 
