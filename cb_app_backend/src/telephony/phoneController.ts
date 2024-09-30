@@ -42,7 +42,7 @@ export const initializeCallsWebSocket = (wss: WebSocket.Server) => {
               ws.send(JSON.stringify({ type: 'callResult', payload: response }));
             }
           } else if ((numbersToCall.length = 1)) {
-            const response = await makeCall(numbersToCall[0]);
+            const response = await makeCall(numbersToCall[numbersToCall.length - 1]);
             console.log('session initiated - ', response.sid);
             ws.send(JSON.stringify({ type: 'callResult', payload: response }));
           }

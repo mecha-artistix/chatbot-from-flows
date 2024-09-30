@@ -1,7 +1,12 @@
+import { Container } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 
 function ProfileSettings() {
-  return <Outlet />;
+  return (
+    <Container>
+      <Outlet />
+    </Container>
+  );
 }
 
 export default ProfileSettings;

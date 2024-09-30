@@ -11,26 +11,27 @@ import {
   InputAdornment,
   Paper,
 } from '@mui/material';
-import { useState, useEffect, useTransition } from 'react';
-import { Form, redirect, useActionData, useNavigation } from 'react-router-dom';
-import useFlowStore from '../store/FlowStore';
+import { useState } from 'react';
+import { ActionFunction, Form, redirect, useActionData, useNavigation } from 'react-router-dom';
 import { createFlowchart } from '../services/fetchFlowchart';
 import { startNode } from './nodes/InitNode';
 
+interface IActionData {
+  response?: {
+    data?: any;
+  };
+}
+
 const CreateNewBtn = () => {
-  const actionData = useActionData();
+  const actionData = useActionData() as IActionData | undefined;
   const navigation = useNavigation();
   const [open, setOpen] = useState(false);
-  const [flowName, setFlowName] = useState<string>('');
-  // const { id, name } = useFlowStore((state) => ({
-  //   id: state.id,
-  //   name: state.name,
-  //   // setName: state.setName,
-  // }));
-  const isSubmitting = navigation.state === 'submitting';
-  const error = { ...actionData?.response?.data };
+  const [flowName, setFlowName] = useState('');
 
-  const handleClick = (e) => {
+  const isSubmitting = navigation.state === 'submitting';
+  const error = actionData?.response?.data || {};
+
+  const handleClick: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     setOpen((prev) => !prev);
     e.stopPropagation();
   };
@@ -46,8 +47,6 @@ const CreateNewBtn = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFlowName(e.target.value);
   };
-
-  const handleSubmit = async (e) => {};
 
   return (
     <Box sx={{ position: 'relative' }}>
@@ -75,7 +74,6 @@ const CreateNewBtn = () => {
                     endAdornment: (
                       <InputAdornment position="end" sx={{ p: 0, m: 0 }}>
                         <Button
-                          onClick={handleSubmit}
                           variant="contained"
                           color="primary"
                           type="submit"
@@ -98,11 +96,10 @@ const CreateNewBtn = () => {
   );
 };
 
-export async function action({ request }) {
+export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
   const { flowName } = data;
-  const { nodes } = useFlowStore.getState();
 
   const newFlowchart = await createFlowchart(flowName, [startNode]);
 
@@ -110,6 +107,6 @@ export async function action({ request }) {
 
   // useFlowStore.getState().setFlowBoardIdName(newFlowchart.data._id, flowName);
   return redirect(`/create-flowchart?flow=${newFlowchart.data._id}`);
-}
+};
 
 export default CreateNewBtn;

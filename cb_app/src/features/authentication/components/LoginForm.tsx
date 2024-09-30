@@ -1,4 +1,4 @@
-import { TextField, InputAdornment, IconButton, Stack, Button, Box, Typography, Divider } from '@mui/material';
+import { TextField, Stack, Button, Typography, Divider } from '@mui/material';
 import { useState, useEffect } from 'react';
 import useAuthStore from '../userStore';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -16,10 +16,7 @@ const LoginForm: React.FC = () => {
     email: 'johndoe@example.com',
     password: 'securePassword123!',
   });
-  const [showPassword, setShowPassword] = useState(false);
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCreds({ ...creds, [e.target.name]: e.target.value });
   };

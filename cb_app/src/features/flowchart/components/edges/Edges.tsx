@@ -1,12 +1,4 @@
-import React from "react";
-import {
-  Stack,
-  Box,
-  Typography,
-  useTheme,
-  Divider,
-  Paper,
-} from "@mui/material";
+import { Typography, useTheme } from '@mui/material';
 
 function Edges() {
   const theme = useTheme();

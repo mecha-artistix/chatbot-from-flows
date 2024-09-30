@@ -1,21 +1,10 @@
-import { useState, useCallback, useEffect } from 'react';
-import {
-  Drawer,
-  Paper,
-  Stack,
-  Typography,
-  TextField,
-  Button,
-  IconButton,
-  Box,
-  TextareaAutosize,
-  ClickAwayListener,
-  Collapse,
-} from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Drawer, Paper, Stack, Typography, TextField, Button, IconButton, Box } from '@mui/material';
 import useFlowStore from '../store/FlowStore';
 import useThemeStore from '../../../theme/themeStore';
 import CloseIcon from '@mui/icons-material/Close';
 import { getIncomers } from '@xyflow/react';
+import { INode, INodeData } from '../../../types/flowchart';
 // export const NodeControlDrawer: React.FC<INodeControlDrawerProps> = ({ open }) => {
 export const NodeControlDrawer: React.FC<INodeControlDrawerProps> = ({
   id,
@@ -23,18 +12,17 @@ export const NodeControlDrawer: React.FC<INodeControlDrawerProps> = ({
   openController,
   setOpenController,
 }) => {
-  const { nodes, edges, setNode, setLayout, updateNodeData } = useFlowStore((state) => ({
+  const { nodes, edges, setLayout, updateNodeData } = useFlowStore((state) => ({
     nodes: state.nodes,
-    setNode: state.setNode,
     setLayout: state.setLayout,
     edges: state.edges,
     updateNodeData: state.updateNodeData,
   }));
   const TopBarHeight = useThemeStore((state) => state.topBarHeight);
   const [resData, setResData] = useState({ ...data });
-  const [parent, setParent] = useState();
+  const [parent, setParent] = useState<INode>();
 
-  const handleChange = (e: React.ChangeEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setResData({ ...resData, [e.target.name]: e.target.value });
   };
 
@@ -44,7 +32,7 @@ export const NodeControlDrawer: React.FC<INodeControlDrawerProps> = ({
     setLayout();
   };
   useEffect(() => {
-    setParent((prev) => {
+    setParent(() => {
       const parent = getIncomers({ id }, nodes, edges)[0];
       return parent;
     });
@@ -118,5 +106,8 @@ export const NodeControlDrawer: React.FC<INodeControlDrawerProps> = ({
 };
 
 interface INodeControlDrawerProps {
-  parentNode?: string;
+  id: string;
+  data: INodeData;
+  openController: boolean;
+  setOpenController: (open: boolean) => void;
 }

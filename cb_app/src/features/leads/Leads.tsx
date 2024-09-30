@@ -1,6 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Container, Stack } from '@mui/material';
-import { DataGrid, GridCallbackDetails, GridRowSelectionModel } from '@mui/x-data-grid';
+import { Box, Container, Stack } from '@mui/material';
+import {
+  DataGrid,
+  GridCallbackDetails,
+  GridRowSelectionModel,
+  GridToolbarContainer,
+  GridToolbarExport,
+  GridToolbarFilterButton,
+} from '@mui/x-data-grid';
 import CallBtn from './components/CallBtn';
 import { LoaderFunction, useLoaderData } from 'react-router-dom';
 import { getLeads } from './services';
@@ -14,7 +21,7 @@ const columns = [
 
 function Leads() {
   const initData = useLoaderData() as IInitData;
-  const [leads, setLeads] = useState<ILead[]>([...initData.data.data.leads]);
+  // const [leads, setLeads] = useState<ILead[]>([...initData.data.data.leads]);
   const [rows, setRows] = useState<Row[]>([]);
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 25 });
   const [callNum, setCallNum] = useState<string[]>([]);
@@ -22,9 +29,7 @@ function Leads() {
   useEffect(() => {
     setRows(() => {
       let rows: Row[] = [];
-      console.log(leads.length);
-      console.log(leads);
-      leads.forEach((obj) => {
+      initData.data.data.leads.forEach((obj) => {
         const { _id, name, email, phone, createdAt } = obj;
         const row = { id: _id, name, email, phone, createdAt };
         rows.push(row);
@@ -32,7 +37,7 @@ function Leads() {
 
       return rows;
     });
-  }, [leads]);
+  }, [initData.data.data.leads]);
 
   const style = {
     container: {
@@ -59,13 +64,12 @@ function Leads() {
         <CreateNewLead setRows={setRows} />
         <CallBtn numbersToCall={callNum} />
       </Stack>
-      <Container>
+      <Container sx={{ height: '700px' }}>
         <DataGrid
           disableColumnMenu
           initialState={{ pagination: { paginationModel } }}
           columns={columns}
           rows={rows}
-          autoHeight
           pagination
           pageSizeOptions={[5, 25, 50, 100]}
           checkboxSelection
@@ -77,6 +81,7 @@ function Leads() {
           onPaginationModelChange={(newPaginationModel) => {
             setPaginationModel(newPaginationModel);
           }}
+          slots={{ toolbar: Toolbar }}
         />
       </Container>
     </Container>
@@ -85,6 +90,26 @@ function Leads() {
 
 export default Leads;
 
+const Toolbar = () => {
+  return (
+    <GridToolbarContainer
+      sx={{
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'space-between',
+        padding: 2,
+      }}
+    >
+      <Box>
+        <GridToolbarFilterButton />
+      </Box>
+      <Box>
+        <GridToolbarExport />
+      </Box>
+    </GridToolbarContainer>
+  );
+};
+
 export const loader: LoaderFunction = async function ({ params }) {
   const { id } = params;
   if (!id) return;
@@ -92,11 +117,6 @@ export const loader: LoaderFunction = async function ({ params }) {
   console.log('leads from loader', leads);
   return leads;
 };
-// type TLoader = ({ params }: TLoaderParams) => Promise<{ [key: string]: any }>;
-
-// type TLoaderParams = {
-//   [key: string]: any;
-// };
 
 export interface Row {
   name?: string;

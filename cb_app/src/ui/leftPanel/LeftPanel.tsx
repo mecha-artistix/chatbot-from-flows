@@ -22,7 +22,6 @@ function LeftPanel() {
     },
     PaperProps: {
       pt: 2,
-      // p: 1,
       display: 'flex',
       flexDirection: 'column',
       gap: 2,
@@ -43,7 +42,6 @@ function LeftPanel() {
           sx: { ...style.PaperProps },
         }}
       >
-        {/* <Box sx={{ height: TopBarHeight, borderBottom: 1 }}> */}
         <SiteLogo />
         <Stack sx={{ flexGrow: 1, width: '100%' }}>
           <Navigation />

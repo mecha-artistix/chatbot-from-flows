@@ -1,6 +1,8 @@
 import { useCallback } from 'react';
 import useFlowStore from '../store/FlowStore';
 
+type THandleAddNode = (label: string, nextResponseType: string, source: string) => void;
+
 const useAddNode = () => {
   const { nodes, addNode, addEdge, setLayout } = useFlowStore((state) => ({
     nodes: state.nodes,
@@ -9,7 +11,7 @@ const useAddNode = () => {
     setLayout: state.setLayout,
   }));
 
-  const handleAddNode = useCallback(
+  const handleAddNode: THandleAddNode = useCallback(
     (label, nextResponseType, source) => {
       const nextNode = {
         id: `${nodes.length + 1}`,
@@ -25,12 +27,12 @@ const useAddNode = () => {
         draggable: false,
         connectable: false,
         parent: source,
-        dragHandle: false,
+        // dragHandle: false,
       };
 
       addNode(nextNode);
 
-      const edgeStroke = (responseType) => {
+      const edgeStroke = (responseType: string) => {
         switch (responseType) {
           case 'neutral':
             return 'blue';

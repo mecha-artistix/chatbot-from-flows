@@ -12,7 +12,7 @@ interface PasswordFieldProps {
   id?: string;
   name?: string;
   fullWidth?: boolean;
-  size?: string;
+  size?: 'small' | 'medium' | undefined;
 }
 
 const PasswordField: React.FC<PasswordFieldProps> = ({

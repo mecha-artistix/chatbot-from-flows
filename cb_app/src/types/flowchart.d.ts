@@ -8,19 +8,30 @@ import type {
   EdgeProps,
   ReactFlowJsonObject,
   Edge,
+  Viewport,
 } from '@xyflow/react';
 
+export interface IFlowchart {
+  _id: string;
+  name: string;
+  createdAt: string;
+  edges: [];
+  nodes: [];
+  user: string;
+  viewport: Viewport;
+}
+
 export interface IFlowchartSlice {
-  flowcharts: [];
-  addFlowcharts: () => Promise<void>;
+  flowcharts: IFlowchart[];
+  addFlowcharts: (flowcharts: IFlowchart[]) => void;
   deleteFlowchart: (id: string) => Promise<void>;
 }
 
-type Viewport = {
-  x: number;
-  y: number;
-  zoom: number;
-};
+// export type Viewport = {
+//   x: number;
+//   y: number;
+//   zoom: number;
+// };
 
 export interface IFlowBoardSlice {
   id: string;
@@ -34,27 +45,28 @@ export interface IFlowBoardSlice {
   defaultEdgeOptions?: DefaultEdgeOptions;
 
   setFlowboard: (flowchart) => void;
-  onNodesChange?: (changes: NodeChange[]) => void;
-  onEdgesChange?: (changes: EdgeChange[]) => void;
-  onConnect?: (connection: Connection) => void;
-  setNodes?: (nodes: INode[]) => void;
-  setEdges?: (nodes: Edge[]) => void;
-  setLayout?: () => void;
-  onNodeClick?: (event, node) => void;
-  addNode?: (newNode: INode) => void;
-  addEdge?: (edge: Edge) => void;
-  updateNodeData?: (id: string, resData: INodeData) => void;
+  onNodesChange: (changes: NodeChange[]) => void;
+  onEdgesChange: (changes: EdgeChange[]) => void;
+  onConnect: (connection: Connection) => void;
+  setNodes: (nodes: INode[]) => void;
+  setEdges: (nodes: Edge[]) => void;
+  setLayout: () => void;
+  onNodeClick: (event, node) => void;
+  addNode: (newNode: INode) => void;
+  addEdge: (edge: Edge) => void;
+  updateNodeData: (id: string, resData: INodeData) => void;
 }
 
 export interface INodeData {
   responseLabel?: string;
-  responseType?: string[];
+  responseType?: string;
+  responseBot?: string;
   [key: string]: unknown;
 }
 
-export interface INode extends Node<INodeData> {
-  type?: 'start_node' | 'response_node' | 'action_node' | 'custom_node';
-}
+export type INode = Node & {
+  data?: INodeData;
+};
 
 interface IFlowStore extends IFlowBoardSlice, IFlowchartSlice {}
 
