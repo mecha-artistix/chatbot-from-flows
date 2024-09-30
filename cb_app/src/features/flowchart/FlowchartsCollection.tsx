@@ -16,13 +16,12 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import ShareIcon from '@mui/icons-material/Share';
-import { useLoaderData, useNavigate } from 'react-router-dom';
-import { getAllFlowcharts } from './services/fetchFlowchart';
+import { LoaderFunction, useLoaderData, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { IFlowchart } from '../../types/flowchart';
 
 const FlowchartsCollection: React.FC = () => {
-  const flowchartsData = useLoaderData();
+  const flowchartsData = useLoaderData() as IFlowchart[];
   const navigate = useNavigate();
   const { flowcharts, addFlowcharts, deleteFlowchart } = useFlowStore((state) => ({
     flowcharts: state.flowcharts,
@@ -40,10 +39,10 @@ const FlowchartsCollection: React.FC = () => {
   const style = {
     tableCell: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
   };
-  const handleEdit = (id) => {
+  const handleEdit = (id: string) => {
     navigate(`/create-flowchart?flow=${id}`);
   };
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: string) => {
     await deleteFlowchart(id);
   };
   return (
@@ -92,7 +91,7 @@ export default FlowchartsCollection;
 
 const URL: string = import.meta.env.VITE_NODE_BASE_API + '/flowcharts';
 
-export const loader = async () => {
+export const loader: LoaderFunction = async () => {
   try {
     const response = await axios.get(URL, { withCredentials: true });
     return response.data.data.data;

@@ -1,7 +1,6 @@
 // import * as dagreD3 from 'dagre-d3';
 import dagre from 'dagre';
-
-import { Node, Edge } from 'reactflow';
+import { Node, Edge } from '@xyflow/react';
 
 interface LayoutOptions {
   direction?: 'TB' | 'LR';

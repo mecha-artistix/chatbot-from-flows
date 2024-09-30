@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { persist, devtools } from 'zustand/middleware';
-import { logoutPost } from './services/AuthenticationCalls';
 
 const URL: string = import.meta.env.VITE_NODE_BASE_API + '/users';
 
@@ -116,9 +115,10 @@ export const useAuthStore = create<AuthState>()(
               },
               credentials: 'include',
             });
-            if (!response.ok) throw new Error(response);
-
-            const data = await response.json();
+            if (!response.ok) {
+              const errorMessage = `Error: ${response.status} ${response.statusText}`;
+              throw new Error(errorMessage);
+            }
 
             set({
               isAuthenticated: false,
@@ -127,7 +127,7 @@ export const useAuthStore = create<AuthState>()(
               username: '',
             });
           } catch (error) {
-            return error;
+            console.log(error);
           }
         },
       }),

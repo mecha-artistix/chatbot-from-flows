@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import { Box, Stack, Container, Grid, Typography } from '@mui/material';
+import { Box, Stack, Grid, Typography } from '@mui/material';
 import SiteLogo from '../../../ui/components/SiteLogo';
 import BotImg from '../../../assets/img/robot_hi.svg';
 

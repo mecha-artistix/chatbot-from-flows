@@ -1,6 +1,5 @@
 import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
-import { blue, grey } from '@mui/material/colors';
-import { useEffect, useState } from 'react';
+import { grey } from '@mui/material/colors';
 
 import A from '../../../assets/img/icons_sessions/A.svg';
 import CallBK from '../../../assets/img/icons_sessions/CALLBK.svg';
@@ -12,8 +11,9 @@ import LB from '../../../assets/img/icons_sessions/LB.svg';
 import NI from '../../../assets/img/icons_sessions/NI.svg';
 import NP from '../../../assets/img/icons_sessions/NP.svg';
 import XFER from '../../../assets/img/icons_sessions/XFER.svg';
+import { IStat } from './SessionsStats';
 
-const colors = {
+const colors: { [key: string]: string } = {
   XFER: '#81c784',
   DAIR: '#F45151',
   DNQ: '#e57373',
@@ -26,7 +26,7 @@ const colors = {
   LB: '#BFAA6B',
 };
 
-const icons = {
+const icons: { [key: string]: string } = {
   XFER,
   DAIR,
   DNQ,
@@ -39,14 +39,17 @@ const icons = {
   LB,
 };
 
-function SingleSessionStat({ total, intent, icon }) {
-  const [statWidth, setStatWidth] = useState();
+interface ISingleSessionStat {
+  total: number;
+  intent: IStat;
+  icon?: string;
+}
 
-  const styleHandler = (theme, component) => {
-    const style = {
-      statBox: {
+const SingleSessionStat: React.FC<ISingleSessionStat> = ({ intent, icon }) => {
+  return (
+    <Paper
+      sx={(theme) => ({
         width: 'clamp(100px, 100%, 130px)',
-        // flex: '1 1 auto',
         py: 2,
         px: 1,
         borderRadius: 2,
@@ -54,23 +57,12 @@ function SingleSessionStat({ total, intent, icon }) {
         backgroundColor: intent.color || colors[intent.name],
         color: grey[900],
         textAlign: 'center',
-      },
-      statTitle: {
-        fontWeight: 600,
-        fontSize: '16px',
-      },
-    };
-    return style[component];
-  };
-
-  useEffect(() => {
-    setStatWidth(() => ((100 * intent.value) / total).toFixed(2));
-  }, [total]);
-
-  return (
-    <Paper sx={(theme) => styleHandler(theme, 'statBox')} elevation={3} variant="elevation">
+      })}
+      elevation={3}
+      variant="elevation"
+    >
       <Box
-        sx={(theme) => ({
+        sx={() => ({
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
@@ -82,7 +74,13 @@ function SingleSessionStat({ total, intent, icon }) {
           <Grid item xs={12}>
             <Stack direction="row" justifyContent={'center'} gap={1}>
               <img src={icon || icons[intent.name]} width="24px" />
-              <Typography sx={(theme) => styleHandler(theme, 'statTitle')} fontSize={10}>
+              <Typography
+                sx={{
+                  fontWeight: 600,
+                  fontSize: '16px',
+                }}
+                fontSize={10}
+              >
                 {intent.name}
               </Typography>
             </Stack>
@@ -94,7 +92,7 @@ function SingleSessionStat({ total, intent, icon }) {
       </Box>
     </Paper>
   );
-}
+};
 
 export default SingleSessionStat;
 

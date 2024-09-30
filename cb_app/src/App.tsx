@@ -25,7 +25,6 @@ import Sessions, { loader as sessionsLoader } from './features/leads/Sessions';
 import AppLayout from './ui/AppLayout';
 import Error from './ui/Error';
 import Leads, { loader as LeadsLoader } from './features/leads/Leads';
-// import { action as createNewLeadAction } from './features/leads/components/CreateNewLead';
 import SessionsStats, { loader as sessionsStatsLoader } from './features/leads/components/SessionsStats';
 
 const getCookie = (name: string) => {
@@ -74,11 +73,12 @@ const router = createBrowserRouter([
         errorElement: <Error />,
         children: [{ index: true, element: <SessionsStats />, loader: sessionsStatsLoader }], // loader: sessionsStatsLoader
       },
-      { path: '/user-profile', element: <ProfileSettings /> },
       {
-        path: '/account-settings',
-        element: <AccountSettings />,
+        path: '/user-profile',
+        element: <ProfileSettings />,
+        errorElement: <Error />,
         children: [
+          { index: true, element: <ProfileSettings /> },
           { path: 'account-settings', element: <AccountSettings /> },
           { path: 'security-settings', element: <SecuritySettings /> },
           { path: 'payment-settings', element: <PaymentSettings /> },

@@ -2,9 +2,7 @@ import axios from 'axios';
 
 const URL_LEADS = import.meta.env.VITE_NODE_BASE_API + '/leads';
 
-// &sort=${sort.sortBy}${sort.key}
-
-type TGetSessions = (page: string, limit: string) => Promise<{ [key: string]: any }>;
+type TGetSessions = (page: number, limit: number) => Promise<{ [key: string]: any }>;
 
 export const getSessions: TGetSessions = async (page, limit) => {
   try {

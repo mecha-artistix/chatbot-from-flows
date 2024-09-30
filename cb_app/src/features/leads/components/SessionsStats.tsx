@@ -1,29 +1,26 @@
-import { useLoaderData } from 'react-router-dom';
+import { LoaderFunction, useLoaderData } from 'react-router-dom';
 import { getSessionsStats } from '../services';
 import { useEffect, useState } from 'react';
-import StatBox from './StatBox';
 import SingleSessionStat from './SingleSessionStat';
 import { Stack } from '@mui/material';
 import All_Calls from '../../../assets/img/icons_sessions/All_Calls.svg';
 import { grey } from '@mui/material/colors';
 
 function SessionsStats() {
-  const initData = useLoaderData();
-  console.log(initData);
-  const [data, setData] = useState(initData.stats);
-  const [stats, setStats] = useState([]);
+  const initData = useLoaderData() as ILoaderData;
+  const [stats, setStats] = useState<IStat[]>([]);
 
   useEffect(() => {
-    setStats((prev) => {
-      const stats = Object.keys(data).map((key, index) => {
+    setStats(() => {
+      const stats = Object.keys(initData.stats).map((key) => {
         return {
           name: key,
-          value: data[key],
+          value: initData.stats[key],
         };
       });
       return stats;
     });
-  }, [data]);
+  }, [initData.stats]);
 
   useEffect(() => {
     console.log('stats', stats);
@@ -49,7 +46,21 @@ function SessionsStats() {
 
 export default SessionsStats;
 
-export async function loader() {
+export const loader: LoaderFunction = async () => {
   const data = await getSessionsStats();
   return data;
+};
+
+interface ILoaderData {
+  status: string;
+  totalLeads: number;
+  stats: TStats;
+}
+
+type TStats = { [key: string]: number };
+
+export interface IStat {
+  name: string;
+  value: number;
+  color?: string;
 }

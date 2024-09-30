@@ -8,12 +8,9 @@ import {
   ListItemButton,
   ListItemText,
   Stack,
-  Typography,
   ClickAwayListener,
-  ListItem,
   ListItemIcon,
   Paper,
-  Theme,
 } from '@mui/material';
 import useAuthStore from '../../features/authentication/userStore';
 import ExpandLess from '@mui/icons-material/ExpandLess';
@@ -21,38 +18,27 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import useThemeStore from '../../theme/themeStore';
-import { Styles, SXHandler } from '../../types/utils';
-import { SxProps } from '@mui/system';
 
 function TopBar() {
   const [open, setOpen] = React.useState(false);
   const TopBarHeight = useThemeStore((state) => state.topBarHeight);
   const { username, logout } = useAuthStore((state) => ({ username: state.username, logout: state.logout }));
 
-  const handleClick = (event) => {
+  const handleClick: React.MouseEventHandler<HTMLDivElement> = (event) => {
     event.stopPropagation();
     setOpen(!open);
   };
 
-  const sxHandler: SXHandler = (theme, component) => {
-    const styles: Styles = {
-      wrapper: {
+  return (
+    <Stack
+      direction="row"
+      spacing={1}
+      sx={(theme) => ({
         justifyContent: 'flex-end',
         height: TopBarHeight,
         borderBottom: `1px solid ${theme.palette.divider}`,
-      },
-      collapsable: {
-        position: 'absolute',
-        zIndex: 1,
-        top: '100%',
-        left: '0',
-        width: '100%',
-      },
-    };
-    return styles[component];
-  };
-  return (
-    <Stack direction="row" spacing={1} sx={(theme) => sxHandler(theme, 'wrapper')}>
+      })}
+    >
       {/* <SiteLogo /> */}
 
       <ToggleTheme />
@@ -66,7 +52,16 @@ function TopBar() {
           {open ? <ExpandLess /> : <ExpandMore />}
         </ListItemButton>
         <ClickAwayListener onClickAway={() => setOpen(false)}>
-          <Collapse in={open} sx={(theme) => sxHandler(theme, 'collapsable')}>
+          <Collapse
+            in={open}
+            sx={{
+              position: 'absolute',
+              zIndex: 1,
+              top: '100%',
+              left: '0',
+              width: '100%',
+            }}
+          >
             <Paper elevation={1}>
               <List>
                 <ListItemButton>
