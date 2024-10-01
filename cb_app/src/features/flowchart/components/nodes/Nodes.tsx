@@ -18,8 +18,6 @@ export const ResponseNode: React.FC<INode> = ({ data, id }) => {
   const [addBtnOpacity, setAddBtnOpacity] = useState(0);
   const [openController, setOpenController] = useState(false);
 
-  console.log(data);
-
   const addNodeHandler = (event: React.MouseEvent) => {
     setOpenNodeSelector(true);
     event.preventDefault();

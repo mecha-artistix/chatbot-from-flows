@@ -53,7 +53,8 @@ const ReactFlowComp: React.FC = () => {
 
   const handleTestBot = () => {
     console.log('test');
-    generatePrompt(nodes, edges);
+    const prompt = generatePrompt(nodes, edges);
+    console.log(prompt);
   };
 
   const handleSave = async () => {

@@ -3,8 +3,13 @@ services:
     build:
       context: ./cb_app
       dockerfile: Dockerfile
+      target: ${NODE_ENV:-development}
     ports:
-      - "80:80"
+      - "${PORT:-5173}:${PORT:-5173}"
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+    volumes:
+      - ./cb_app:/app
     depends_on:
       - backend
 
@@ -12,5 +17,10 @@ services:
     build:
       context: ./cb_app_backend
       dockerfile: Dockerfile
+      target: ${NODE_ENV:-development}
     ports:
-      - "3000:3000"
+      - "${PORT:-3000}:${PORT:-3000}"
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+    volumes:
+      - ./cb_app_backend:/app
