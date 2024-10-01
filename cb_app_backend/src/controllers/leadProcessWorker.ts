@@ -3,11 +3,11 @@ import fs from 'fs';
 import csvParser from 'csv-parser';
 import { LeadDataSource, Lead } from '../models/leadModel';
 
-const leadProcessingQueue = new Bull('lead-processing');
+const leadProcessingQueue = new Bull<LeadProcessingJobData>('lead-processing');
 
 leadProcessingQueue.process(async (job) => {
   const { csvFilePath, jsonFilePath, leadsDataSourceId, userId } = job.data;
-  const results = [];
+  const results: object[] = [];
 
   await new Promise((resolve, reject) => {
     fs.createReadStream(csvFilePath)
@@ -42,3 +42,10 @@ leadProcessingQueue.process(async (job) => {
 
   return { processedLeads: leadIds.length };
 });
+
+interface LeadProcessingJobData {
+  csvFilePath: string;
+  jsonFilePath: string;
+  leadsDataSourceId: string;
+  userId: string;
+}
