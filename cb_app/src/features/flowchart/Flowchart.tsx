@@ -1,9 +1,12 @@
-import FlowBoard from "./components/FlowBoard";
+import { ReactFlowProvider } from '@xyflow/react';
+import FlowBoard from './components/FlowBoard';
 
 function index() {
   return (
     <div>
-      <FlowBoard />
+      <ReactFlowProvider>
+        <FlowBoard />
+      </ReactFlowProvider>
     </div>
   );
 }
