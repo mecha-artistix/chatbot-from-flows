@@ -11,7 +11,7 @@ export async function makeCall(toNumber) {
     from: `${TWILIO_PHONE_NUMBER}`,
     to: toNumber,
     url: `${SERVER_IP}/phone/receive-call`,
-    statusCallback: `${SERVER_IP}/phone/call-status`,
+    // statusCallback: `${SERVER_IP}/phone/call-status`,
   });
   console.log('Call initiated', call.sid);
   return call;
