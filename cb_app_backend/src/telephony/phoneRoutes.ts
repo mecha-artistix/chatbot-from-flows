@@ -1,6 +1,7 @@
 import express, { Router } from 'express';
 import { protect } from '../controllers/authController';
-import { makeCall, processSpeech, reveiveCall } from './phoneController';
+import { makeCall } from './phoneController';
+import { processSpeech, reveiveCall } from './CallWithBotController';
 
 const router: Router = express.Router();
 

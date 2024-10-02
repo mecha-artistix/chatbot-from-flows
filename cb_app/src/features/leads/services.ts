@@ -86,7 +86,7 @@ export const getLeads: TGetLeads = async (id) => {
   }
 };
 
-const URL_PHONE = import.meta.env.VITE_NODE_BASE_API + '/phone';
+const URL_PHONE = import.meta.env.VITE_BACKEND_URL + '/phone';
 
 type TMakeCall = (numbersToCall: string[]) => Promise<{ [key: string]: any }>;
 export const makeCall: TMakeCall = async (numbersToCall) => {
