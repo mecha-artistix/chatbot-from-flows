@@ -3,7 +3,7 @@ dotenv.config({ path: './../../.env' });
 const twilio = require('twilio');
 const VoiceResponse = require('twilio').twiml.VoiceResponse;
 
-const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER } = process.env;
+const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER, SERVER_IP } = process.env;
 
 const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
@@ -43,7 +43,7 @@ async function makeCall(toNumber) {
   const call = await client.calls.create({
     from: `${TWILIO_PHONE_NUMBER}`, // Twilio number
     to: toNumber, // callee's phone number
-    url: 'http://91.107.194.217:5180/api/v2/phone/receive-call', // Your endpoint where Twilio gets TwiML
+    url: `${SERVER_IP}/phone/receive-call`, // Your endpoint where Twilio gets TwiML
   });
   console.log('Call initiated', call.sid);
 }
