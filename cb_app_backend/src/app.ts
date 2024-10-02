@@ -18,7 +18,7 @@ import userRoutes from './routes/userRoutes';
 import flowchartRoutes from './routes/flowchartRoutes';
 import leadRoutes from './routes/leadRoutes';
 import phoneRoutes from './telephony/phoneRoutes';
-const { BASE_URL } = process.env;
+const { BASE_URL, SERVER_IP } = process.env;
 const ALLOWED_ORIGINS = ['127.0.0.1', 'localhost', '91.107.194.217', '172.31.149.141', '209.209.42.134'];
 const { window } = new JSDOM('');
 const dompurify = DOMPurify(window);
@@ -117,7 +117,7 @@ app.use(BASE_URL + '/flowcharts', flowchartRoutes);
 
 app.use(BASE_URL + '/leads', leadRoutes);
 
-app.use(BASE_URL + '/phone', phoneRoutes);
+app.use(SERVER_IP + '/phone', phoneRoutes);
 
 app.get('/error-test', (req: Request, res: Response, next: NextFunction) => {
   const err = new AppError('This is a test error', 500);
