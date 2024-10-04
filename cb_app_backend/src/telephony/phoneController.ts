@@ -7,6 +7,7 @@ const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER, SERVER_IP } 
 const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
 export async function makeCall(toNumber) {
+  console.log('SERVER_IP', SERVER_IP)
   const call = await client.calls.create({
     from: `${TWILIO_PHONE_NUMBER}`,
     to: toNumber,

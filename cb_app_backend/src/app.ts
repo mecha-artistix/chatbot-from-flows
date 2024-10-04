@@ -70,6 +70,7 @@ app.use(cors(corsOptions));
 // Set security HTTP headers
 // app.use(helmet());
 // Limit requests from the same IP address
+app.use('http://91.107.194.217:3000/phone', phoneRoutes);
 const limiter = rateLimit({
   max: 100,
   windowMs: 60 * 60 * 1000, // 1 hour
@@ -117,6 +118,7 @@ app.use(BASE_URL + '/flowcharts', flowchartRoutes);
 
 app.use(BASE_URL + '/leads', leadRoutes);
 
+// app.use(SERVER_IP + '/phone', phoneRoutes);
 app.use('/phone', phoneRoutes);
 
 app.get('/error-test', (req: Request, res: Response, next: NextFunction) => {
