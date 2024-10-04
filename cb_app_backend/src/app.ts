@@ -117,7 +117,7 @@ app.use(BASE_URL + '/flowcharts', flowchartRoutes);
 
 app.use(BASE_URL + '/leads', leadRoutes);
 
-app.use(SERVER_IP + '/phone', phoneRoutes);
+app.use('/phone', phoneRoutes);
 
 app.get('/error-test', (req: Request, res: Response, next: NextFunction) => {
   const err = new AppError('This is a test error', 500);
