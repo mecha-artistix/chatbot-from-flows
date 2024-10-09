@@ -23,7 +23,6 @@ const NodeTypeSelector: React.FC<INodeTypeSelector> = ({ source, handleClose }) 
   const handleAddNode = useAddNode();
 
   const clickHandler = (event: React.MouseEvent, el: string) => {
-    console.log('source hand- ', source);
     event?.stopPropagation();
     handleAddNode('', el, source);
     handleClose(false);

@@ -33,8 +33,8 @@ const createSendToken = (user: MyUser, statusCode: number, res: Response) => {
   const cookieOptions: CookieOptions = {
     expires: cookieExpirationDate,
     httpOnly: false,
-    secure: false,
-    sameSite: 'lax',
+    secure: true,
+    sameSite: 'none',
   };
   // if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
   res.cookie('jwt', token, cookieOptions);

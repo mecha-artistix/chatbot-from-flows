@@ -1,14 +1,24 @@
 import { ReactFlowProvider } from '@xyflow/react';
 import FlowBoard from './components/FlowBoard';
+import { LoaderFunction } from 'react-router-dom';
+import { getFlowchart } from './services/fetchFlowchart';
 
-function index() {
+const Flowchart: React.FC = () => {
   return (
-    <div>
+    <>
       <ReactFlowProvider>
         <FlowBoard />
       </ReactFlowProvider>
-    </div>
+    </>
   );
-}
+};
 
-export default index;
+export const loader: LoaderFunction = async ({ request }) => {
+  const url = new URL(request.url);
+  const flowId = url.searchParams.get('flow');
+  if (!flowId) return;
+  const flowchart = await getFlowchart(flowId);
+  return flowchart;
+};
+
+export default Flowchart;

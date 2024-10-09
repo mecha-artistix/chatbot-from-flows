@@ -70,6 +70,7 @@ Follow these rules:
 const openai = new OpenAI({
   apiKey: GPT_KEY,
 });
+
 const fs = require('fs');
 const path = require('path');
 
@@ -108,45 +109,45 @@ async function getChatbotResponse(message) {
 
 getChatbotResponse('I have part a');
 
-const server = new WebSocket.Server({ port: 3001 });
-const clients = {};
+// const server = new WebSocket.Server({ port: 3001 });
+// const clients = {};
 
-server.on('connection', (socket) => {
-  const clientId = Date.now(); // Simple unique ID for the client
-  clients[clientId] = [{ role: 'system', content: systemMessage }];
+// server.on('connection', (socket) => {
+//   const clientId = Date.now(); // Simple unique ID for the client
+//   clients[clientId] = [{ role: 'system', content: systemMessage }];
 
-  console.log('New client connected:', clientId);
+//   console.log('New client connected:', clientId);
 
-  socket.on('message', async (message) => {
-    console.log('Received message from client:', message);
+//   socket.on('message', async (message) => {
+//     console.log('Received message from client:', message);
 
-    // Update conversation history with the user's message
-    clients[clientId].push({ role: 'user', content: message });
+//     // Update conversation history with the user's message
+//     clients[clientId].push({ role: 'user', content: message });
 
-    // Call OpenAI API with the conversation history
-    try {
-      const response = await openai.chat.completions.create({
-        model: 'gpt-4o-mini',
-        messages: clients[clientId],
-      });
+//     // Call OpenAI API with the conversation history
+//     try {
+//       const response = await openai.chat.completions.create({
+//         model: 'gpt-4o-mini',
+//         messages: clients[clientId],
+//       });
 
-      const botResponse = response.choices[0].message.content;
+//       const botResponse = response.choices[0].message.content;
 
-      // Update conversation history with the bot's response
-      clients[clientId].push({ role: 'assistant', content: botResponse });
+//       // Update conversation history with the bot's response
+//       clients[clientId].push({ role: 'assistant', content: botResponse });
 
-      // Send the bot response back to the client
-      socket.send(botResponse);
-    } catch (error) {
-      console.error('Error with OpenAI API request:', error);
-      socket.send('An error occurred while processing your request.');
-    }
-  });
+//       // Send the bot response back to the client
+//       socket.send(botResponse);
+//     } catch (error) {
+//       console.error('Error with OpenAI API request:', error);
+//       socket.send('An error occurred while processing your request.');
+//     }
+//   });
 
-  socket.on('close', () => {
-    console.log('Client disconnected:', clientId);
-    delete clients[clientId]; // Cleanup conversation history
-  });
-});
+//   socket.on('close', () => {
+//     console.log('Client disconnected:', clientId);
+//     delete clients[clientId]; // Cleanup conversation history
+//   });
+// });
 
-console.log('WebSocket server is running on ws://localhost:3000');
+// console.log('WebSocket server is running on ws://localhost:3000');

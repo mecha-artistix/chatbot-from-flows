@@ -3,7 +3,7 @@ import { addEdge, applyEdgeChanges, applyNodeChanges } from '@xyflow/react';
 import { startNode } from '../components/nodes/InitNode';
 import { IFlowBoardSlice, INode } from '../../../types/flowchart';
 import { StartNode, ResponseNode, CustomNode } from '../components/nodes/Nodes';
-import { useDAGRELayout } from '../utils/useDAGRELayout';
+import { useDAGRELayout } from '../hooks/useDAGRELayout';
 
 const getLayoutedElements = useDAGRELayout({ direction: 'LR' });
 

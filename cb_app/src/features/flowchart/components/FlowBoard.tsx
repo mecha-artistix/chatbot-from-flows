@@ -1,14 +1,19 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { ReactFlow, Controls, Background, Panel, useReactFlow } from '@xyflow/react';
 import useThemeStore from '../../../theme/themeStore';
 import { Box, Button, CircularProgress, Stack } from '@mui/material';
 import '@xyflow/react/dist/style.css';
 import useFlowStore from '../store/FlowStore';
-import { LoaderFunction, useLoaderData, useLocation } from 'react-router-dom';
-import { ReactFlow, Controls, Background, Panel, useReactFlow, ReactFlowProvider } from '@xyflow/react';
-import { getFlowchart, patchFlowchart } from '../services/fetchFlowchart';
+import { useLoaderData, useLocation } from 'react-router-dom';
+import { patchFlowchart } from '../services/fetchFlowchart';
 import useGeneratePrompt from '../../bots/utils/generatePromptString';
+import { createBot } from '../../chatBox/services';
+import { useChatBoxStore } from '../../chatBox/chatBoxStore';
 
-const ReactFlowComp: React.FC = () => {
+// import ChatBox from '../../chatBox/ChatBox';
+
+const FlowBoard: React.FC = () => {
+  // const [openChatBox, setOpenChatBox] = useState(false);
   const { getViewport } = useReactFlow();
   const flowchart = useLoaderData();
   const reactFlowWrapper = useRef<HTMLDivElement>(null);
@@ -17,7 +22,11 @@ const ReactFlowComp: React.FC = () => {
   const queryParams = new URLSearchParams(location.search);
   const flowId: string = queryParams.get('flow') as string;
   const [saveStatus, setSaveStatus] = useState('');
+  const { setOpenChatBox } = useChatBoxStore((state) => ({
+    setOpenChatBox: state.setOpenChatBox,
+  }));
   const {
+    name,
     nodes,
     edges,
     onNodesChange,
@@ -29,6 +38,7 @@ const ReactFlowComp: React.FC = () => {
     setFlowboard,
     viewport,
   } = useFlowStore((state) => ({
+    name: state.name,
     nodes: state.nodes,
     edges: state.edges,
     defaultEdgeOptions: state.defaultEdgeOptions,
@@ -51,10 +61,23 @@ const ReactFlowComp: React.FC = () => {
   //   // console.log('nodes--', nodes, 'edges---', edges);
   // }, [nodes.length, edges.length]);
 
-  const handleTestBot = () => {
-    console.log('test');
+  const handleTestBot = async () => {
     const prompt = generatePrompt(nodes, edges);
-    console.log(prompt);
+    const body = {
+      name: name,
+      promptText: prompt,
+      source: flowId,
+    };
+    const response = await createBot(body);
+
+    if (response.status === 'fail') {
+      return;
+    }
+    const bot = await response.data.data._id;
+    setOpenChatBox(bot);
+    console.log(bot);
+    // navigate(`/chat-box/${bot}`, { replace: false });
+    // console.log('prompt after', prompt);
   };
 
   const handleSave = async () => {
@@ -106,24 +129,9 @@ const ReactFlowComp: React.FC = () => {
         </Panel>
         <Controls position="bottom-right" />
       </ReactFlow>
+      {/* <ChatBox openChatBox={openChatBox} setOpenChatBox={setOpenChatBox} /> */}
     </Box>
   );
 };
 
-const FlowBoard = () => {
-  return (
-    <ReactFlowProvider>
-      <ReactFlowComp />
-    </ReactFlowProvider>
-  );
-};
-
 export default FlowBoard;
-
-export const loader: LoaderFunction = async ({ request }) => {
-  const url = new URL(request.url);
-  const flowId = url.searchParams.get('flow');
-  if (!flowId) return;
-  const flowchart = await getFlowchart(flowId);
-  return flowchart;
-};

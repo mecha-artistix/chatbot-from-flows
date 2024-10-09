@@ -1,9 +1,8 @@
 import { Edge, getIncomers } from '@xyflow/react';
 import { useCallback, useState } from 'react';
-import { parameters, instructions } from './botPromptConfig';
 import { INode } from '../../../types/flowchart';
 
-type TGeneratePromptString = (nodes: INode[], edges: Edge[]) => void;
+type TGeneratePromptString = (nodes: INode[], edges: Edge[]) => string;
 
 const useGeneratePrompt = () => {
   const [prompt, setPrompt] = useState('');
@@ -23,10 +22,12 @@ const useGeneratePrompt = () => {
     }, '');
 
     // Update the prompt state with the new prompt
-    setPrompt(`${parameters} \n ${instructions} \n${newPrompt}`);
+    // setPrompt(`${parameters} \n ${instructions} \n${newPrompt}`);
+    setPrompt(`\n${newPrompt}`);
+    return newPrompt;
   }, []);
 
-  // console.log('prompt');
+  // console.log(prompt);
 
   return { prompt, generatePrompt };
 };

@@ -6,6 +6,7 @@ import WebSocket from 'ws';
 import app from './app';
 import { initializeLeadsWebSocket } from './models/leadModel';
 import { initializeCallsWebSocket } from './telephony/phoneController';
+import { initializeChatWebSocket } from './telephony/ChatWithBotController';
 
 const localIPAddress = getLocalIPAddress();
 const host = localIPAddress === '172.31.149.141' ? 'localhost' : localIPAddress;
@@ -30,9 +31,39 @@ async function connectToDatabase() {
 }
 
 function initializeWebSocketServer(server) {
-  const wss = new WebSocket.Server({ server });
-  initializeLeadsWebSocket(wss);
-  initializeCallsWebSocket(wss);
+  const leadsWss = new WebSocket.Server({ noServer: true, path: '/ws/leads' });
+  initializeLeadsWebSocket(leadsWss);
+
+  const callsWss = new WebSocket.Server({ noServer: true, path: '/ws/call' });
+  initializeCallsWebSocket(callsWss);
+
+  const chatWss = new WebSocket.Server({ noServer: true, path: '/ws/chat' });
+  initializeChatWebSocket(chatWss);
+
+  server.on('upgrade', (request, socket, head) => {
+    const { pathname } = new URL(request.url, `http://${request.headers.host}`);
+
+    switch (pathname) {
+      case '/ws/chat':
+        chatWss.handleUpgrade(request, socket, head, (ws) => {
+          chatWss.emit('connection', ws, request);
+        });
+        break;
+      case '/ws/calls':
+        callsWss.handleUpgrade(request, socket, head, (ws) => {
+          callsWss.emit('connection', ws, request);
+        });
+        break;
+      case '/ws/leads':
+        leadsWss.handleUpgrade(request, socket, head, (ws) => {
+          leadsWss.emit('connection', ws, request);
+        });
+        break;
+      default:
+        console.warn(`Unknown WebSocket path: ${pathname}. Connection destroyed.`);
+        socket.destroy();
+    }
+  });
 }
 
 async function startServer() {

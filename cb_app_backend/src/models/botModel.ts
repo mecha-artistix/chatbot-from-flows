@@ -10,11 +10,15 @@ const botSchema = new Schema<IBot>({
   identity: { type: String, default: '' },
   instrunctions: { type: String, default: '' },
   endPoint: { type: String, default: '' },
-  prompt: {
-    promptText: { type: String },
-    source: { type: Schema.Types.ObjectId, ref: 'Flowchart', default: null },
-  },
+  promptText: { type: String },
+  source: { type: Schema.Types.ObjectId, ref: 'Flowchart', default: null },
 });
+
+// PRE  MIDDLEWARE
+// botSchema.pre<IBot>('save', async function (next) {
+//   this.user = req.user._id;
+//   next()
+// });
 
 // POST MIDDLEWARE
 botSchema.post<IBot>('save', async function (doc) {
@@ -24,6 +28,20 @@ botSchema.post<IBot>('save', async function (doc) {
     console.log(error);
   }
 });
+
+// // POST DELETE MIDDLEWARE
+// botSchema.post<IBot>('deleteOne', async function (doc) {
+//   try {
+//     // Remove the bot reference from the user's document after the bot is deleted
+//     await User.findOneAndUpdate(
+//       { _id: doc.user },
+//       { $pull: { bots: doc._id } }, // Remove the bot from the bots array
+//       { new: true }, // Return the updated user document
+//     );
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
 
 const Bot = mongoose.model('Bot', botSchema);
 

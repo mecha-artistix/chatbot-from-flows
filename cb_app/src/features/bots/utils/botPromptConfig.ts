@@ -1,6 +1,6 @@
-const modal = 'llama3';
+const model = 'llama3';
 
-export const parameters = `FROM ${modal}
+export const parameters = `FROM ${model}
 # Perameters:
 # set the temperature to 0.3 [higher is more creative, lower is more coherent]
 PARAMETER temperature 0.3
@@ -32,7 +32,3 @@ SYSTEM """
 21. Maintain a polite and empathetic tone, especially when dealing with customer complaints or issues.
 22. If the customer's issue cannot be resolved within the conversation, provide a clear process for escalation or follow-up.
 23. Confirm important details with the customer to avoid misunderstandings.`;
-
-// const conversation = `#Conversation History \n` + convo;
-
-// const completePrompt = parameters + '\n' + instructions + '\n' + conversation + '\n"""';

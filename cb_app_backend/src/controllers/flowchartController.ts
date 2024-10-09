@@ -29,12 +29,6 @@ export const clearUser = catchAsync(async (req, res, next) => {
 
   // check/delete related flowchart
   const pullFromUser = { flowcharts: deletedFlowchart._id };
-  //   const relatedBot = deletedFlowchart.bot;
-  //   if (relatedBot) {
-  //     const deletedBot = await Bot.findByIdAndDelete(relatedBot);
-  //     pullFromUser.bots = deletedBot._id;
-  //   }
-  // update user
 
   if (req.user && req.user._id) await User.updateMany({ _id: req.user._id }, { $pull: pullFromUser });
 
