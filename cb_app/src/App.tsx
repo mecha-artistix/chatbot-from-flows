@@ -8,12 +8,12 @@ import useThemeStore from './theme/themeStore';
 import { createMaterialTheme } from './theme/theme';
 import UserAuthPage from './features/authentication/components/UserAuthPage';
 import Dashboard from './features/dashboard/Dashboard';
-
-import LoginForm from './features/authentication/components/LoginForm';
-import RegistrationForm from './features/authentication/components/RegistrationForm';
+import LoginForm, { action as loginAction } from './features/authentication/components/LoginForm';
+import RegistrationForm, { action as signUpAction } from './features/authentication/components/RegistrationForm';
 import FlowchartsCollection, { loader as flowchartsLoader } from './features/flowchart/FlowchartsCollection';
 import { action as CreateNewFlowchartAction } from './features/flowchart/components/CreateNewBtn';
-import FlowBoard, { loader as FlowchartLoader } from './features/flowchart/components/FlowBoard';
+import Flowchart, { loader as FlowchartLoader } from './features/flowchart/Flowchart';
+// import ChatBox, { loader as ChatBoxLoader } from './features/chatBox/ChatBox';
 import Knowledgebase from './features/knowledgebase/Knowledgebase';
 import Bots from './features/bots/Bots';
 import ProfileSettings from './features/userProfile/ProfileSettings';
@@ -26,16 +26,31 @@ import AppLayout from './ui/AppLayout';
 import Error from './ui/Error';
 import Leads, { loader as LeadsLoader } from './features/leads/Leads';
 import SessionsStats, { loader as sessionsStatsLoader } from './features/leads/components/SessionsStats';
+import useAuthStore from './features/authentication/userStore';
 
-const getCookie = (name: string) => {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(';').shift();
-};
+// const getCookie = (name: string) => {
+//   const value = `; ${document.cookie}`;
+//   const parts = value.split(`; ${name}=`);
+//   if (parts.length === 2) return parts.pop()?.split(';').shift();
+// };
 
 const ProtectedRoute = ({ element }: { element: JSX.Element }) => {
-  const jwtToken = getCookie('jwt');
-  return jwtToken ? element : <Navigate to="/authentication/login" replace />;
+  const { isAuthenticated } = useAuthStore((state) => ({ isAuthenticated: state.isAuthenticated }));
+  // console.log('ProtectedRoute called');
+  // const jwtToken = getCookie('jwt');
+
+  // (async function () {
+  //   try {
+  //     const response = await verify();
+  //     return response;
+  //   } catch (error) {
+  //     return error;
+  //   }
+  // })();
+
+  // console.log(jwtToken);
+  // return jwtToken ? element : <Navigate to="/authentication/login" replace />;
+  return isAuthenticated ? element : <Navigate to="/authentication/login" replace />;
 };
 
 const router = createBrowserRouter([
@@ -51,9 +66,10 @@ const router = createBrowserRouter([
         action: CreateNewFlowchartAction,
         errorElement: <Error />,
       },
-      { path: '/create-flowchart', element: <FlowBoard />, loader: FlowchartLoader },
+      { path: '/create-flowchart', element: <Flowchart />, loader: FlowchartLoader },
       { path: '/knowledgebase', element: <Knowledgebase /> },
       { path: '/bots', element: <Bots /> },
+      // { path: '/chat-box/:id', element: <ChatBox />, loader: ChatBoxLoader },
       {
         path: '/leads-collections',
         element: <LeadsCollections />,
@@ -90,8 +106,8 @@ const router = createBrowserRouter([
     path: '/authentication',
     element: <UserAuthPage />,
     children: [
-      { path: 'login', element: <LoginForm /> },
-      { path: 'sign-up', element: <RegistrationForm /> },
+      { path: 'login', element: <LoginForm />, action: loginAction },
+      { path: 'sign-up', element: <RegistrationForm />, action: signUpAction },
     ],
   },
 ]);

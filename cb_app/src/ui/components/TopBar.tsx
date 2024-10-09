@@ -18,15 +18,29 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import useThemeStore from '../../theme/themeStore';
+import { logout } from '../../features/authentication/services';
 
 function TopBar() {
   const [open, setOpen] = React.useState(false);
   const TopBarHeight = useThemeStore((state) => state.topBarHeight);
-  const { username, logout } = useAuthStore((state) => ({ username: state.username, logout: state.logout }));
+  const { username, setLoggedOut } = useAuthStore((state) => ({
+    username: state.username,
+    setLoggedOut: state.setLoggedOut,
+  }));
 
   const handleClick: React.MouseEventHandler<HTMLDivElement> = (event) => {
     event.stopPropagation();
     setOpen(!open);
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await logout();
+      setLoggedOut();
+      return response;
+    } catch (error: any) {
+      throw new Error(error);
+    }
   };
 
   return (
@@ -70,7 +84,7 @@ function TopBar() {
                   </ListItemIcon>
                   <ListItemText primary="Profile" />
                 </ListItemButton>
-                <ListItemButton onClick={() => logout()}>
+                <ListItemButton onClick={handleLogout}>
                   <ListItemIcon>
                     <ExitToAppIcon />
                   </ListItemIcon>

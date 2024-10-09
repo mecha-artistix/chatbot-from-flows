@@ -5,11 +5,11 @@
   },
   {
     "role": "user",
-    "content": "what do you want to know about me"
+    "content": "I have part a"
   },
   {
     "role": "assistant",
-    "content": "Hello! I’d love to know if you’re currently enrolled in a Medicare plan and if you’re looking for any specific information or assistance regarding your coverage."
+    "content": "That's great! Having Part A means you have hospital insurance. Are you interested in learning more about Part B or any additional coverage options for your Medicare plan?"
   },
   {
     "role": "user",
@@ -17,6 +17,6 @@
   },
   {
     "role": "assistant",
-    "content": "Great! Just to confirm, do you also have Part B, or are you interested in learning about additional coverage options like Part C or Part D?"
+    "content": "Thanks for confirming that! Do you also have Part B, or are you considering enrolling in it? This could help you get more comprehensive coverage."
   }
 ]

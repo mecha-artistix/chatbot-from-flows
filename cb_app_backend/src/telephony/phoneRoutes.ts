@@ -10,5 +10,5 @@ router.route('/').post(makeCall);
 router.route('/receive-call').post(reveiveCall);
 router.route('/process-speech').post(processSpeech);
 
-router.use(protect);
+// router.use(protect);
 export default router;

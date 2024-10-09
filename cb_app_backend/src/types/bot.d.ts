@@ -8,10 +8,11 @@ export interface IBot extends Document {
   identity?: string;
   instrunctions: string;
   endPoint: string;
-  prompt: IPrompt;
-}
-
-interface IPrompt {
   promptText: string;
   source?: Types.ObjectId;
 }
+
+// interface IPrompt {
+//   promptText: string;
+//   source?: Types.ObjectId;
+// }
