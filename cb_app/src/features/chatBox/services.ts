@@ -60,3 +60,15 @@ export const makeCall: TMakeCall = async (numberToCall) => {
     return error;
   }
 };
+
+
+type TAbortCall = (callSid:string) => Promise<{ [key: string]: any }>;
+export const abortCall:TAbortCall = async (callSid) => {
+  try {
+    const response = await axios.post(URL_PHONE + '/abort-call', { callSid })
+    const data = response.data
+    return data
+  } catch (error: any) {
+    console.log(error)
+  }
+}

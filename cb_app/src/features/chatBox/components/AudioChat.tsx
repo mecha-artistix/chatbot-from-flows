@@ -10,7 +10,7 @@ import PhoneEnabledIcon from '@mui/icons-material/PhoneEnabled';
 import PhoneDisabledIcon from '@mui/icons-material/PhoneDisabled';
 import { Stack } from '@mui/system';
 import { useChatBoxStore } from '../chatBoxStore';
-import { makeCall } from '../services';
+import { makeCall, abortCall } from '../services';
 import { Message } from '../../../types/bot';
 const { VITE_NODE_WS} = import.meta.env;
 // const { VITE_SERVER_WS } = import.meta.env;
@@ -80,8 +80,10 @@ const AudioChat = () => {
     setCallSid(call.callSid)
   };
 
-  const handleAbort = () => {
+  const handleAbort = async () => {
     console.log('abort')
+    const response = await abortCall(callSid)
+    console.log(response)
   };
 
   useEffect(() => {

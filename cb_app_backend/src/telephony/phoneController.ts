@@ -32,11 +32,39 @@ export  const makeCall = catchAsync(async (req,res,next) => {
         statusCallback: `${SERVER_IP}/phone/call-status`, // actual web hook where twilio will send back events
       });
       console.log('Call initiated', call.sid);
-      if (!call) return new AppError('Call init failed', 400)
+      if (!call) return next(new AppError('Call init failed', 400))
 
       res.status(200).json({status:'success', callSid:call.sid ,data: call})
  
 }) 
+
+export const endCall = catchAsync(async (req, res, next) => {
+  const { callSid } = req.body;
+
+  // Check if callSid is provided
+  if (!callSid) {
+    return next(new AppError('callSid not found in request body', 400));
+  }
+
+  try {
+    // Attempt to update the call status to 'completed'
+    const call = await client.calls(callSid).update({ status: 'completed' });
+    console.log(`Call ${call.sid} has been aborted.`);
+
+    // Respond to the client
+    res.status(200).json({ message: 'Call aborted successfully', data: call });
+  } catch (error: any) {
+    // Check if the error is due to the call not being found
+    if (error.code === 20404) {
+      // Twilio error code 20404 indicates resource not found
+      return next(new AppError('Call not found with the provided callSid', 404));
+    } else {
+      // Log the error and pass it to the global error handler
+      console.error('Error aborting call:', error);
+      return next(new AppError('An error occurred while aborting the call', 500));
+    }
+  }
+});
 
 
  // POST route for stream status updates from twilio
