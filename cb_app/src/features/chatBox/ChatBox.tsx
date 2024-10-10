@@ -5,8 +5,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import { IBotData } from '../../types/bot';
 import { useChatBoxStore } from './chatBoxStore';
 import ChooseModal from './components/ChooseModal';
-// import TrainModal from './components/TrainModal';
-import TestModal from './components/TestModal';
+import AudioChat from './components/AudioChat';
+import TextChat from './components/TextChat';
 
 interface IChatBox {
   // openChatBox: boolean;
@@ -46,9 +46,7 @@ const ChatBox: React.FC<IChatBox> = () => {
       case 0:
         return <ChooseModal />;
       case 1:
-        return <TestModal />;
-      // case 2:
-      //   return <TestModal />;
+        return <TestModel />;
       default:
         return (
           <div>
@@ -103,25 +101,7 @@ const ChatBox: React.FC<IChatBox> = () => {
 
 export default ChatBox;
 
-/*
-1- choose a model
-2- test a model msg or call
-3- action
-
-export const loader: LoaderFunction = ({ params }) => {
-  const { id } = params;
-  console.log(id);
-  if (!id) throw new Error('id was not found');
-  const response = getBot(id);
-  return response;
-};
-
-return (
-  <ClickAwayListener onClickAway={() => setOpenChatBox(false)}>
-    <Collapse in={openChatBox} sx={style.wrapper}>
-      <Stack sx={style.container}>{prompt}</Stack>
-    </Collapse>
-  </ClickAwayListener>
-);
-
-*/
+function TestModel() {
+  const { testMethod } = useChatBoxStore((state) => ({ testMethod: state.testMethod }));
+  return testMethod === 'phone' ? <AudioChat /> : <TextChat />;
+}

@@ -8,22 +8,15 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
-import { useChatBoxStore } from '../chatBoxStore';
 import { useEffect, useRef, useState } from 'react';
 import SendIcon from '@mui/icons-material/Send';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 const { VITE_NODE_WS } = import.meta.env;
 
-function TestModel() {
-  const { testMethod } = useChatBoxStore((state) => ({ testMethod: state.testMethod }));
-
-  return testMethod === 'phone' ? <PhoneTest /> : <MessageTest />;
-}
-
 type Message = { role: 'assistant' | 'user' | 'server'; content: string };
 
-const MessageTest = () => {
+const TextChat = () => {
   const [input, setInput] = useState('');
   // const [response, setResponse] = useState('');
   // const [connectionStatus, setConnectionStatus] = useState<string>('Disconnected');
@@ -120,8 +113,12 @@ const MessageTest = () => {
   }, [messages]);
 
   return (
-    <Stack sx={{ width: '100%', height: '100%', overflow: 'hidden' }} className="messageCont">
-      <Stack direction="column" sx={{ flexGrow: 1, overflowY: 'auto', border: '1' }} className="messageStack">
+    <Stack sx={{ width: '100%', height: '100%', overflow: 'hidden', gap: 1 }} className="messageCont">
+      <Stack
+        direction="column"
+        sx={(theme) => ({ flexGrow: 1, overflowY: 'auto', border: `1px solid ${theme.palette.divider}`, p: 1 })}
+        className="messageStack"
+      >
         <List sx={style.messages}>
           {messages.map((message, i) => {
             if (message.role == 'assistant') {
@@ -171,9 +168,4 @@ const MessageTest = () => {
     </Stack>
   );
 };
-
-const PhoneTest = () => {
-  return <p>Testing method was set to phone</p>;
-};
-
-export default TestModel;
+export default TextChat;

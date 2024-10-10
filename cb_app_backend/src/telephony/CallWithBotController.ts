@@ -11,7 +11,8 @@ const { SERVER_IP } = process.env;
 const BOT_IP: string = process.env.BOT_IP as string;
 const GPT_KEY: string = process.env.GPT_KEY as string;
 
-export const reveiveCall = async (req, res) => {
+// export const reveiveCall = async (req, res) => {
+export const makeTwiml = async (req, res) => {
   try {
     const twiml = new VoiceResponse();
 
