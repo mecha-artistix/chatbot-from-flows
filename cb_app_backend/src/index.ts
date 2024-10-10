@@ -5,7 +5,7 @@ import getLocalIPAddress from './utils/getLocalIPAdress';
 import WebSocket from 'ws';
 import app from './app';
 import { initializeLeadsWebSocket } from './models/leadModel';
-import { initializeCallsWebSocket } from './telephony/phoneController';
+// import { initializeCallsWebSocket } from './telephony/phoneController';
 import { initializeChatWebSocket } from './telephony/ChatWithBotSocket';
 import { initializeCallsWithBotWebSocket } from './telephony/CallWithBotSocket';
 import { initializeMediaStreamsWebSocket } from './telephony/MediaStreamsSocket';
@@ -69,6 +69,7 @@ function initializeWebSocketServer(server) {
         mediaStreamsWss.handleUpgrade(request, socket, head, (ws) => {
           mediaStreamsWss.emit('connection', ws, request);
         });
+        break;
       default:
         console.warn(`Unknown WebSocket path: ${pathname}. Connection destroyed.`);
         socket.destroy();

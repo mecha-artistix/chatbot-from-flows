@@ -6,7 +6,9 @@ const store: StateCreator<IStore> = (set) => ({
   chatBoxId: '',
   activeStep: 0,
   testMethod: 'message',
+  callSid: '',
   // setOpenChatBox: (value) => set({ openChatBox: value }),
+  setCallSid : (CallSid) => set({ callSid:CallSid }), 
   setOpenChatBox: (id) => set({ chatBoxId: id, openChatBox: true }),
   setChatBoxId: (id) => set({ chatBoxId: id }),
   closeChatBox: () => set({ openChatBox: false }),
@@ -30,6 +32,8 @@ interface IStore {
   chatBoxId: string;
   activeStep: number;
   testMethod: 'phone' | 'message';
+  callSid:string;
+  setCallSid:(CallSid:string) => void;
   // setOpenChatBox: (open: boolean) => void;
   setOpenChatBox: (id: string) => void;
   setChatBoxId: (id: string) => void;

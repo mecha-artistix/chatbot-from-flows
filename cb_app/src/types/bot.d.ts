@@ -15,3 +15,6 @@ export interface IBotData {
   source: null | string;
   createdAt: string;
 }
+
+
+export type Message = { role: 'assistant' | 'user' | 'server'; content: string };

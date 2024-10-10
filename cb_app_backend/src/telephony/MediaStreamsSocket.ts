@@ -1,13 +1,14 @@
 import WebSocket from 'ws';
 
 export const initializeMediaStreamsWebSocket = (wss: WebSocket.Server) => {
-  wss.on('connection', (ws) => {
-    console.log('Client connected to media stream socket');
+  wss.on('connection', (ws, req) => {
+    console.log('Client connected to media stream socket - ', req.socket.remoteAddress);
 
     // Handle incoming messages from Twilio
-    ws.on('message', async (message) => {
+    ws.on('message', async (data) => {
+      console.log(data)
       try {
-        console.log('Data received from Twilio:', message);
+        console.log('Data received from Twilio:', data);
         // const transcriptionData = JSON.parse(message);
         // const { CallSid, text, timestamp } = transcriptionData;
         // 1. Broadcast transcription data to all connected clients
@@ -19,9 +20,9 @@ export const initializeMediaStreamsWebSocket = (wss: WebSocket.Server) => {
     });
 
     // Handle WebSocket disconnection
-    ws.on('close', () => {
-      console.log('Twilio Media Stream WebSocket disconnected');
-    });
+    // ws.on('close', () => {
+    //   console.log('Twilio Media Stream WebSocket disconnected');
+    // });
 
     // Handle WebSocket errors
     ws.on('error', (error) => {

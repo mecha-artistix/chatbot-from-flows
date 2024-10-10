@@ -12,6 +12,7 @@ const ChooseModal = () => {
     setActiveStep: state.setActiveStep,
     chatBoxId: state.chatBoxId,
     setTestMethod: state.setTestMethod,
+    setCallSid: state.setCallSid,
   }));
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState('pending');
@@ -30,6 +31,12 @@ const ChooseModal = () => {
   const style = {
     chip: {},
   };
+  const handleCallTest = async () => {
+  //  const call = await makeCall('+923439107326')
+  //  console.log('call init - ', call)
+  //  setCallSid(call.callSid)
+   handleModelTest('phone')
+  }
   return (
     <Stack alignItems="center">
       <Stack direction="row" gap={2} justifyContent="center" my={3} flexWrap="wrap">
@@ -47,7 +54,7 @@ const ChooseModal = () => {
       {isLoading && <Loader />}
       {status == 'success' && (
         <Stack sx={{ justifyContent: 'center', alignItems: 'center', m: 5, gap: 5 }}>
-          <Button variant="outlined" startIcon={<PhoneInTalkIcon />} onClick={() => handleModelTest('phone')}>
+          <Button variant="outlined" startIcon={<PhoneInTalkIcon />} onClick={handleCallTest}>
             Test with Call
           </Button>
           <Button variant="outlined" startIcon={<ForumIcon />} onClick={() => handleModelTest('message')}>

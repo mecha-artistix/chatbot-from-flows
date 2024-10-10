@@ -46,3 +46,17 @@ export const patchBot: TPatchBot = async (id, body) => {
     throw new Error(error);
   }
 };
+
+
+const URL_PHONE = import.meta.env.VITE_SERVER_IP + '/phone';
+
+type TMakeCall = (numberToCall: string) => Promise<{ [key: string]: any }>;
+export const makeCall: TMakeCall = async (numberToCall) => {
+  try {
+    const response = await axios.post(URL_PHONE, { numberToCall }, { withCredentials: true });
+    const data = await response.data;
+    return data;
+  } catch (error: any) {
+    return error;
+  }
+};

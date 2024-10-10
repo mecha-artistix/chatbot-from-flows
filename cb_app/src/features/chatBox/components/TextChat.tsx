@@ -12,9 +12,10 @@ import { useEffect, useRef, useState } from 'react';
 import SendIcon from '@mui/icons-material/Send';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { Message } from '../../../types/bot';
 const { VITE_NODE_WS } = import.meta.env;
 
-type Message = { role: 'assistant' | 'user' | 'server'; content: string };
+
 
 const TextChat = () => {
   const [input, setInput] = useState('');

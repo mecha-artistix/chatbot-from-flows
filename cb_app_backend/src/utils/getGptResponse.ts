@@ -1,9 +1,12 @@
 import OpenAI from 'openai';
 import { ChatCompletionMessageParam } from 'openai/resources';
+
 const GPT_KEY: string = process.env.GPT_KEY as string;
 
 type IModel = 'gpt-3.5-turbo' | 'gpt-4o' | 'gpt-4o-mini';
-type Message = { role: string; content: string };
+export type Message = { role: string; content: string };
+
+
 type GetChatbotResponse = (conversation: Message[], systemMessage?: string, model?: IModel) => any;
 
 export const getGptResponse: GetChatbotResponse = async (
