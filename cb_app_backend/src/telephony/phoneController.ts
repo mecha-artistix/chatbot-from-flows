@@ -16,6 +16,7 @@ export async function makeCall(toNumber) {
     url: `${SERVER_WS}/media-streams`, // WebSocket URL for real-time media streaming
     track: 'both_tracks',
     statusCallback: `${SERVER_IP}/phone/stream-status`, // HTTP(S) URL for stream status updates
+
   });
 
   twiml.gather({
