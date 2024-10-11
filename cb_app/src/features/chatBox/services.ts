@@ -64,7 +64,7 @@ export const makeCall: TMakeCall = async (numberToCall) => {
 type TAbortCall = (callSid: string) => Promise<{ [key: string]: any }>;
 export const abortCall: TAbortCall = async (callSid) => {
   try {
-    const response = await axios.post(URL_PHONE_SERVER + '/abort-call', { callSid });
+    const response = await axios.post(URL_PHONE_SERVER + '/abort-call', { callSid }, { withCredentials: true });
     const data = response.data;
     return data;
   } catch (error: any) {
