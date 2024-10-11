@@ -48,7 +48,7 @@ export const patchBot: TPatchBot = async (id, body) => {
 };
 
 const URL_PHONE = import.meta.env.VITE_NODE_BASE_API + '/phone';
-const URL_PHONE_SERVER = import.meta.env.VITE_SERVER_WS + '/phone';
+const URL_PHONE_SERVER = import.meta.env.VITE_SERVER_IP + '/phone';
 
 type TMakeCall = (numberToCall: string) => Promise<{ [key: string]: any }>;
 export const makeCall: TMakeCall = async (numberToCall) => {
