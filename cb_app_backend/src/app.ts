@@ -18,7 +18,8 @@ import userRoutes from './routes/userRoutes';
 import flowchartRoutes from './routes/flowchartRoutes';
 import botRoutes from './routes/botRoutes';
 import leadRoutes from './routes/leadRoutes';
-import phoneRoutes from './telephony/phoneRoutes';
+// import phoneRoutes from './telephony/phoneRoutes';
+import { callRouter, phoneRouter } from './telephony/phoneRoutes';
 const { BASE_URL, SERVER_IP } = process.env;
 const ALLOWED_ORIGINS = ['127.0.0.1', 'localhost', 'wslhost', '91.107.194.217', '172.31.149.141', '209.209.42.134'];
 const { window } = new JSDOM('');
@@ -71,7 +72,7 @@ app.use(cors(corsOptions));
 // Set security HTTP headers
 // app.use(helmet());
 // Limit requests from the same IP address
-app.use(SERVER_IP + '/phone', phoneRoutes);
+
 const limiter = rateLimit({
   max: 100,
   windowMs: 60 * 60 * 1000, // 1 hour
@@ -113,6 +114,10 @@ app.get('/', (req: Request, res: Response) => {
   });
 });
 
+app.use('/phone', callRouter);
+
+app.use(BASE_URL + '/phone', phoneRouter);
+
 app.use(BASE_URL + '/users', userRoutes);
 
 app.use(BASE_URL + '/flowcharts', flowchartRoutes);
@@ -120,8 +125,6 @@ app.use(BASE_URL + '/flowcharts', flowchartRoutes);
 app.use(BASE_URL + '/leads', leadRoutes);
 
 app.use(BASE_URL + '/bots', botRoutes);
-
-app.use('/phone', phoneRoutes);
 
 app.get('/error-test', (req: Request, res: Response, next: NextFunction) => {
   const err = new AppError('This is a test error', 500);

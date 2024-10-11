@@ -47,8 +47,8 @@ export const patchBot: TPatchBot = async (id, body) => {
   }
 };
 
-
-const URL_PHONE = import.meta.env.VITE_SERVER_IP + '/phone';
+const URL_PHONE = import.meta.env.VITE_NODE_BASE_API + '/phone';
+const URL_PHONE_SERVER = import.meta.env.VITE_SERVER_WS + '/phone';
 
 type TMakeCall = (numberToCall: string) => Promise<{ [key: string]: any }>;
 export const makeCall: TMakeCall = async (numberToCall) => {
@@ -61,14 +61,13 @@ export const makeCall: TMakeCall = async (numberToCall) => {
   }
 };
 
-
-type TAbortCall = (callSid:string) => Promise<{ [key: string]: any }>;
-export const abortCall:TAbortCall = async (callSid) => {
+type TAbortCall = (callSid: string) => Promise<{ [key: string]: any }>;
+export const abortCall: TAbortCall = async (callSid) => {
   try {
-    const response = await axios.post(URL_PHONE + '/abort-call', { callSid })
-    const data = response.data
-    return data
+    const response = await axios.post(URL_PHONE_SERVER + '/abort-call', { callSid });
+    const data = response.data;
+    return data;
   } catch (error: any) {
-    console.log(error)
+    console.log(error);
   }
-}
+};

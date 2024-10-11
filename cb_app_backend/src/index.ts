@@ -5,10 +5,8 @@ import getLocalIPAddress from './utils/getLocalIPAdress';
 import WebSocket from 'ws';
 import app from './app';
 import { initializeLeadsWebSocket } from './models/leadModel';
-// import { initializeCallsWebSocket } from './telephony/phoneController';
 import { initializeChatWebSocket } from './telephony/ChatWithBotSocket';
 import { initializeCallsWithBotWebSocket } from './telephony/CallWithBotSocket';
-import { initializeMediaStreamsWebSocket } from './telephony/MediaStreamsSocket';
 
 const localIPAddress = getLocalIPAddress();
 const host = localIPAddress === '172.31.149.141' ? 'localhost' : localIPAddress;
@@ -37,14 +35,10 @@ function initializeWebSocketServer(server) {
   initializeLeadsWebSocket(leadsWss);
 
   const callsWss = new WebSocket.Server({ noServer: true, path: '/call' });
-  // initializeCallsWebSocket(callsWss);
   initializeCallsWithBotWebSocket(callsWss);
 
   const chatWss = new WebSocket.Server({ noServer: true, path: '/chat' });
   initializeChatWebSocket(chatWss);
-
-  const mediaStreamsWss = new WebSocket.Server({ noServer: true, path: '/media-streams' });
-  initializeMediaStreamsWebSocket(mediaStreamsWss);
 
   server.on('upgrade', (request, socket, head) => {
     const { pathname } = new URL(request.url, `http://${request.headers.host}`);
@@ -63,11 +57,6 @@ function initializeWebSocketServer(server) {
       case '/leads':
         leadsWss.handleUpgrade(request, socket, head, (ws) => {
           leadsWss.emit('connection', ws, request);
-        });
-        break;
-      case '/media-streams':
-        mediaStreamsWss.handleUpgrade(request, socket, head, (ws) => {
-          mediaStreamsWss.emit('connection', ws, request);
         });
         break;
       default:

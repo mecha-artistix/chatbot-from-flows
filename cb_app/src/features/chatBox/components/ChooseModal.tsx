@@ -32,11 +32,8 @@ const ChooseModal = () => {
     chip: {},
   };
   const handleCallTest = async () => {
-  //  const call = await makeCall('+923439107326')
-  //  console.log('call init - ', call)
-  //  setCallSid(call.callSid)
-   handleModelTest('phone')
-  }
+    handleModelTest('phone');
+  };
   return (
     <Stack alignItems="center">
       <Stack direction="row" gap={2} justifyContent="center" my={3} flexWrap="wrap">
