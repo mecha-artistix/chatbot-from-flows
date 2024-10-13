@@ -4,4 +4,7 @@ cicd.yml.copy
 dist/
 .github
 docker-compose.yml
-
+cb_app/DockerFile
+cb_app_backend/Dockerfile
+docker-compose.yml
+*/.dockerignore

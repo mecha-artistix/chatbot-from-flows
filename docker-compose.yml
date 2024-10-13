@@ -6,10 +6,11 @@ services:
       target: ${NODE_ENV:-development}
     ports:
       - "${PORT:-5173}:${PORT:-5173}"
-    environment:
-      - NODE_ENV=${NODE_ENV:-development}
+    env_file:
+      - ./cb_app/.env
     volumes:
       - ./cb_app:/app
+      # - ./cb_app/node_modules
     depends_on:
       - backend
 
@@ -20,7 +21,39 @@ services:
       target: ${NODE_ENV:-development}
     ports:
       - "${PORT:-3000}:${PORT:-3000}"
-    environment:
-      - NODE_ENV=${NODE_ENV:-development}
+    env_file:
+      - ./cb_app_backend/.env
     volumes:
       - ./cb_app_backend:/app
+    depends_on:
+      - redis
+
+  workers:
+    build:
+      context: ./cb_app_backend
+      dockerfile: Dockerfile
+      target: worker
+    command: node dist/worker.js
+    env_file:
+      - ./cb_app_backend/.env
+    volumes:
+      - ./cb_app_backend:/app
+    depends_on:
+      - redis
+      - backend
+
+  nginx:
+    image: nginx:1.24
+    container_name: nginx_container
+    ports:
+      - "8084:80"
+    volumes:
+      - ./cb_app/dist:/usr/share/nginx/html
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - frontend
+
+  redis:
+    image: 'redis:latest'
+    ports:
+      - '6379:6379'
