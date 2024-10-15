@@ -114,7 +114,8 @@ app.get('/', (req: Request, res: Response) => {
   });
 });
 
-app.use('/phone', callRouter);
+// unporotected endpoit for call service
+app.use('/call', callRouter);
 
 app.use(BASE_URL + '/phone', phoneRouter);
 

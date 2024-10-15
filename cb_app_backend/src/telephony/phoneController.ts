@@ -18,7 +18,7 @@ export const makeCall = catchAsync(async (req, res, next) => {
 
   twiml.gather({
     input: ['speech'],
-    action: `${process.env.SERVER_IP}/phone/process-speech`,
+    action: `${SERVER_IP}/call/process-speech`,
     speechTimeout: 'auto',
   });
 
@@ -30,7 +30,7 @@ export const makeCall = catchAsync(async (req, res, next) => {
     to: numberToCall,
     twiml: twiml.toString(),
     statusCallbackEvent: ['initiated', 'ringing', 'answered', 'completed'], // events that twilio will send to webhook
-    statusCallback: `${SERVER_IP}/phone/call-status`, // actual web hook where twilio will send back events
+    statusCallback: `${SERVER_IP}/call/call-status`, // actual web hook where twilio will send back events
   });
   console.log('Call initiated', call.sid);
   if (!call) return next(new AppError('Call init failed', 400));
