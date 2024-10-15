@@ -13,7 +13,7 @@ logs
 *.sw?
 
 */.env
-
+**/dist/
 */node_modules
 cicd.yml.copy
 
