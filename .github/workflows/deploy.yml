@@ -23,5 +23,6 @@ jobs:
             cd ${{ secrets.SSH_DIR }}
             git pull origin ${{ secrets.MAIN_BRANCH }}
             # Use docker-compose to build and start the application
-            NODE_ENV=production docker-compose up --build -d
+            # NODE_ENV=production docker-compose up --build -d
+            docker-compose up
           EOF
