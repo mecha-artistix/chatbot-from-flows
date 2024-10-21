@@ -25,6 +25,7 @@ const signToken = (id: string): string => {
 const createSendToken = (user: MyUser, statusCode: number, res: Response) => {
   const token = signToken(user._id);
   const expiresIn = process.env.JWT_EXPIRES_IN || '7d';
+  const isProduction = process.env.NODE_ENV === 'production';
   if (!expiresIn) {
     throw new Error('JWT_EXPIRES_IN is not defined');
   }
@@ -33,10 +34,9 @@ const createSendToken = (user: MyUser, statusCode: number, res: Response) => {
   const cookieOptions: CookieOptions = {
     expires: cookieExpirationDate,
     httpOnly: false,
-    secure: true,
-    sameSite: 'none',
+    secure: isProduction,
+    sameSite: 'lax',
   };
-  // if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
   res.cookie('jwt', token, cookieOptions);
   user.password = '';
   res.status(statusCode).json({
@@ -137,18 +137,11 @@ export const verify: RequestHandler = catchAsync(async (req, res, next) => {
 });
 
 export const logout: RequestHandler = catchAsync(async (req, res, next) => {
-  // res.clearCookie('jwt', { path: '/' });
-  // res.clearCookie('jwt', {
-  //   path: '/',
-  //   httpOnly: false,
-  //   secure: true,
-  //   sameSite: 'none',
-  // });
-
+  const isProduction = process.env.NODE_ENV === 'production';
   res.cookie('jwt', 'loggedOut', {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: false,
-    secure: false,
+    secure: isProduction,
     sameSite: 'lax',
   });
 

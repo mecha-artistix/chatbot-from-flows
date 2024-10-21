@@ -50,6 +50,7 @@ const flowChartSchema = new Schema<IFlowChart>({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 });
 
+// add flowchart to user
 flowChartSchema.post('save', async function (doc) {
   await User.findOneAndUpdate({ _id: doc.user }, { $addToSet: { flowcharts: doc._id } }, { new: true, upsert: true });
 });

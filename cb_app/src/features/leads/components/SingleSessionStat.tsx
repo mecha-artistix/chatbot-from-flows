@@ -1,6 +1,5 @@
 import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
 import { grey } from '@mui/material/colors';
-
 import A from '../../../assets/img/icons_sessions/A.svg';
 import CallBK from '../../../assets/img/icons_sessions/CALLBK.svg';
 import DAIR from '../../../assets/img/icons_sessions/DAIR.svg';
@@ -11,6 +10,8 @@ import LB from '../../../assets/img/icons_sessions/LB.svg';
 import NI from '../../../assets/img/icons_sessions/NI.svg';
 import NP from '../../../assets/img/icons_sessions/NP.svg';
 import XFER from '../../../assets/img/icons_sessions/XFER.svg';
+import total from '../../../assets/img/icons_sessions/All_Calls.svg';
+
 import { IStat } from './SessionsStats';
 
 const colors: { [key: string]: string } = {
@@ -24,6 +25,7 @@ const colors: { [key: string]: string } = {
   A: '#FCB6F1',
   Hang_Up: '#ABA88B',
   LB: '#BFAA6B',
+  total: grey[200],
 };
 
 const icons: { [key: string]: string } = {
@@ -37,6 +39,7 @@ const icons: { [key: string]: string } = {
   A,
   Hang_Up,
   LB,
+  total,
 };
 
 interface ISingleSessionStat {

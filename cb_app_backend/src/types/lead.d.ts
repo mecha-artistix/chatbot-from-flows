@@ -1,10 +1,21 @@
 import { Date, Document, Types } from 'mongoose';
 
 export interface ISession extends Document {
-  lead?: Types.ObjectId;
+  user?: Types.ObjectId;
   createdAt: Date;
-  sessionId: string;
-  intent: string;
+  lead?: Types.ObjectId;
+  intent?: string;
+  sid: string;
+  dateCreated?: Date;
+  dateUpdated?: Date;
+  fromFormatted?: string;
+  toFormatted?: string;
+  status?: string;
+  startTime?: string;
+  endTime?: string;
+  duration?: string;
+  price?: number;
+  conversation?: string;
 }
 
 export interface ILead extends Document {
@@ -13,11 +24,12 @@ export interface ILead extends Document {
   phone?: string;
   email?: string;
   createdAt: Date;
-  dataSource?: string;
-  sessions?: ISession[];
+  leadsCollection?: string;
+  sessions?: Types.ObjectId;
 }
 
-export interface ILeadDataSource extends Document {
+// export interface ILeadDataSource extends Document {
+export interface ILeadCollection extends Document {
   user?: Types.ObjectId;
   name?: string;
   createdAt: Date;

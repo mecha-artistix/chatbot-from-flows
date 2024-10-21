@@ -79,32 +79,43 @@ export const getAll = <T extends Document>(Model: MongooseModel<T>) =>
     // if (!req.user) {
     //   return next(new AppError('User not authenticated', 401));
     // }
-
-    // const modelArrName = `${Model.modelName.toLowerCase()}s` as keyof MyUser;
-
-    // Safely access `req.user` properties with type assertion
-    // const userArray = (req.user[modelArrName] as Schema.Types.ObjectId[]) || [];
-    // const filter = { _id: { $in: userArray } };
-    // Ensure the request query is properly typed
-
-    // const features = new APIFeatures(Model.find(filter), req.query as { [key: string]: string })
-    // const totalDocs = await Model.countDocuments();
-
-    const features = new APIFeatures(Model.find(), req.query as { [key: string]: string })
+    let filter = {};
+    if (req.user) filter['user'] = req.user.id;
+    const features = new APIFeatures(Model.find(filter), req.query as { [key: string]: string })
       .filter()
       .sort()
       .limitFields()
       .paginate();
 
     // Execute the query
+    const total = await Model.countDocuments(filter);
     const doc = await features.query;
 
     // Send response
     res.status(200).json({
       status: 'success',
-      results: doc.length,
+      total,
       data: {
+        results: doc.length,
         data: doc,
+      },
+    });
+  });
+
+type GetAllOfUser = (model: string) => RequestHandler;
+
+export const getAllOfUser: GetAllOfUser = (model) =>
+  catchAsync(async (req, res, next) => {
+    if (!req.user) return next(new AppError('you are not logged in', 401));
+    if (!req.user[model]) return next(new AppError(`Model '${model}' not found on user`, 400));
+
+    const populatedUser = await req.user.populate({ path: model, select: '' });
+    const data = populatedUser[model];
+    res.status(200).json({
+      status: 'success',
+      length: data.length,
+      data: {
+        data,
       },
     });
   });

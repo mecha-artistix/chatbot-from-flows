@@ -58,6 +58,7 @@ const userSchema = new mongoose.Schema<MyUser>({
   active: { type: Boolean, default: true, select: false },
   flowcharts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Flowchart' }],
   bots: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Bot' }],
+  leadsCollection: [{ type: mongoose.Schema.Types.ObjectId, ref: 'LeadsCollection' }],
 });
 
 userSchema.pre('save', async function (this: MyUser, next) {

@@ -1,5 +1,5 @@
-import React from 'react';
-import ToggleTheme from './ToggleTheme';
+import React from "react";
+import ToggleTheme from "./ToggleTheme";
 import {
   Avatar,
   List,
@@ -11,14 +11,14 @@ import {
   ClickAwayListener,
   ListItemIcon,
   Paper,
-} from '@mui/material';
-import useAuthStore from '../../features/authentication/userStore';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import useThemeStore from '../../theme/themeStore';
-import { logout } from '../../features/authentication/services';
+} from "@mui/material";
+import useAuthStore from "../../features/authentication/userStore";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import useThemeStore from "../../theme/themeStore";
+import { logout } from "../../features/authentication/services";
 
 function TopBar() {
   const [open, setOpen] = React.useState(false);
@@ -48,7 +48,8 @@ function TopBar() {
       direction="row"
       spacing={1}
       sx={(theme) => ({
-        justifyContent: 'flex-end',
+        justifyContent: "flex-end",
+        alignItems: "center",
         height: TopBarHeight,
         borderBottom: `1px solid ${theme.palette.divider}`,
       })}
@@ -57,7 +58,7 @@ function TopBar() {
 
       <ToggleTheme />
 
-      <Stack direction="row" sx={{ position: 'relative' }}>
+      <Stack direction="row" sx={{ position: "relative" }}>
         <ListItemButton onClick={handleClick}>
           <ListItemAvatar>
             <Avatar />
@@ -69,11 +70,11 @@ function TopBar() {
           <Collapse
             in={open}
             sx={{
-              position: 'absolute',
+              position: "absolute",
               zIndex: 1,
-              top: '100%',
-              left: '0',
-              width: '100%',
+              top: "100%",
+              left: "0",
+              width: "100%",
             }}
           >
             <Paper elevation={1}>

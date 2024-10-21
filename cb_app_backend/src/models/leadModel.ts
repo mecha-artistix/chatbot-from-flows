@@ -1,50 +1,38 @@
-import mongoose, { Schema, Model } from 'mongoose';
-import WebSocket from 'ws';
-import validator from 'validator';
-import User from './usersModel';
-import { ILead, ISession, ILeadDataSource } from '../types/lead';
-
-const sessionSchema = new Schema<ISession>({
-  //   user: { type: Schema.ObjectId, ref: 'User', required: true },
-  //   name: { type: String, required: false },
-  lead: { type: mongoose.Schema.Types.ObjectId, ref: 'Lead' },
-  createdAt: { type: Date, default: Date.now },
-  sessionId: { type: String },
-  intent: { type: String },
-});
+import mongoose, { Schema, Model } from "mongoose";
+import validator from "validator";
+import { ILead, ISession, ILeadCollection } from "../types/lead";
+import User from "./usersModel";
 
 const leadSchema = new Schema<ILead>({
-  user: { type: Schema.ObjectId, ref: 'User', required: true },
+  user: { type: Schema.ObjectId, ref: "User", required: true },
   name: { type: String, required: false },
   phone: { type: String, match: /^[0-9+\-\s()]*$/ },
   email: {
     type: String,
     required: false,
     lowercase: true,
-    validate: [validator.isEmail, 'Please provide a valid email'],
+    validate: [validator.isEmail, "Please provide a valid email"],
   },
   createdAt: { type: Date, default: Date.now },
-  dataSource: { type: Schema.ObjectId, ref: 'LeadDataSource', required: false },
-  sessions: [sessionSchema],
+  leadsCollection: { type: Schema.ObjectId, ref: "LeadsCollection" },
+  sessions: [{ type: Schema.ObjectId, ref: "Session" }],
 });
 
-const leadsDataSourceSchema = new Schema<ILeadDataSource>({
-  user: { type: Schema.ObjectId, ref: 'User', required: true },
+const leadsCollectionSchema = new Schema<ILeadCollection>({
+  user: { type: Schema.ObjectId, ref: "User", required: true },
   name: { type: String, required: false },
   createdAt: { type: Date, default: Date.now },
-  leads: [{ type: Schema.ObjectId, ref: 'Lead', required: false }],
+  leads: [{ type: Schema.ObjectId, ref: "Lead", required: false }],
 });
 
 /*
 - MIDDLEWARE CONTROLLERS
-
  */
 
-leadSchema.post<ILead>('save', async function (doc) {
+leadSchema.post<ILead>("save", async function (doc) {
   try {
-    const source = await LeadDataSource.findOne({ _id: doc.dataSource });
-    const update = await LeadDataSource.findOneAndUpdate(
-      { _id: doc.dataSource },
+    await LeadsCollection.findOneAndUpdate(
+      { _id: doc.leadsCollection },
       { $addToSet: { leads: doc._id } },
       { new: true, upsert: true },
     );
@@ -53,9 +41,23 @@ leadSchema.post<ILead>('save', async function (doc) {
   }
 });
 
+leadsCollectionSchema.post("save", async function (doc) {
+  await User.findOneAndUpdate(
+    { _id: doc.user },
+    { $addToSet: { leadsCollection: doc._id } },
+    { new: true, upsert: true },
+  );
+});
+
+/*
+- EXPORTS
+*/
+export const Lead = mongoose.model<ILead>("Lead", leadSchema);
+export const LeadsCollection = mongoose.model("LeadsCollection", leadsCollectionSchema);
+
 /*
 - Initialize Call web socket
- */
+
 
 export const initializeLeadsWebSocket = (wss: WebSocket.Server) => {
   // Access the leads collection from the existing mongoose connection
@@ -81,10 +83,4 @@ export const initializeLeadsWebSocket = (wss: WebSocket.Server) => {
     });
   });
 };
-
-/*
-- EXPORTS
 */
-export const Session = mongoose.model('Session', sessionSchema);
-export const Lead = mongoose.model<ILead>('Lead', leadSchema);
-export const LeadDataSource = mongoose.model('LeadDataSource', leadsDataSourceSchema);
