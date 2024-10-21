@@ -1,6 +1,6 @@
 import Flowchart from '../models/flowchartModel';
 import User from '../models/usersModel';
-import { createOne, deleteOne, getAll, getOne, updateOne } from './handlerFactory';
+import { createOne, deleteOne, getAll, getAllOfUser, getOne, updateOne } from './handlerFactory';
 import { IFlowChart } from '../types/flowchart';
 import { catchAsync } from '../utils/catchAsync';
 import AppError from '../utils/appError';
@@ -15,7 +15,8 @@ export const updateUser = catchAsync(async (req, res, next) => {
 
 export const createFlowchart = createOne<IFlowChart>(Flowchart);
 
-export const getAllFlowcharts = getAll(Flowchart);
+// export const getAllFlowcharts = getAll(Flowchart);
+export const getAllFlowcharts = getAllOfUser('flowcharts');
 
 export const getOneFlowchart = getOne(Flowchart);
 

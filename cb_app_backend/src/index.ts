@@ -1,62 +1,53 @@
-import dotenv from 'dotenv';
-dotenv.config({ path: './.env' });
-import mongoose from 'mongoose';
-import getLocalIPAddress from './utils/getLocalIPAdress';
-import WebSocket from 'ws';
-import app from './app';
-import { initializeLeadsWebSocket } from './models/leadModel';
-import { initializeChatWebSocket } from './telephony/ChatWithBotSocket';
-import { initializeCallsWithBotWebSocket } from './telephony/CallWithBotSocket';
+import dotenv from "dotenv";
+dotenv.config({ path: "./.env" });
+import mongoose from "mongoose";
+import getLocalIPAddress from "./utils/getLocalIPAdress";
+import WebSocket from "ws";
+import app from "./app";
+// import { initializeLeadsWebSocket } from './models/leadModel';
+import { initializeChatWebSocket } from "./telephony/ChatWithBotSocket";
+import { initializeCallsWithBotWebSocket } from "./telephony/CallWithBotSocket";
 
 const localIPAddress = getLocalIPAddress();
-const host = localIPAddress === '172.31.149.141' ? 'localhost' : localIPAddress;
+const host = localIPAddress === "172.31.149.141" ? "localhost" : localIPAddress;
 
 const PORT = Number(process.env.PORT);
 const { DB_MONGO_URL } = process.env;
-
 async function connectToDatabase() {
   try {
-    if (!DB_MONGO_URL) throw new Error('MongoDB connection string is undefined');
+    if (!DB_MONGO_URL) throw new Error("MongoDB connection string is undefined");
 
     await mongoose.connect(DB_MONGO_URL, {
       tls: true,
       serverSelectionTimeoutMS: 30000,
       socketTimeoutMS: 45000,
     });
-    console.log('Connected to MongoDB');
+    console.log("Connected to MongoDB");
   } catch (err) {
-    console.log('Error connecting to mongoDB: ', err);
+    console.log("Error connecting to mongoDB: ", err);
     throw err;
   }
 }
 
 function initializeWebSocketServer(server) {
-  const leadsWss = new WebSocket.Server({ noServer: true, path: '/leads' });
-  initializeLeadsWebSocket(leadsWss);
-
-  const callsWss = new WebSocket.Server({ noServer: true, path: '/call' });
+  const callsWss = new WebSocket.Server({ noServer: true, path: "/call" });
   initializeCallsWithBotWebSocket(callsWss);
 
-  const chatWss = new WebSocket.Server({ noServer: true, path: '/chat' });
+  const chatWss = new WebSocket.Server({ noServer: true, path: "/chat" });
   initializeChatWebSocket(chatWss);
 
-  server.on('upgrade', (request, socket, head) => {
+  server.on("upgrade", (request, socket, head) => {
     const { pathname } = new URL(request.url, `http://${request.headers.host}`);
 
     switch (pathname) {
-      case '/chat':
+      case "/chat":
         chatWss.handleUpgrade(request, socket, head, (ws) => {
-          chatWss.emit('connection', ws, request);
+          chatWss.emit("connection", ws, request);
         });
         break;
-      case '/call':
+      case "/call":
         callsWss.handleUpgrade(request, socket, head, (ws) => {
-          callsWss.emit('connection', ws, request);
-        });
-        break;
-      case '/leads':
-        leadsWss.handleUpgrade(request, socket, head, (ws) => {
-          leadsWss.emit('connection', ws, request);
+          callsWss.emit("connection", ws, request);
         });
         break;
       default:
@@ -68,7 +59,7 @@ function initializeWebSocketServer(server) {
 
 async function startServer() {
   await connectToDatabase();
-  const server = app.listen(PORT, '0.0.0.0', () => {
+  const server = app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on port http://${host}:${PORT}`);
   });
 
@@ -78,7 +69,7 @@ async function startServer() {
 
 // Start the application
 startServer().catch((err) => {
-  console.error('Failed to start server:', err);
+  console.error("Failed to start server:", err);
 });
 
 /*

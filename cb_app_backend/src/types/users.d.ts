@@ -25,4 +25,5 @@ export interface MyUser extends Document {
   active: boolean;
   flowcharts: Schema.Types.ObjectId[];
   bots: Schema.Types.ObjectId[];
+  leadsCollection: Schema.Types.ObjectId[];
 }

@@ -1,10 +1,8 @@
-import { LoaderFunction, useLoaderData } from 'react-router-dom';
-import { getSessionsStats } from '../services';
-import { useEffect, useState } from 'react';
-import SingleSessionStat from './SingleSessionStat';
-import { Stack } from '@mui/material';
-import All_Calls from '../../../assets/img/icons_sessions/All_Calls.svg';
-import { grey } from '@mui/material/colors';
+import { LoaderFunction, useLoaderData } from "react-router-dom";
+import { getSessionsStats } from "../services";
+import { useEffect, useState } from "react";
+import SingleSessionStat from "./SingleSessionStat";
+import { Stack } from "@mui/material";
 
 function SessionsStats() {
   const initData = useLoaderData() as ILoaderData;
@@ -22,21 +20,8 @@ function SessionsStats() {
     });
   }, [initData.stats]);
 
-  useEffect(() => {
-    console.log('stats', stats);
-  }, [stats]);
-
   return (
-    <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 2, justifyContent: 'center', alignItems: 'center', my: 3 }}>
-      <SingleSessionStat
-        total={initData.totalLeads}
-        intent={{
-          name: 'All Calls',
-          value: initData.totalLeads,
-          color: grey[200],
-        }}
-        icon={All_Calls}
-      />
+    <Stack direction="row" sx={{ flexWrap: "wrap", gap: 2, justifyContent: "center", alignItems: "center", my: 3 }}>
       {stats.map((el, i) => (
         <SingleSessionStat key={i} total={initData.totalLeads} intent={el} />
       ))}

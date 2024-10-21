@@ -9,18 +9,18 @@ import {
   Stack,
   TextField,
   TextFieldProps,
-} from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { createLead } from '../services';
-import { Row } from '../Leads';
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import React, { useState } from "react";
+import { useParams } from "react-router-dom";
+import { createLead } from "../services";
+import { Row } from "../Leads";
 
 const style = {
   collapsable: {
-    width: '500px',
-    position: 'absolute',
-    top: '100%',
+    width: "500px",
+    position: "absolute",
+    top: "100%",
     zIndex: 9,
   },
 };
@@ -31,7 +31,7 @@ interface ICreateNewLead {
 
 const CreateNewLead: React.FC<ICreateNewLead> = ({ setRows }) => {
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState({ name: '', phone: '', email: '' });
+  const [data, setData] = useState({ name: "", phone: "", email: "" });
   const { id } = useParams();
 
   const handleClick: React.MouseEventHandler<HTMLButtonElement> = (e) => {
@@ -47,7 +47,7 @@ const CreateNewLead: React.FC<ICreateNewLead> = ({ setRows }) => {
     e.preventDefault();
     if (!data || !id) return;
     const { name, email, phone } = data;
-    const body = { name, email, phone, dataSource: id };
+    const body = { name, email, phone, leadsCollection: id };
 
     const newLead = await createLead(body);
     console.log(newLead);
@@ -58,15 +58,15 @@ const CreateNewLead: React.FC<ICreateNewLead> = ({ setRows }) => {
         return [row, ...prev];
       });
       setOpen(false);
-      console.log('Form submitted with:', data);
+      console.log("Form submitted with:", data);
     } else {
-      console.log('failed');
+      console.log("failed");
     }
   };
 
-  const inputProps: TextFieldProps = { margin: 'none', variant: 'outlined', required: true, onChange: handleChange };
+  const inputProps: TextFieldProps = { margin: "none", variant: "outlined", required: true, onChange: handleChange };
   return (
-    <Box sx={{ position: 'relative' }}>
+    <Box sx={{ position: "relative" }}>
       <Button onClick={handleClick} variant="contained" endIcon={<AddIcon />}>
         Create New Lead
       </Button>

@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { persist, devtools } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist, devtools } from "zustand/middleware";
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -22,7 +22,7 @@ export const useAuthStore = create<AuthState>()(
         setLoggedOut: () => set({ isAuthenticated: false }),
       }),
       {
-        name: 'auth-storage',
+        name: "auth-storage",
         partialize: (state) => ({
           userId: state.userId,
           username: state.username,
