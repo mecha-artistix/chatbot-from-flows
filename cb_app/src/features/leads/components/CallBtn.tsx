@@ -12,7 +12,7 @@ const CallBtn: React.FC<ICallBtn> = ({ numbersToCall }) => {
 
   return (
     <Button variant="contained" onClick={handleClick} startIcon={<CircularProgress size={20} />}>
-      Call
+      Call Now
     </Button>
   );
 };
