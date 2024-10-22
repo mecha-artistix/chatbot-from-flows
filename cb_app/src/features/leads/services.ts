@@ -46,11 +46,22 @@ export const uploadLeadsData: TUploadLeadsData = async (file) => {
   const formData = new FormData();
   formData.append("csvFile", file);
   try {
-    const response = await axios.post(URL + "/leads/collections", formData, {
+    const response = await axios.post(URL + "/leads/upload", formData, {
       headers: { "Content-Type": "multipart/form-data" },
       withCredentials: true,
     });
     const data = response.data;
+    return data;
+  } catch (error: any) {
+    return { error };
+  }
+};
+
+type TCreateLeadCollection = (body: Record<string, any>) => Promise<{ [key: string]: any }>;
+export const createLeadCollection: TCreateLeadCollection = async (body) => {
+  try {
+    const response = await axios.post(URL + "/leads/collections", body, { withCredentials: true });
+    const data = await response.data;
     return data;
   } catch (error: any) {
     return { error };
@@ -69,6 +80,17 @@ export const getLeadsCollections: TGetLeadsCollection = async () => {
   }
 };
 
+type TDeleteLeadCollection = (id: string) => Promise<{ [key: string]: any }>;
+export const deleteLeadCollection: TDeleteLeadCollection = async (id) => {
+  try {
+    const response = await axios.delete(URL + `/leads/collections/${id}`, { withCredentials: true });
+    const data = response.data;
+    return data;
+  } catch (error) {
+    return { error };
+  }
+};
+
 interface IBody {
   name: string;
   email: string;
@@ -76,14 +98,14 @@ interface IBody {
   leadsCollection: string;
 }
 
-type TCreateLead = (body: IBody) => Promise<{ [key: string]: any }>;
+type TCreateLead = (body: Record<string, any>) => Promise<{ [key: string]: any }>;
 export const createLead: TCreateLead = async (body) => {
   try {
     const response = await axios.post(URL + "/leads", body, { withCredentials: true });
     const data = await response.data;
     return data;
   } catch (error: any) {
-    return error;
+    return { error };
   }
 };
 

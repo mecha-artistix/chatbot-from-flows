@@ -41,6 +41,8 @@ leadSchema.post<ILead>("save", async function (doc) {
   }
 });
 
+export const Lead = mongoose.model<ILead>("Lead", leadSchema);
+
 leadsCollectionSchema.post("save", async function (doc) {
   await User.findOneAndUpdate(
     { _id: doc.user },
@@ -49,10 +51,21 @@ leadsCollectionSchema.post("save", async function (doc) {
   );
 });
 
+leadsCollectionSchema.post("findOneAndDelete", async function (doc) {
+  if (doc) {
+    try {
+      await User.updateMany({ _id: doc.user }, { $pull: { leadsCollection: doc._id } });
+      await Lead.deleteMany({ _id: { $in: doc.leads } });
+    } catch (error) {
+      console.error("Error in post findOneAndDelete middleware:", error);
+    }
+  }
+});
+
 /*
 - EXPORTS
 */
-export const Lead = mongoose.model<ILead>("Lead", leadSchema);
+
 export const LeadsCollection = mongoose.model("LeadsCollection", leadsCollectionSchema);
 
 /*

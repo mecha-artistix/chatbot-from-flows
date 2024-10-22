@@ -1,29 +1,35 @@
-import { LoaderFunction, useLoaderData } from "react-router-dom";
+// import { LoaderFunction, useLoaderData } from "react-router-dom";
 import { getSessionsStats } from "../services";
 import { useEffect, useState } from "react";
 import SingleSessionStat from "./SingleSessionStat";
 import { Stack } from "@mui/material";
 
 function SessionsStats() {
-  const initData = useLoaderData() as ILoaderData;
+  // const initData = useLoaderData() as ILoaderData;
   const [stats, setStats] = useState<IStat[]>([]);
 
   useEffect(() => {
-    setStats(() => {
-      const stats = Object.keys(initData.stats).map((key) => {
-        return {
-          name: key,
-          value: initData.stats[key],
-        };
+    async function fetchData() {
+      const data = await getSessionsStats();
+      console.log(data);
+      // return data;
+      setStats(() => {
+        const stats = Object.keys(data.stats).map((key) => {
+          return {
+            name: key,
+            value: data.stats[key],
+          };
+        });
+        return stats;
       });
-      return stats;
-    });
-  }, [initData.stats]);
+    }
+    fetchData();
+  }, []);
 
   return (
     <Stack direction="row" sx={{ flexWrap: "wrap", gap: 2, justifyContent: "center", alignItems: "center", my: 3 }}>
       {stats.map((el, i) => (
-        <SingleSessionStat key={i} total={initData.totalLeads} intent={el} />
+        <SingleSessionStat key={i} intent={el} />
       ))}
     </Stack>
   );
@@ -31,10 +37,12 @@ function SessionsStats() {
 
 export default SessionsStats;
 
-export const loader: LoaderFunction = async () => {
-  const data = await getSessionsStats();
-  return data;
-};
+// export const loader: LoaderFunction = async ({ params }) => {
+//   console.log("params", params);
+//   const data = await getSessionsStats();
+//   console.log("data", data);
+//   return data;
+// };
 
 interface ILoaderData {
   status: string;

@@ -1,28 +1,27 @@
-import express, { Router } from 'express';
-import { protect } from '../controllers/authController';
+import express, { Router } from "express";
+import { protect } from "../controllers/authController";
 import {
-  clearUser,
   createFlowchart,
   deleteFlowchart,
   getAllFlowcharts,
   getOneFlowchart,
   updateFlowchart,
   updateUser,
-} from '../controllers/flowchartController';
+} from "../controllers/flowchartController";
 
 const router: Router = express.Router();
 
 router.use(protect);
 
 router
-  .route('/')
+  .route("/")
   .get(getAllFlowcharts as express.RequestHandler)
   .post(updateUser, createFlowchart as express.RequestHandler);
 
 router
-  .route('/:id')
+  .route("/:id")
   .get(getOneFlowchart as express.RequestHandler)
   .patch(updateFlowchart as express.RequestHandler)
-  .delete(deleteFlowchart as express.RequestHandler, clearUser);
+  .delete(deleteFlowchart as express.RequestHandler);
 
 export default router;

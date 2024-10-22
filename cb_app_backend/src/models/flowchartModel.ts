@@ -1,9 +1,9 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema } from "mongoose";
 // const { LinkedNodes, makeConnectionsObj, generateModel } = require('./generatePromptString');
 
 // const Bot = require('@/bots/botModel');
-import User from './usersModel';
-import { INode, IEdge, IFlowChart } from '../types/flowchart';
+import User from "./usersModel";
+import { INode, IEdge, IFlowChart } from "../types/flowchart";
 
 const nodeSchema = new Schema<INode>({
   type: { type: String },
@@ -34,8 +34,8 @@ const edgeSchema = new Schema<IEdge>({
 const flowChartSchema = new Schema<IFlowChart>({
   name: {
     type: String,
-    required: [true, 'Please Provide a valid name for flowchart'],
-    match: [/^[a-zA-Z][a-zA-Z0-9]*$/, 'Name must start with a letter and contain only alphanumeric characters'],
+    required: [true, "Please Provide a valid name for flowchart"],
+    match: [/^[a-zA-Z][a-zA-Z0-9]*$/, "Name must start with a letter and contain only alphanumeric characters"],
   },
   createdAt: { type: Date, default: Date.now },
   nodes: [nodeSchema],
@@ -46,12 +46,12 @@ const flowChartSchema = new Schema<IFlowChart>({
     zoom: { type: Number, required: true, default: 0 },
   },
   // promptText: { type: String },
-  bot: { type: mongoose.Schema.Types.ObjectId, ref: 'Bot' },
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  bot: { type: mongoose.Schema.Types.ObjectId, ref: "Bot" },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 });
 
 // add flowchart to user
-flowChartSchema.post('save', async function (doc) {
+flowChartSchema.post("save", async function (doc) {
   await User.findOneAndUpdate({ _id: doc.user }, { $addToSet: { flowcharts: doc._id } }, { new: true, upsert: true });
 });
 
@@ -68,17 +68,27 @@ flowChartSchema.index({ user: 1, name: 1 }, { unique: true, background: true });
 // };
 
 // Post-save middleware
-flowChartSchema.post<IFlowChart>('save', async function (doc) {
+flowChartSchema.post<IFlowChart>("save", async function (doc) {
   try {
     // Ensure `doc.user` and `doc._id` are of the correct type
     await User.findOneAndUpdate({ _id: doc.user }, { $addToSet: { flowcharts: doc._id } }, { new: true, upsert: true });
   } catch (error) {
     // Handle potential errors here
-    console.error('Error updating User with new flowchart:', error);
+    console.error("Error updating User with new flowchart:", error);
   }
 });
 
-const Flowchart = mongoose.model<IFlowChart>('Flowchart', flowChartSchema);
+flowChartSchema.post("findOneAndDelete", async function (doc) {
+  if (doc) {
+    try {
+      await User.updateMany({ _id: doc.user }, { $pull: { flowcharts: doc._id } });
+    } catch (error) {
+      console.error("Error in post findOneAndDelete middleware:", error);
+    }
+  }
+});
+
+const Flowchart = mongoose.model<IFlowChart>("Flowchart", flowChartSchema);
 
 export default Flowchart;
 
