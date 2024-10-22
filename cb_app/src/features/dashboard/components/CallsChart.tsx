@@ -34,26 +34,24 @@ const CallsChart: React.FC<ICallsChart> = () => {
   const colors = [theme.palette.primary.main, theme.palette.error.main, theme.palette.warning.main];
 
   return (
-    <Box>
-      <PieChart
-        series={[
-          {
-            data: data,
-            arcLabel: getArcLabel,
-            valueFormatter: (v) => {
-              return ` ${v.value}`;
-            },
+    <PieChart
+      series={[
+        {
+          data: data,
+          arcLabel: getArcLabel,
+          valueFormatter: (v) => {
+            return ` ${v.value}`;
           },
-        ]}
-        margin={{ top: 5, bottom: 30 }}
-        // width={300}
-        // height={300}
-        colors={colors}
-        slotProps={{
-          legend: { direction: "row", position: { vertical: "bottom", horizontal: "middle" }, padding: 0 },
-        }}
-      />
-    </Box>
+        },
+      ]}
+      margin={{ top: 5, bottom: 30 }}
+      // width={300}
+      // height={300}
+      colors={colors}
+      slotProps={{
+        legend: { direction: "row", position: { vertical: "bottom", horizontal: "middle" }, padding: 0 },
+      }}
+    />
   );
 };
 
