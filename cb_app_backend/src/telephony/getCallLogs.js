@@ -6,6 +6,7 @@ const { Session } = require("../../dist/models/leadModel");
 
 const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, DB_MONGO_URL } = process.env;
 console.log(TWILIO_ACCOUNT_SID);
+
 const client = twilio(TWILIO_ACCOUNT_SID,TWILIO_AUTH_TOKEN );
 mongoose
   .connect(DB_MONGO_URL)
