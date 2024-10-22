@@ -1,29 +1,32 @@
-const dotenv = require('dotenv');
-dotenv.config({ path: './../../.env' });
-const twilio = require('twilio');
-const mongoose = require('mongoose');
-// const { Session } = require('../../dist/models/leadModel');
+const dotenv = require("dotenv");
+dotenv.config({ path: "./../../.env" });
+const twilio = require("twilio");
+const mongoose = require("mongoose");
+const { Session } = require("../../dist/models/leadModel");
 
 const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, DB_MONGO_URL } = process.env;
+console.log(TWILIO_ACCOUNT_SID);
 
-const client = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
-mongoose.connect(DB_MONGO_URL).then((connection) => console.log('connection successful'));
+const client = twilio(TWILIO_ACCOUNT_SID,TWILIO_AUTH_TOKEN );
+mongoose
+  .connect(DB_MONGO_URL)
+  .then((connection) => console.log("connection successful"));
 
 const sessionLogs = [
-  'sid',
-  'dateCreated',
-  'dateUpdated',
-  'toFormatted',
-  'from',
-  'fromFormatted',
-  'status',
-  'startTime',
-  'endTime',
-  'duration',
-  'price',
+  "sid",
+  "dateCreated",
+  "dateUpdated",
+  "toFormatted",
+  "from",
+  "fromFormatted",
+  "status",
+  "startTime",
+  "endTime",
+  "duration",
+  "price",
 ];
-const intents = ['XFER', 'DAIR', 'DNQ', 'CallBK', 'DNC', 'NI', 'NP', 'A', 'Hang_Up', 'LB'];
-const user = '66c87b11febb7c40e47f974e';
+const intents = ["XFER", "DAIR", "DNQ", "CallBK", "DNC", "NI", "NP", "A", "Hang_Up", "LB"];
+const user = "66c87b11febb7c40e47f974e";
 async function listCall() {
   const calls = await client.calls.list();
   const logs = [];
@@ -32,11 +35,11 @@ async function listCall() {
     const log = { user };
     sessionLogs.forEach((el) => {
       log[el] = c[el];
-      log['intent'] = intents[Math.floor(Math.random() * intents.length)];
+      log["intent"] = intents[Math.floor(Math.random() * intents.length)];
     });
 
-    // await Session.findOneAndUpdate({ sid: c.sid }, { $set: log }, { new: true, upsert: true });
-    console.log('uploaded:', c.sid);
+    await Session.findOneAndUpdate({ sid: c.sid }, { $set: log }, { new: true, upsert: true });
+    console.log("uploaded:", c.sid);
     logs.push(log);
   }
 
@@ -67,11 +70,11 @@ async function deleteAllFromDb() {
 async function main() {
   try {
     const calls = await listCall();
-    // console.log('Retrieved Calls:', calls);
+    console.log("Retrieved Calls:", calls);
   } catch (error) {
-    console.error('Error in main:', error);
+    console.error("Error in main:", error);
   }
   // process.exit();
 }
 
-// main();
+main();

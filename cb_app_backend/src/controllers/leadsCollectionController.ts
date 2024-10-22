@@ -37,55 +37,61 @@ export const uploadLeadsCollection = upload.single("csvFile");
 
 export const createLeadsCollection = catchAsync(async (req, res, next) => {
   if (!req.user) return next(new AppError("User was not found", 404));
-
+  let leadCollection;
   if (!req.file) {
-    return next(new AppError("File was not found", 500));
+    // return next(new AppError("File was not found", 500));
+    const { name } = req.body;
+    const user = req.user._id;
+    leadCollection = await LeadsCollection.create({ name, user });
+  } else {
+    //  CREATE COLLECTION DOCUMENT
+    req.body.name = req.file.filename;
+    if (req.user) req.body.user = req.user._id;
+    leadCollection = await LeadsCollection.create(req.body);
+    if (!leadCollection) return next(new AppError("file could not be uploaded", 404));
+
+    // READ FROM CSV AND CREATE LEAD FROM EACH ROW
+    const results: ILeadsCollectionFile[] = [];
+    fs.createReadStream(req.file.path)
+      .pipe(csvParser())
+      .on("data", async (data: ILeadsCollectionFile) => {
+        const cleanedData = Object.keys(data).reduce((acc, key) => {
+          const cleanedKey = key.replace(/\s+/g, "").toLowerCase();
+          acc[cleanedKey] = data[key];
+          return acc;
+        }, {} as ILeadsCollectionFile);
+        // CREATE LEAD DOCUMENT
+        const leadObj = {
+          user: req?.user?._id,
+          leadsCollection: leadCollection._id,
+          ...cleanedData,
+        };
+        const lead = await Lead.create(leadObj);
+        // PUSH NEWLY CREATED LEAD TO LEADDATASOURCE DOC CREATED ABOVE
+        await LeadsCollection.findByIdAndUpdate(
+          leadCollection._id,
+          { $push: { leads: lead._id } },
+          { new: true, useFindAndModify: false },
+        );
+
+        results.push(data);
+      })
+
+      .on("error", (err) => {
+        // Handle any file reading errors
+        return next(new AppError("Error processing the file", 500));
+      });
   }
 
-  //  CREATE COLLECTION DOCUMENT
-  req.body.name = req.file.filename;
-  if (req.user) req.body.user = req.user._id;
-  const leadsDataSource = await LeadsCollection.create(req.body);
-  if (!leadsDataSource) return next(new AppError("file could not be uploaded", 404));
-
-  // READ FROM CSV AND CREATE LEAD FROM EACH ROW
-  const results: ILeadsCollectionFile[] = [];
-  fs.createReadStream(req.file.path)
-    .pipe(csvParser())
-    .on("data", async (data: ILeadsCollectionFile) => {
-      const cleanedData = Object.keys(data).reduce((acc, key) => {
-        const cleanedKey = key.replace(/\s+/g, "").toLowerCase();
-        acc[cleanedKey] = data[key];
-        return acc;
-      }, {} as ILeadsCollectionFile);
-      // CREATE LEAD DOCUMENT
-      const leadObj = {
-        user: req?.user?._id,
-        leadsCollection: leadsDataSource._id,
-        ...cleanedData,
-      };
-      const lead = await Lead.create(leadObj);
-      // PUSH NEWLY CREATED LEAD TO LEADDATASOURCE DOC CREATED ABOVE
-      await LeadsCollection.findByIdAndUpdate(
-        leadsDataSource._id,
-        { $push: { leads: lead._id } },
-        { new: true, useFindAndModify: false },
-      );
-
-      results.push(data);
-    })
-
-    .on("error", (err) => {
-      // Handle any file reading errors
-      return next(new AppError("Error processing the file", 500));
-    });
   res.status(201).json({
     status: "success",
-    data: { data: leadsDataSource },
+    data: { data: leadCollection },
   });
 });
 
 export const getLeadsCollection = getAll(LeadsCollection);
+
+export const deleteLeadCollection = deleteOne(LeadsCollection);
 
 export const getLeadsfromCollection = catchAsync(async (req, res, next) => {
   const doc = await LeadsCollection.findOne({ _id: req.params.id }).populate({
