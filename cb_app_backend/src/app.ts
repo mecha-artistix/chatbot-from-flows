@@ -20,6 +20,8 @@ import leadRoutes from "./routes/leadRoutes";
 import sessionRoutes from "./routes/SessionRoutes";
 // import phoneRoutes from './telephony/phoneRoutes';
 import { callRouter, phoneRouter } from "./telephony/phoneRoutes";
+import { setupQueueDashboard } from "./config/queueDashboard";
+
 const { BASE_URL, SERVER_IP } = process.env;
 const ALLOWED_ORIGINS = ["127.0.0.1", "localhost", "wslhost", "91.107.194.217", "172.31.149.141", "209.209.42.134"];
 const { window } = new JSDOM("");
@@ -63,6 +65,8 @@ const corsOptions: CorsOptions = {
 };
 // serving static files
 app.use(BASE_URL + "/public", express.static(path.join(__dirname, "..", "public")));
+// MESSAGE QUEUE ADMIN DASHBOARD
+
 app.use(cors(corsOptions));
 
 // app.use(cors({ origin: '*', credentials: true }));
@@ -131,7 +135,7 @@ app.get("/error-test", (req: Request, res: Response, next: NextFunction) => {
   const err = new AppError("This is a test error", 500);
   next(err);
 });
-
+setupQueueDashboard(app);
 // ERROR (GLOBAL) HANDLING MIDDLEWARE. THIS TAKES IN 4 ARGS.EXPRESS RECOGNIZES  THIS MIDDLEWARE FUNC BY THE 4 ARGS
 app.use(globalErrorHandler);
 export default app;

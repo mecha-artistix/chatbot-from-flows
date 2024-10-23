@@ -1,5 +1,5 @@
 import { Lead } from "../models/leadModel";
-import { getAllOfUser } from "./handlerFactory";
+import { deleteOne, getAllOfUser } from "./handlerFactory";
 import { catchAsync } from "../utils/catchAsync";
 
 // export const getLeads = getAll(Lead);
@@ -17,10 +17,12 @@ export const createLead = catchAsync(async (req, res, next) => {
   res.status(201).json({ status: "success", data: { data: doc } });
 });
 
-export const deleteLead = catchAsync(async (req, res, next) => {
-  res.status(201).json({ status: "working" });
-});
+export const deleteLead = deleteOne(Lead);
+// export const deleteLead = catchAsync(async (req, res, next) => {
+//   res.status(201).json({ status: "working" });
+// });
 
 export const updateLead = catchAsync(async (req, res, next) => {
-  res.status(201).json({ status: "working" });
+  console.log(req.body);
+  res.status(201).json({ status: "Patched" });
 });

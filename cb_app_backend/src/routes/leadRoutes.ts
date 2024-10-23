@@ -22,5 +22,5 @@ router.route("/collections/:id").get(getLeadsfromCollection).delete(deleteLeadCo
 router.route("/").post(createLead).get(getLeads);
 
 router.route("/leads").get(getLeads);
-router.route("/id").delete(deleteLead).patch(updateLead);
+router.route("/:id").delete(deleteLead).patch(updateLead);
 export default router;

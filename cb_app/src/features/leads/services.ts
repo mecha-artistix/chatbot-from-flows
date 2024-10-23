@@ -119,3 +119,23 @@ export const getLeads: TGetLeads = async (id) => {
     throw new Error(error);
   }
 };
+
+type TPatchLead = (id: string, body: Record<string, any>) => Promise<Record<string, any>>;
+export const patchLead: TPatchLead = async (id, body) => {
+  try {
+    const response = await axios.patch(URL + `/leads/${id}`, { body }, { withCredentials: true });
+    return response.data;
+  } catch (error) {
+    return { error };
+  }
+};
+
+type TDeleteLead = (id: string) => Promise<Record<string, any>>;
+export const deleteLead: TDeleteLead = async (id) => {
+  try {
+    const response = await axios.delete(URL + `/leads/${id}`, { withCredentials: true });
+    return response.data;
+  } catch (error) {
+    return { error };
+  }
+};

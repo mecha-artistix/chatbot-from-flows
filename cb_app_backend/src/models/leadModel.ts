@@ -41,6 +41,12 @@ leadSchema.post<ILead>("save", async function (doc) {
   }
 });
 
+leadSchema.post("findOneAndDelete", async function (doc) {
+  try {
+    await LeadsCollection.updateOne({ _id: doc.leadsCollection }, { $pull: { leads: doc._id } });
+  } catch (error) {}
+});
+
 export const Lead = mongoose.model<ILead>("Lead", leadSchema);
 
 leadsCollectionSchema.post("save", async function (doc) {

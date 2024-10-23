@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Box, Container, Stack } from "@mui/material";
+import { Box, Container, IconButton, Stack, Typography } from "@mui/material";
 import {
   DataGrid,
   GridCallbackDetails,
   GridColDef,
+  GridRowModel,
   GridRowSelectionModel,
   GridToolbarContainer,
   GridToolbarExport,
@@ -11,18 +12,14 @@ import {
 } from "@mui/x-data-grid";
 import CallBtn from "./components/CallBtn";
 import { LoaderFunction, useLoaderData, useParams } from "react-router-dom";
-import { createLead, getLeads } from "./services";
+import { createLead, deleteLead, getLeads, patchLead } from "./services";
 import CreateNew from "../../components/createNew/CreateNew";
-
-const columns: GridColDef[] = [
-  { field: "name", headerName: "Name", flex: 1, sortable: false },
-  { field: "email", headerName: "Email", flex: 1, sortable: false },
-  { field: "phone", headerName: "Phone", flex: 1, sortable: false },
-];
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
 function Leads() {
   const initData = useLoaderData() as IInitData;
-  // const [leads, setLeads] = useState<ILead[]>([...initData.data.data.leads]);
+  const [leads, setLeads] = useState<ILead[]>([...initData.data.data.leads]);
   const { id } = useParams();
   const [rows, setRows] = useState<Row[]>([]);
   const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 25 });
@@ -31,7 +28,8 @@ function Leads() {
   useEffect(() => {
     setRows(() => {
       let rows: Row[] = [];
-      initData.data.data.leads.forEach((obj) => {
+      // initData.data.data.leads.forEach((obj) => {
+      leads.forEach((obj) => {
         const { _id, name, email, phone, createdAt } = obj;
         const row = { id: _id, name, email, phone, createdAt };
         rows.push(row);
@@ -39,7 +37,40 @@ function Leads() {
 
       return rows;
     });
-  }, [initData.data.data.leads]);
+  }, []);
+  // }, [initData.data.data.leads]);
+
+  const handleDelete = async (id: any) => {
+    try {
+      await deleteLead(id);
+      setLeads((prev) => prev.filter((el) => el._id !== id));
+    } catch (error) {}
+  };
+
+  const columns: GridColDef[] = [
+    {
+      field: "name",
+      headerName: "Name",
+      flex: 1,
+      sortable: false,
+      editable: true,
+      renderCell: (params) => (
+        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ gap: 2, height: "100%" }}>
+          <Typography>{params.value}</Typography>
+          <Stack direction="row" sx={{ gap: 1 }}>
+            <IconButton onClick={() => handleDelete(params.id)} aria-label="delete">
+              <DeleteIcon />
+            </IconButton>
+            <IconButton onClick={() => console.log(`${params.id}`)}>
+              <EditIcon />
+            </IconButton>
+          </Stack>
+        </Stack>
+      ),
+    },
+    { field: "email", headerName: "Email", width: 200, sortable: false },
+    { field: "phone", headerName: "Phone", width: 200, sortable: false },
+  ];
 
   const style = {
     container: {
@@ -67,7 +98,20 @@ function Leads() {
       return [row, ...prev];
     });
   }
-
+  async function processRowUpdate(params: GridRowModel) {
+    console.log("params - ", params);
+    try {
+      const { id, name, email, phone } = params;
+      console.log({ id, name, email, phone });
+      const response = await patchLead(id, { name, email, phone });
+      console.log(response);
+      // setRows((prev) => prev.map((row) => (row.id === id ? { ...row, name, email, phone } : row)));
+      // setRows((prevRows) => prevRows.map((row) => (row.id === id ? { id, name, email, phone } : row)));
+    } catch (error) {
+      console.log(error);
+      return { error };
+    }
+  }
   return (
     <Container maxWidth="xl">
       <Stack direction="row" sx={style.container}>
@@ -97,13 +141,18 @@ function Leads() {
           checkboxSelection
           onRowSelectionModelChange={handleSelectionChange}
           disableRowSelectionOnClick
-          density="compact"
+          density="comfortable"
           sx={{ border: 0 }}
           paginationModel={paginationModel}
           onPaginationModelChange={(newPaginationModel) => {
             setPaginationModel(newPaginationModel);
           }}
           slots={{ toolbar: Toolbar }}
+          editMode="row"
+          processRowUpdate={processRowUpdate}
+          onProcessRowUpdateError={(error) => {
+            console.error(error);
+          }}
         />
       </Container>
     </Container>
@@ -136,11 +185,11 @@ export const loader: LoaderFunction = async function ({ params }) {
   const { id } = params;
   if (!id) return;
   const leads = await getLeads(id);
-  console.log("leads from loader", leads);
   return leads;
 };
 
 export interface Row {
+  id: string;
   name?: string;
   email?: string;
   phone?: string;
